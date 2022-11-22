@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">FoodiGo1</string>
+<<<<<<< HEAD
     <string name="title_activity_maps1">Maps1Activity</string>
     <string name="title_activity_maps2">Maps2Activity</string>
+=======
+    <string name="title_activity_elo_maps">EloMapsActivity</string>
+>>>>>>> 86ff5ec9baad9897d02c4692cb709f40b92a4649
 </resources>
