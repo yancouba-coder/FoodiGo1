@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FoodiGo1</string>
+    <string name="title_activity_maps1">Maps1Activity</string>
+    <string name="title_activity_maps2">Maps2Activity</string>
+</resources>
