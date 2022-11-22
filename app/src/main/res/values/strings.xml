@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FoodiGo1</string>
+    <string name="title_activity_elo_maps">EloMapsActivity</string>
 </resources>
