@@ -29,19 +29,9 @@
             android:value="YOUR_API_KEY" />
 
         <activity
-<<<<<<< HEAD
-            android:name=".Maps2Activity"
-            android:exported="false"
-            android:label="@string/title_activity_maps2" />
-        <activity
             android:name=".Maps1Activity"
             android:exported="false"
-            android:label="@string/title_activity_maps1" />
-=======
-            android:name=".EloMapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_elo_maps" />
->>>>>>> 86ff5ec9baad9897d02c4692cb709f40b92a4649
+             />
         <activity
             android:name=".MainActivity"
             android:exported="true">
