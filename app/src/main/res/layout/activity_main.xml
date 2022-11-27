@@ -70,8 +70,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="50dp"
                 android:layout_marginTop="20dp"
+                android:fontFamily="@font/NunitoBlack"
+                android:textSize="15dp"
                 android:text="@string/home_message" />
         </LinearLayout>
         <LinearLayout
@@ -100,6 +102,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_primary"
                 android:onClick="onClick"
+                android:fontFamily="@font/Hobeaux"
+                android:textSize="25dp"
                 android:text="@string/play_message" />
         </LinearLayout>
     </LinearLayout>

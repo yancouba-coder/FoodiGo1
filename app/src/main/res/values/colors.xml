@@ -6,6 +6,16 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
     <color name="primary">#1A8C0F</color>
+    <color name="secondary">#01B5EA</color>
+    <color name="tertiary">#F0C513</color>
+    <color name="primaryLight">#61AD58</color>
+    <color name="secndaryLight">#A6E7FB</color>
+    <color name="greenPepslight">#D3F5E4</color>
+    <color name="greenPeps">#2CD688</color>
+    <color name="greyDark">#515151</color>
+    <color name="greyLight">#B4B4B4</color>
+    <color name="white">#FFFFFFFF</color>
+
 </resources>
