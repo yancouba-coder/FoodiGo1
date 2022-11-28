@@ -34,13 +34,19 @@
             android:id="@+id/imalogomap1"
             android:layout_height="70dp"
             app:srcCompat="@drawable/logov2" />
+
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:background="@drawable/rounded_corner"
+                android:fontFamily="@font/style5"
+                android:gravity="center"
                 android:padding="5dp"
-            android:text="200XP" />
+                android:layout_marginTop="5dp"
+                android:text="@string/score_initial"
+                android:textColor="@color/secondary"
+                android:textSize="18sp"
+                />
 
 
         </LinearLayout>
@@ -48,12 +54,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+
             android:gravity="end" >
             <ImageView
+                android:id="@+id/menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-
+                android:padding="10dp"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/menu" />
         </LinearLayout>
 
@@ -69,12 +77,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginHorizontal="50dp"
                 android:layout_marginTop="20dp"
-                android:fontFamily="@font/NunitoBlack"
-                android:textSize="15dp"
-                android:text="@string/home_message" />
+                android:fontFamily="@font/style4"
+                android:textColor="@color/style4"
+                android:gravity="center"
+                android:text="@string/home_message"
+                android:textSize="@dimen/style4" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,18 +102,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="100dp"
-
             android:orientation="vertical">
 
             <Button
                 android:id="@+id/play"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_primary"
+                android:layout_marginTop="20dp"
                 android:onClick="onClick"
-                android:fontFamily="@font/Hobeaux"
-                android:textSize="25dp"
-                android:text="@string/play_message" />
+                android:padding="10dp"
+
+                android:text="@string/play_message"
+
+                android:textColor="@color/style1"
+                android:fontFamily="@font/style1"
+                android:textSize="@dimen/style1"
+
+                app:cornerRadius="@dimen/cornerRadius"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="@dimen/stroke" />
+
         </LinearLayout>
     </LinearLayout>
 

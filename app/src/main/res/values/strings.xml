@@ -3,8 +3,9 @@
 
     <string name="title_activity_maps1">Maps1Activity</string>
 
-    <string name="home_message">Arriverez vous à retrouver tous les aliments sur la care ?</string>
+    <string name="home_message">Arriverez vous à retrouver tous les foodies sur la cartte ?</string>
     <string name="play_message">JOUER</string>
     <string name="findFoodi">Repére une foodie sur la carte et pars à sa recherche </string>
+    <string name="score_initial">0XP</string>
     >>>>>>> 86ff5ec9baad9897d02c4692cb709f40b92a4649
 </resources>
