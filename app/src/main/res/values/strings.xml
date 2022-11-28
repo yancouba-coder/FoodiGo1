@@ -7,5 +7,16 @@
     <string name="play_message">JOUER</string>
     <string name="findFoodi">Repére une foodie sur la carte et pars à sa recherche </string>
     <string name="score_initial">0XP</string>
+    <string name="title_activity_menu">menuActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
     >>>>>>> 86ff5ec9baad9897d02c4692cb709f40b92a4649
 </resources>
