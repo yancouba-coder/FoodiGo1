@@ -3,6 +3,5 @@
     <font
         android:font="@font/hobeaux_"
         android:fontStyle="normal"
-        android:textSize="30sp"
-        android:textColor="@color/white" />
+         />
 </font-family>

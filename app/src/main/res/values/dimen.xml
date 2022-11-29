@@ -3,13 +3,14 @@
     <dimen name="style1">25sp</dimen>
     <dimen name="style2">20sp</dimen>
     <dimen name="style3">20sp</dimen>
-    <dimen name="style4">20sp</dimen>
+    <dimen name="style4">25sp</dimen>
     <dimen name="style5">15sp</dimen>
     <dimen name="style6">12sp</dimen>
     <dimen name="style7">10sp</dimen>
 
     <dimen name="cornerRadius">50dp</dimen>
     <dimen name="stroke">3dp</dimen>
+
 
 
 </resources>
