@@ -87,9 +87,10 @@
             android:text="Carte"></TextView>
            <TextView
                android:layout_width="0dp"
+               android:layout_weight="1"
+
                android:layout_height="wrap_content"
                android:gravity="end"
-              android:layout_weight="1"
 
                android:text="ABC">
 
