@@ -87,9 +87,10 @@
             android:text="Carte"></TextView>
            <TextView
                android:layout_width="0dp"
+               android:layout_weight="1"
+
                android:layout_height="wrap_content"
                android:gravity="end"
-              android:layout_weight="1"
 
                android:text="ABC">
 
@@ -97,16 +98,18 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="460dp"
         android:orientation="horizontal"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:id="@+id/fragCarte"
 
         android:background="@drawable/rounded_corner">
 
-    </LinearLayout>
+    </FrameLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
