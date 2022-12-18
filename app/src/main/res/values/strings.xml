@@ -6,5 +6,7 @@
     <string name="home_message">Arriverez vous à retrouver tous les aliments sur la care ?</string>
     <string name="play_message">JOUER</string>
     <string name="findFoodi">Repére une foodie sur la carte et pars à sa recherche </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     >>>>>>> 86ff5ec9baad9897d02c4692cb709f40b92a4649
 </resources>
