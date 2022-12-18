@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         System.out.println("le jeu commence");
         Intent menu = new Intent(this, MenuActivity.class);
 
-
+//comment
         System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
         menu.putExtra("callBy",this.getLocalClassName());
         startActivity(menu);
