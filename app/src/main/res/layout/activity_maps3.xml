@@ -104,9 +104,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:id="@+id/fragCarte"
-
-        android:background="@drawable/rounded_corner">
+        android:id="@+id/fragCarte">
 
     </FrameLayout>
 
