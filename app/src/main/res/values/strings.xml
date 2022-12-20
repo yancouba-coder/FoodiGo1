@@ -5,7 +5,7 @@
 
     <string name="home_message">Arriverez vous à retrouver tous les foodies sur la cartte ?</string>
     <string name="play_message">JOUER</string>
-    <string name="findFoodi">Repére une foodie sur la carte et pars à sa recherche </string>
+    <string name="findFoodi">Repére une foodie sur la carte et pars à sa recherche pour la prendre en photo </string>
 
     <string name="score_initial">0 XP</string>
     <string name="title_activity_menu">menuActivity</string>

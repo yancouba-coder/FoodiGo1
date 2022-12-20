@@ -37,6 +37,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"
+            android:backgroundTint="@color/transparentWhite"
             android:gravity="center"
             android:padding="5dp"
             android:text="200XP"
@@ -61,40 +62,65 @@
 
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:gravity="start"
+        android:gravity="center_vertical"
        android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:orientation="horizontal">
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="ABC"
             android:layout_weight="1"
-            android:textColor="@color/black"
+            android:gravity="center_vertical"
             >
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                app:srcCompat="@drawable/arrow_left_black"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                >
+            </ImageView>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                app:srcCompat="@drawable/grid_ico_black"
+                android:layout_weight="2"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/black"
+                >
+            </ImageView>
 
-        </TextView>
+        </LinearLayout>
+
+
 
         <TextView
             android:id="@+id/carte"
             android:layout_width="0dp"
             android:gravity="center"
-           android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:text="Carte"></TextView>
-           <TextView
+            android:text="Carte"
+            android:background="@drawable/rounded_corner"
+            android:backgroundTint="@color/transparentWhite"
+            app:cornerRadius="@dimen/cornerRadius"
+            android:layout_marginBottom="3dp"
+            android:textColor="@color/style4"
+            android:fontFamily="@font/style4"
+            android:textSize="@dimen/style4"
+            ></TextView>
+           <ImageView
                android:layout_width="0dp"
                android:layout_weight="1"
-
                android:layout_height="wrap_content"
                android:gravity="end"
+               app:srcCompat="@drawable/photo_ico_black">
 
-               android:text="ABC">
-
-           </TextView>
+           </ImageView>
 
     </LinearLayout>
 
@@ -102,8 +128,8 @@
         android:layout_width="match_parent"
         android:layout_height="460dp"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:id="@+id/fragCarte">
 
     </FrameLayout>
@@ -112,8 +138,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/findFoodi"
+        android:textColor="@color/style6"
+        android:fontFamily="@font/style6"
+        android:textSize="@dimen/style6"
         android:layout_marginLeft="23dp"
-        android:layout_marginRight="23dp">
+
+        android:textAlignment="center"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="40dp"
+       >
 
     </TextView>
 
@@ -122,56 +155,67 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+
         android:orientation="horizontal">
-        <TextView
+        <ImageView
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_corner"
-            android:layout_weight="1">
+            app:srcCompat="@drawable/ananas_black">
 
-        </TextView>
-        <TextView
+        </ImageView>
+
+        <ImageView
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_corner"
-            android:layout_weight="1">
+            app:srcCompat="@drawable/avocat_black">
 
-        </TextView>
-        <TextView
+        </ImageView>
+
+        <ImageView
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_corner"
-            android:layout_weight="1">
+            app:srcCompat="@drawable/banane_black">
 
-        </TextView>
-        <TextView
+        </ImageView>
+
+        <ImageView
             android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:background="@drawable/rounded_corner"
+            android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner"
+            app:srcCompat="@drawable/pasteque_black">
 
-        </TextView>
-        <TextView
+        </ImageView>
+
+        <ImageView
             android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:background="@drawable/rounded_corner"
+            android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner"
+            app:srcCompat="@drawable/mangue_black">
 
-        </TextView>
-        <TextView
+        </ImageView>
+
+        <ImageView
             android:layout_width="0dp"
+            android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
-            android:layout_height="60dp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_corner"
-            android:layout_weight="1">
+            app:srcCompat="@drawable/pommes_black">
 
-        </TextView>
+        </ImageView>
     </LinearLayout>
 
 </LinearLayout>
