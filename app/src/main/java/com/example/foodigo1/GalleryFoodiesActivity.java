@@ -8,11 +8,15 @@ public class GalleryFoodiesActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, UIComponentForGallery.class, null)
-                    .commit();
-        }
+            /*setContentView(R.layout.activity_gallery_foodies);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view1, new UIComponentForGallery()).commit();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view2, new UIComponentForGallery()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view3, new UIComponentForGallery()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view4, new UIComponentForGallery()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view5, new UIComponentForGallery()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view6, new UIComponentForGallery()).commit();
+*/
+
     }
 }

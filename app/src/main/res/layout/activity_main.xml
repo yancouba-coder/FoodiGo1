@@ -13,10 +13,7 @@
         >
 
 
-
-
-
-    <LinearLayout
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -100,17 +97,17 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="100dp"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <Button
                 android:id="@+id/play"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:onClick="onClick"
-                android:padding="10dp"
+                android:layout_gravity="center"
+                android:paddingHorizontal="50dp"
+                android:paddingVertical="10dp"
 
                 android:text="@string/play_message"
 
