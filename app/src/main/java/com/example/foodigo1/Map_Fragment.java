@@ -24,7 +24,7 @@ public class Map_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map_,container,false);
-        SupportMapFragment supportMapFragment= (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.MY_MAP);
+        SupportMapFragment supportMapFragment= (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {

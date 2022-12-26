@@ -41,7 +41,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 i = new Intent(this, GalleryFoodiesActivity.class);
                 break;
             case R.id.map:
-                i = new Intent(this, Maps1Activity.class);
+                i = new Intent(this, Maps3Activity.class);
                 break;
             case R.id.photos:
                 i = new Intent(this, GalleryPhotoActivity.class);
