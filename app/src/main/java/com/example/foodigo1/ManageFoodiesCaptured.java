@@ -10,9 +10,12 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class ManageFoodiesCaptured {
@@ -124,7 +127,55 @@ public class ManageFoodiesCaptured {
             return null;
         }
         // other methods and fields go here
+public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename) throws IOException {
+            //On ouvre le fichier captured.json en mode écriture
+            //On récupére tout le contenu du fichier JSON dans un HashMap
+    JSONObject capturedJSON = readJson("captured.json");
+    HashMap<String, Boolean> foodies = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
+    Boolean replace = foodies.replace(foodname, isCaptured);
 
+    if(replace){
+        System.out.println( foodname+" a été remplacé dans le Hashmap");
+        //On convertit le Hashmap en JSON object
+        Gson gson = new Gson();
+        String json = gson.toJson(foodies);
+        //Puis on reécrit tout le hashmap dans le JSON
+        writeToFile(filename, json);
+
+    }
+    else{
+        System.out.println(foodname + "n'a pas pu être remplacé");
+    }
+    }
+
+
+
+
+
+
+public static void WriteToFile(Context context, String filename, String str){
+    try{
+         FileOutputStream fos = context.openFileOutput(filename, context.MODE_PRIVATE);
+         fos.write(str.getBytes(StandardCharsets.UTF_8), 0, str.length());
+         fos.close();
+
+
+    }
+    catch (IOException e){
+        e.printStackTrace();
+    }
+
+
+}
+
+public void writeToFile(File f,String str) throws IOException{
+
+            FileOutputStream fos= new FileOutputStream(f);
+            fos.write(str.getBytes(StandardCharsets.UTF_8));
+            fos.close();
+
+
+}
 
         /*getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view1, new UIComponentForGallery()).commit();
 
@@ -214,7 +265,7 @@ public class ManageFoodiesCaptured {
                     }
                 }*/
     // ***************************** TROISIEME ESSAI
-    // Get an instance of the AssetManager
+    // Get an instance of the AssetManager//
         public JSONObject getJsonObject() throws JSONException {
             // tuto :
             // https://medium.com/@nayantala259/android-how-to-read-and-write-parse-data-from-json-file-226f821e957a
