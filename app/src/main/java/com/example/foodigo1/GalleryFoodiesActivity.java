@@ -1,11 +1,15 @@
 package com.example.foodigo1;
 
+import static com.google.android.material.internal.ContextUtils.getActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.security.identity.CipherSuiteNotSupportedException;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -28,7 +32,7 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery_foodies);
         manager.displayCapturedFoodie(this);
-        manager.readJson("captured.json");
+
     }
 
 
@@ -40,27 +44,16 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
 
         switch (view.getId()) {
             case (R.id.play):
-                try {
-                    manager.writeJSON(manager.getJsonObject(), "captured.json");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
+                Intent gallery = new Intent(this, GalleryFoodiesActivity.class);
+                startActivity(gallery);
 
             case(R.id.home):
                 Intent main = new Intent(this, MainActivity.class);
-                System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
-                main.putExtra("callBy",this.getLocalClassName());
                 startActivity(main);
-                break;
 
                 //Affichage du menu
             case (R.id.menu):
                 Intent menu = new Intent(this, MenuActivity.class);
-                System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
-                menu.putExtra("callBy",this.getLocalClassName());
                 startActivity(menu);
                 break;
 

@@ -42,4 +42,6 @@
     <string name="messageFoodieGallery">Capture les Foodies sur la carte et collectionne leur photo pour gagner des points !</string>
 
 
+    <string name="nameOfPreferencesFile">capturedFoodie</string>
+
 </resources>
