@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="ananasXP">100</integer>
+    <integer name="avocatXP">100</integer>
+    <integer name="bananeXP">200</integer>
+    <integer name="pastequeXP">200</integer>
+    <integer name="mangueXP">300</integer>
+    <integer name="pommesXP">300</integer>
+
+</resources>

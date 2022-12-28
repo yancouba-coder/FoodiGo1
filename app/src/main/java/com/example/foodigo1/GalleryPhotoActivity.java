@@ -16,6 +16,33 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void onClick(View view) {
-        startActivity(new Intent(this, MenuActivity.class));
+        switch (view.getId()) {
+            case (R.id.menu):
+                Intent menu = new Intent(this, MenuActivity.class);
+                System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
+                menu.putExtra("callBy",this.getLocalClassName());
+                startActivity(menu);
+                break;
+
+            case(R.id.home):
+                Intent main = new Intent(this, MainActivity.class);
+                System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
+                main.putExtra("callBy",this.getLocalClassName());
+                startActivity(main);
+                break;
+
+            case(R.id.back):
+                if (view.getParent() != null) {
+                    //on redirige vers l'activité qui appelle
+                    finish();
+
+                }else{
+                    //si on a perdu le prent on redirige vers l'acceuil
+                    startActivity(new Intent(this, MainActivity.class));
+                }
+                //revenir sur l'activité appelante'
+                break;
+
+        }
     }
 }
