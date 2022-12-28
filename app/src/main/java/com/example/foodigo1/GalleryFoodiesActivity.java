@@ -1,6 +1,6 @@
 package com.example.foodigo1;
 
-import static com.google.android.material.internal.ContextUtils.getActivity;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -48,8 +49,10 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
                 startActivity(gallery);
 
             case(R.id.home):
+
                 Intent main = new Intent(this, MainActivity.class);
                 startActivity(main);
+
 
                 //Affichage du menu
             case (R.id.menu):

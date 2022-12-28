@@ -84,7 +84,7 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="400dp"
             android:orientation="vertical"
             android:gravity="center">
 
@@ -95,31 +95,20 @@
                 android:layout_margin="20dp"
                 app:srcCompat="@drawable/glob2" />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="100dp"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/play"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:onClick="onClick"
-
-                android:padding="10dp"
-
-                android:text="@string/play_message"
-
-                android:textColor="@color/style1"
-                android:fontFamily="@font/style1"
-                android:textSize="@dimen/style1"
-
-                app:cornerRadius="@dimen/cornerRadius"
-                app:strokeColor="@color/primary"
-                app:strokeWidth="@dimen/stroke" />
-
-        </LinearLayout>
+    <Button
+        android:id="@+id/play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="onClick"
+        android:layout_marginHorizontal="100dp"
+        android:padding="10dp"
+        android:text="@string/play_message"
+        android:textColor="@color/style1"
+        android:fontFamily="@font/style1"
+        android:textSize="@dimen/style1"
+        app:cornerRadius="@dimen/cornerRadius"
+        app:strokeColor="@color/primary"
+        app:strokeWidth="@dimen/stroke" />
     </LinearLayout>
 
