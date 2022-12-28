@@ -14,7 +14,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(this);
+        manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
+        manager.writeToPreferences("avocat", true);
     }
 
     @Override

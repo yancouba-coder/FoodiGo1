@@ -15,6 +15,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_maps3);
         Fragment fragment= new Map_Fragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragCarte,fragment).commit();
+        ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(this);
+        manager.displayCapturedFoodieForMapsActivity(this);
     }
 
     @Override
