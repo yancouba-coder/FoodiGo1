@@ -1,5 +1,6 @@
 package com.example.foodigo1;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -15,6 +16,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -50,10 +52,21 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
                 break;
 
             case(R.id.home):
-                Intent main = new Intent(this, MainActivity.class);
+                /*Intent main = new Intent(this, MainActivity.class);
                 System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
                 main.putExtra("callBy",this.getLocalClassName());
                 startActivity(main);
+                /
+                 */
+               //filesdir= contextApp.getAssets();
+                AssetManager filesDir = getAssets();
+                File file = new File(String.valueOf(filesDir), "isCaptured.json");
+                try {
+                    manager.UdapteFoodInJson("ananas",true,file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                manager.displayCapturedFoodie(this);
                 break;
 
                 //Affichage du menu

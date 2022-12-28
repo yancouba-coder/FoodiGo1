@@ -2,8 +2,10 @@ package com.example.foodigo1;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -134,13 +136,15 @@ public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename
     HashMap<String, Boolean> foodies = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
     Boolean replace = foodies.replace(foodname, isCaptured);
 
-    if(replace){
+    if(replace!=null){
         System.out.println( foodname+" a été remplacé dans le Hashmap");
         //On convertit le Hashmap en JSON object
         Gson gson = new Gson();
         String json = gson.toJson(foodies);
+        System.out.println(json);
         //Puis on reécrit tout le hashmap dans le JSON
-        writeToFile(filename, json);
+
+        WriteToFile(contextApp, "captured.json", json);
 
     }
     else{
@@ -154,26 +158,34 @@ public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename
 
 
 public static void WriteToFile(Context context, String filename, String str){
-    try{
-         FileOutputStream fos = context.openFileOutput(filename, context.MODE_PRIVATE);
-         fos.write(str.getBytes(StandardCharsets.UTF_8), 0, str.length());
-         fos.close();
+    File file = contextApp.getFileStreamPath(filename);
+    if(!file.exists()) {
+        try {
 
+
+            FileOutputStream fos = context.openFileOutput(filename, context.MODE_PRIVATE);
+            fos.write(str.getBytes(StandardCharsets.UTF_8), 0, str.length());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
-    catch (IOException e){
-        e.printStackTrace();
+    else{
+        System.out.println("Le fichier n'existe pas");
+
+        System.out.println("Un nouveau fichier a été créé");
+
     }
-
-
 }
 
 public void writeToFile(File f,String str) throws IOException{
 
-            FileOutputStream fos= new FileOutputStream(f);
+
+            File ff=contextApp.getExternalFilesDir("captured.json");
+            FileOutputStream fos= new FileOutputStream(ff);
             fos.write(str.getBytes(StandardCharsets.UTF_8));
             fos.close();
-
 
 }
 
@@ -305,4 +317,6 @@ public void writeToFile(File f,String str) throws IOException{
         readJson("captured.json");*/
         System.out.println("*********************** writeJSON passed");
     }
+
+
 }

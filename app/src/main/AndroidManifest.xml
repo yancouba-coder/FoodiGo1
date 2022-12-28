@@ -19,8 +19,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDLZmI47uiO9nCsgqFNNQnDfz8P5FT-Yus" />
-
-
         <activity
             android:name=".GalleryPhotoActivity"
             android:exported="false">

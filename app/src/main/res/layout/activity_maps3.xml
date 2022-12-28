@@ -30,6 +30,7 @@
             android:id="@+id/logo"
             android:layout_width="200dp"
             android:layout_height="70dp"
+            android:onClick="onClick"
             app:srcCompat="@drawable/logov2" />
 
         <TextView
@@ -52,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:onClick="onClick"
             app:srcCompat="@drawable/menu" />
     </LinearLayout>
     </LinearLayout>
@@ -78,8 +80,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="left"
+                android:id="@+id/arrow_left_black"
                 app:srcCompat="@drawable/arrow_left_black"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:textColor="@color/black"
                 >
             </ImageView>
@@ -87,6 +91,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="left"
+                android:onClick="onClick"
+                android:id="@+id/grid_ico_black"
                 app:srcCompat="@drawable/grid_ico_black"
                 android:layout_weight="2"
                 android:layout_marginRight="5dp"
@@ -118,6 +124,8 @@
                android:layout_weight="1"
                android:layout_height="wrap_content"
                android:gravity="end"
+               android:id="@+id/photo_ico_black"
+               android:onClick="onClick"
                app:srcCompat="@drawable/photo_ico_black">
 
            </ImageView>
@@ -162,6 +170,8 @@
             android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:id="@+id/ananas_black"
+            android:onClick="onClick"
             android:background="@drawable/rounded_corner"
             app:srcCompat="@drawable/ananas_black">
 
@@ -172,6 +182,8 @@
             android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:onClick="onClick"
+            android:id="@+id/avocat_black"
             android:background="@drawable/rounded_corner"
             app:srcCompat="@drawable/avocat_black">
 
@@ -182,6 +194,8 @@
             android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:onClick="onClick"
+            android:id="@+id/banane_black"
             android:background="@drawable/rounded_corner"
             app:srcCompat="@drawable/banane_black">
 
@@ -192,6 +206,8 @@
             android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:id="@+id/pasteque_black"
+            android:onClick="onClick"
             android:background="@drawable/rounded_corner"
             app:srcCompat="@drawable/pasteque_black">
 
@@ -202,6 +218,8 @@
             android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:id="@+id/mangue_black"
+            android:onClick="onClick"
             android:background="@drawable/rounded_corner"
             app:srcCompat="@drawable/mangue_black">
 
@@ -212,6 +230,9 @@
             android:layout_height="@dimen/HeightCard"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:id="@+id/pomme_black"
+
+            android:onClick="onClick"
             android:background="@drawable/rounded_corner"
             app:srcCompat="@drawable/pommes_black">
 
