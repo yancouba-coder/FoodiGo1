@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Food!Go</string>
+    <string name="hello_blank_fragment">Hello, Blank Fragment!</string>
 
     <string name="title_activity_maps1">Maps1Activity</string>
 
@@ -19,7 +21,25 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="ananasPoints">+100xp</string>
+    <string name="ananas">Ananas</string>
+
+    <string name="avocatPoints">+100xp</string>
+    <string name="avocat">Avocat</string>
+
+    <string name="bananePoints">+200xp</string>
+    <string name="banane">Banane</string>
+
+    <string name="pastequePoints">+200xp</string>
+    <string name="pasteque">Pastèque</string>
+
+    <string name="manguePoints">+300xp</string>
+    <string name="mangue">Mangue</string>
+
+    <string name="pommesPoints">+300xp</string>
+    <string name="pommes">Pommes</string>
+    <string name="messageFoodieGallery">Capture les Foodies sur la carte et collectionne leur photo pour gagner des points !</string>
+
 
 </resources>

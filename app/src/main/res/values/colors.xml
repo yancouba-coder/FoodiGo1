@@ -25,8 +25,8 @@
     <color name="style4">@color/primary</color>
     <color name="style5">@color/secondary</color>
     <color name="style6">@color/greyDark</color>
-    <color name="Style7">@color/primary</color>
+    <color name="style7">@color/primary</color>
     <color name="transparentWhite">#80FFFFFF</color>
 
-
+    <color name="secondary20">#2001B5EA</color>
 </resources>
