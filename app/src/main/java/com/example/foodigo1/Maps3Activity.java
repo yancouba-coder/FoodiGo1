@@ -1,14 +1,19 @@
 package com.example.foodigo1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
 public class Maps3Activity extends AppCompatActivity implements View.OnClickListener {
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     //Officiel Maps activity
+    private boolean mLocationPermissionGranted;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,4 +33,6 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+
 }
