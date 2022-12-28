@@ -47,6 +47,14 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
+
+            case(R.id.home):
+                Intent main = new Intent(this, MainActivity.class);
+                System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
+                main.putExtra("callBy",this.getLocalClassName());
+                startActivity(main);
+                break;
 
                 //Affichage du menu
             case (R.id.menu):
@@ -54,6 +62,7 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
                 System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
                 menu.putExtra("callBy",this.getLocalClassName());
                 startActivity(menu);
+                break;
 
                 //Affichage de l'image du fruit si elle existe
             case (R.id.ananasPicture):
@@ -65,6 +74,7 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
                 Intent photo = new Intent(this, GalleryPhotoActivity.class);
                 photo.putExtra("callBy",view.getId());
                 startActivity(photo);
+                break;
             default:
                 return;
         }
