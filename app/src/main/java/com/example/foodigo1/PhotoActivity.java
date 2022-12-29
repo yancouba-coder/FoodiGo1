@@ -133,7 +133,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         System.out.println("Path de la photto = " + photoFile.getPath());
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
-
+//TODO : modifier ouu effacer les lignes si dessus
     }
 
 
