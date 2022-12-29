@@ -12,7 +12,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
+        ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(this);
+        manager.updatePoints(this);
     }
 
     @Override

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/fond_menu"
+    android:background="@drawable/fond"
     tools:context=".GalleryFoodiesActivity">
 
     <!-- En tête  -->
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         android:baselineAligned="false">
 
@@ -32,16 +32,17 @@
                 app:srcCompat="@drawable/logov2" />
 
             <TextView
+                android:id="@+id/points"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner"
-                android:fontFamily="@font/style5"
                 android:gravity="center"
                 android:padding="5dp"
                 android:layout_marginTop="5dp"
+                android:fontFamily="@font/style5"
+                android:textColor="@color/style5"
+                android:textSize="@dimen/style5"
                 android:text="@string/score_initial"
-                android:textColor="@color/secondary"
-                android:textSize="18sp"
                 />
 
 
@@ -83,7 +84,7 @@
         android:onClick="onClick"
         android:orientation="horizontal"
         android:paddingHorizontal="5dp"
-        android:paddingVertical="5dp">
+        android:paddingVertical="2dp">
 
         <TextView
             android:layout_width="wrap_content"

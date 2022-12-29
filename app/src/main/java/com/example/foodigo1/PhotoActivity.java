@@ -42,7 +42,8 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
         photoFoodieCaptured = findViewById(R.id.photoFoodieCaptured);
-
+        ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(this);
+        manager.updatePoints(this);
 
 
         // Déclaration de l'objet ActivityResultContract

@@ -43,5 +43,6 @@
 
 
     <string name="nameOfPreferencesFile">capturedFoodie</string>
+    <string name="nameOfPointsSysteme">pointsSysteme</string>
 
 </resources>

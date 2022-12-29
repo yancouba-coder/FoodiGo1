@@ -33,7 +33,7 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery_foodies);
         manager.displayCapturedFoodie(this);
-
+        manager.updatePoints(this); //mise à jour des points
     }
 
 
