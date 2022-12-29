@@ -45,8 +45,8 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
 
         switch (view.getId()) {
             case (R.id.play):
-                Intent gallery = new Intent(this, GalleryFoodiesActivity.class);
-                startActivity(gallery);
+                Intent map = new Intent(this, Maps3Activity.class);
+                startActivity(map);
 
             case(R.id.home):
 

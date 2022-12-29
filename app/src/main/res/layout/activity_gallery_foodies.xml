@@ -29,7 +29,6 @@
                 android:id="@+id/home"
                 android:onClick="onClick"
                 android:layout_height="70dp"
-                android:onClick="onClick"
                 app:srcCompat="@drawable/logov2" />
 
             <TextView

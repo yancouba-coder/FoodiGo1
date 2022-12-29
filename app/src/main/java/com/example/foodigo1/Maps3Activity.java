@@ -29,8 +29,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         switch (view.getId()){
             case R.id.arrow_left_black:
             case R.id.grid_ico_black:
-                Intent menu = new Intent(this, MenuActivity.class);
-                startActivity(menu);
+                Intent gallery = new Intent(this, GalleryFoodiesActivity.class);
+                startActivity(gallery);
             default:
                 break;
         }

@@ -107,6 +107,7 @@ public class ManageFoodiesCaptured {
         public void displayPhotoFoodieCaptured(GalleryPhotoActivity photoActivity, String nameInJson, int idImageView){
             ImageView iv = photoActivity.findViewById(idImageView);
             int idDeLImageDansLeStockage = 1;
+            //TODO : à modifier
             iv.setImageResource(idDeLImageDansLeStockage);
         }
         //Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
@@ -175,28 +176,30 @@ public class ManageFoodiesCaptured {
             showThePrefrerencesInConsole("removeAPreference : ");
         }
 
-public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename) throws IOException {
-            //On ouvre le fichier captured.json en mode écriture
-            //On récupére tout le contenu du fichier JSON dans un HashMap
-    JSONObject capturedJSON = readJson("captured.json");
-    HashMap<String, Boolean> foodies = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
-    Boolean replace = foodies.replace(foodname, isCaptured);
 
-    if(replace!=null){
-        System.out.println( foodname+" a été remplacé dans le Hashmap");
-        //On convertit le Hashmap en JSON object
-        Gson gson = new Gson();
-        String json = gson.toJson(foodies);
-        System.out.println(json);
-        //Puis on reécrit tout le hashmap dans le JSON
+        /*
+        public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename) throws IOException {
+                    //On ouvre le fichier captured.json en mode écriture
+                    //On récupére tout le contenu du fichier JSON dans un HashMap
+            JSONObject capturedJSON = readJson("captured.json");
+            HashMap<String, Boolean> foodies = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
+            Boolean replace = foodies.replace(foodname, isCaptured);
 
-        WriteToFile(contextApp, "captured.json", json);
+            if(replace!=null){
+                System.out.println( foodname+" a été remplacé dans le Hashmap");
+                //On convertit le Hashmap en JSON object
+                Gson gson = new Gson();
+                String json = gson.toJson(foodies);
+                System.out.println(json);
+                //Puis on reécrit tout le hashmap dans le JSON
 
-    }
-    else{
-        System.out.println(foodname + "n'a pas pu être remplacé");
-    }
-    }
+                //WriteToFile(contextApp, "captured.json", json);
+
+            }
+            else{
+                System.out.println(foodname + "n'a pas pu être remplacé");
+            }
+            }*/
 
 
 
@@ -231,7 +234,6 @@ public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename
         public void reInitPreferences(){
             SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
             clearAllPreference();
-            removeAPreference("test");
             initPreferences();
             showThePrefrerencesInConsole("reInitPreferences");
 
