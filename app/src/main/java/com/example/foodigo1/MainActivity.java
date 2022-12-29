@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(this);
         manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
         manager.writeToPreferences("avocat", true);
+        manager.updatePoints(this);
     }
 
     @Override

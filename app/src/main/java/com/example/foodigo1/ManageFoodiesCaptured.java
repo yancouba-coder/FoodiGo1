@@ -7,12 +7,14 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 
 import java.io.File;
@@ -32,6 +34,9 @@ public class ManageFoodiesCaptured {
             // private constructor to prevent external instantiation
         }
 
+        /*
+        Cette classe est uun singleton istancée par getInstnce() par le reste de l'application
+         */
         public static ManageFoodiesCaptured getInstance(Context context) {
             if (instance == null) {
                 instance = new ManageFoodiesCaptured();
@@ -39,6 +44,7 @@ public class ManageFoodiesCaptured {
             }
             return instance;
         }
+
         //Run the display methods to change color
         public void displayCapturedFoodie(GalleryFoodiesActivity gallery){
             displayCheckBox(gallery,"ananas", R.id.ananasCheck);
@@ -64,6 +70,9 @@ public class ManageFoodiesCaptured {
 
         }
 
+        /*
+        Affiche le foodie en couleur si il a été capturé sinon en gris dans MapsActivity
+         */
         public void displayCapturedFoodieForMapsActivity(Maps3Activity activity){
             displayImageFoodie(activity,"ananas",R.id.ananasImage,R.drawable.ananas,R.drawable.ananas_black);
             displayImageFoodie(activity,"avocat",R.id.avocatImage,R.drawable.avocat,R.drawable.avocat_black);
@@ -104,12 +113,17 @@ public class ManageFoodiesCaptured {
             }
         }
 
+        /*
+
+         */
         public void displayPhotoFoodieCaptured(GalleryPhotoActivity photoActivity, String nameInJson, int idImageView){
             ImageView iv = photoActivity.findViewById(idImageView);
             int idDeLImageDansLeStockage = 1;
             //TODO : à modifier
             iv.setImageResource(idDeLImageDansLeStockage);
         }
+
+
         //Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
         private Boolean OLDisCaptured(String foodie) throws Exception {
             //OLD method, actually not used
@@ -123,6 +137,10 @@ public class ManageFoodiesCaptured {
             }
         }
 
+
+        /*
+        Permet de lire les informations contenues dans un fichier JSON
+         */
         public JSONObject readJson(String filename){
 
             AssetManager assetManager = contextApp.getAssets();
@@ -150,30 +168,43 @@ public class ManageFoodiesCaptured {
             }
             return null;
         }
-        // other methods and fields go here
 
+
+        /*
+        Permet d'enregistrer la capture d'un foodie dans les préférences
+         */
         public void writeToPreferences(String name, Boolean valueToSave){
             SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(name, valueToSave);
             editor.apply();
-            showThePrefrerencesInConsole("writeToPreferences : ");
+            showThePrefrerencesInConsole("writeToPreferences : ", R.string.nameOfPreferencesFile);
         }
+
+
+        /*
+        Supprime toutes les préférences
+         */
         private void clearAllPreference(){
             //Supprimer toutes les valeurs
             SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.clear();
             editor.apply();
-            showThePrefrerencesInConsole("clearAllPreference : ");
+            showThePrefrerencesInConsole("clearAllPreference : ", R.string.nameOfPreferencesFile);
         }
+
+
+        /*
+        Retire une préference de la liste "capturedFoodie"
+         */
         public void removeAPreference(String name){
             //Supprime une seule valeur
             SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.remove(name);
             editor.apply();
-            showThePrefrerencesInConsole("removeAPreference : ");
+            showThePrefrerencesInConsole("removeAPreference : ", R.string.nameOfPreferencesFile);
         }
 
 
@@ -204,13 +235,18 @@ public class ManageFoodiesCaptured {
 
 
 
-
-        public void showThePrefrerencesInConsole(String strBefore){
-            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
+        /*
+        Affiche la lise des variables enregistrées dans les préférences dans la console
+         */
+        public void showThePrefrerencesInConsole(String strBefore, int nameOfPreferencce){
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(nameOfPreferencce),Context.MODE_PRIVATE);
             System.out.println(strBefore + sharedPref.getAll().toString());
         }
 
 
+        /*
+        Retourne un booléan indiquant si le foodie a déjà été capturé
+         */
         public Boolean isCaptured(String name){
             SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
             Boolean result = sharedPref.getBoolean(name,false);
@@ -218,7 +254,9 @@ public class ManageFoodiesCaptured {
         }
 
 
-
+        /*
+        Initialise "captureFoodie" avec les valers à false, soir les foodies n'ont pas encore été capturé.
+         */
         public void initPreferences(){
             SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
             if (!sharedPref.contains("ananas")){writeToPreferences("ananas",false);}
@@ -227,19 +265,81 @@ public class ManageFoodiesCaptured {
             if (!sharedPref.contains("pasteque")){writeToPreferences("pasteque",false);}
             if (!sharedPref.contains("mangue")){writeToPreferences("mangue",false);}
             if (!sharedPref.contains("pommes")){writeToPreferences("pommes",false);}
-            showThePrefrerencesInConsole("initPreferences");
+
+            showThePrefrerencesInConsole("initPreferences", R.string.nameOfPreferencesFile);
         }
 
 
+        /*
+        Permet de réinitialiser les préférences du jeu à l'état initial
+         */
         public void reInitPreferences(){
             SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
             clearAllPreference();
             initPreferences();
-            showThePrefrerencesInConsole("reInitPreferences");
+            showThePrefrerencesInConsole("reInitPreferences", R.string.nameOfPreferencesFile);
 
         }
 
+        /*
+        Permet d'enregistrer la capture d'un foodie
+         */
+        public void newFoodieCaptured(String foodieName){
+            writeToPreferences(foodieName,true);
+            addVictoryToPoints(getPointOfFoodie(foodieName));
+        }
 
 
+        /*
+        Met à jour l'affichage du score dans les vues
+         */
+        public void updatePoints(Activity activity){
+            TextView pointsView = activity.findViewById(R.id.points);
+            pointsView.setText(getPoints() + " XP");
+        }
 
+        /*
+        Retourne le score en cours du joueur
+         */
+        public int getPoints(){
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPointsSysteme),Context.MODE_PRIVATE);
+            return sharedPref.getInt("points",0);
+        }
+
+        /*
+        Modifie les points dans les preferences du jeu lors d'une victoire
+         */
+        private void addVictoryToPoints(int points) {
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPointsSysteme),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            int newPoints = sharedPref.getInt("points",0) + points;
+            editor.putInt("points", newPoints);
+            editor.apply();
+            showThePrefrerencesInConsole("writeToPreferences : ", R.string.nameOfPointsSysteme);
+        }
+
+
+        /*
+        Retourne le nombre de points que rapporte un foodie une fois capturés
+         */
+        private int getPointOfFoodie(String foodieName) {
+            switch (foodieName){
+                case "ananas":
+                    return R.integer.ananasXP;
+                case "avocat":
+                    return R.integer.avocatXP;
+                case "banane":
+                    return R.integer.bananeXP;
+                case "pasteque":
+                    return R.integer.pastequeXP;
+                case "mangue":
+                    return R.integer.mangueXP;
+                case "pommes":
+                    return R.integer.pommesXP;
+                default:
+                    System.out.println("getPointOfFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
+                    return 0 ;
+
+            }
+        }
 }

@@ -22,18 +22,31 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         getSupportFragmentManager().beginTransaction().replace(R.id.fragCarte,fragment).commit();
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(this);
         manager.displayCapturedFoodieForMapsActivity(this);
+        manager.updatePoints(this);
     }
 
     @Override
     public void onClick(View view) {
+        Intent i = null;
         switch (view.getId()){
+
+            case R.id.menu:
+                 i = new Intent(this, MenuActivity.class);
+
+            case R.id.photo_ico_black:
+                 i = new Intent(this, PhotoActivity.class);
+
             case R.id.arrow_left_black:
             case R.id.grid_ico_black:
-                Intent gallery = new Intent(this, GalleryFoodiesActivity.class);
-                startActivity(gallery);
+                i = new Intent(this, GalleryFoodiesActivity.class);
+
+            case R.id.home:
+                i = new Intent(this, MainActivity.class);
             default:
                 break;
+
         }
+        if (i !=null) startActivity(i);
     }
 
 
