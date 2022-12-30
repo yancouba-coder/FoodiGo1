@@ -150,6 +150,7 @@
         android:fontFamily="@font/style6"
         android:textSize="@dimen/style6"
         android:layout_marginLeft="23dp"
+        android:id="@+id/textviewR"
 
         android:textAlignment="center"
         android:paddingVertical="5dp"

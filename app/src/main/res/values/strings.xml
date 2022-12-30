@@ -40,6 +40,8 @@
     <string name="pommesPoints">+300xp</string>
     <string name="pommes">Pommes</string>
     <string name="messageFoodieGallery">Capture les Foodies sur la carte et collectionne leur photo pour gagner des points !</string>
+    <string name="default_info_title">Sydney</string>
+    <string name="default_info_snippet">Coucou ici c est Sydney</string>
 
 
 </resources>

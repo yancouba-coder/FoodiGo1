@@ -2,10 +2,8 @@ package com.example.foodigo1;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 

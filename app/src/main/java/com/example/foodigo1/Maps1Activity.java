@@ -2,7 +2,12 @@ package com.example.foodigo1;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +21,41 @@ public class Maps1Activity extends FragmentActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private ActivityMaps1Binding binding;
+    /**************************CONNECTION AU SERVICE DE LOCATION*********************************/
+    private LocationService mLocationService;
+    private boolean mBound = false;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+            mLocationService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, LocationService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+    /*******************************************************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,5 +86,6 @@ public class Maps1Activity extends FragmentActivity implements OnMapReadyCallbac
         LatLng mapFrance= new LatLng(46.227638, 2.213749);
         mMap.addMarker(new MarkerOptions().position(mapFrance).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapFrance));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapFrance, 12.0f));
     }
 }
