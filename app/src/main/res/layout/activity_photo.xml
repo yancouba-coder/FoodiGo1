@@ -144,7 +144,7 @@
 
                 android:padding="10dp"
 
-                android:text="prendre photo"
+                android:text="retour"
 
                 android:textColor="@color/style1"
                 android:fontFamily="@font/style1"

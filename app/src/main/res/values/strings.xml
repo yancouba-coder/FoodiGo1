@@ -5,7 +5,7 @@
 
     <string name="title_activity_maps1">Maps1Activity</string>
 
-    <string name="home_message">Arriverez vous à retrouver tous les foodies sur la cartte ?</string>
+    <string name="home_message">Arriverez vous à retrouver tous les foodies sur la carte ?</string>
     <string name="play_message">JOUER</string>
     <string name="findFoodi">Repére une foodie sur la carte et pars à sa recherche pour la prendre en photo </string>
 
@@ -44,5 +44,12 @@
 
     <string name="nameOfPreferencesFile">capturedFoodie</string>
     <string name="nameOfPointsSysteme">pointsSysteme</string>
+    <string name="nameOfAbsolutePathPreference">absolutePathReferences</string>
+    <string name="messageErrorFoodieNotcaptured">\"Ce foodie n\'a pas encore été capturé. Capture le d\'abord! \"</string>
+    <string name="replay_message">REJOUER</string>
+    <string name="replayQuestion">On rejoue ?</string>
+    <string name="congratMessage">Bravo !</string>
+    <string name="congratMessagePartTwo">Tu as attrapé tout les foodies, tu peux être fier de toi !</string>
+    <string name="replayMessage">Le jeu a été réinitialisé, tu peux désormais rejouer !</string>
 
 </resources>

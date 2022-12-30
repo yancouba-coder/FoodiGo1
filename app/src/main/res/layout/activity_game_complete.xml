@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/fond"
+    tools:context=".GameCompleteActivity">
+
+    <!-- En tête  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="200dp"
+                android:id="@+id/home"
+                android:onClick="onClick"
+                android:layout_height="70dp"
+                app:srcCompat="@drawable/logov2" />
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/style5"
+                android:textColor="@color/style5"
+                android:textSize="@dimen/style5"
+                android:text="@string/score_initial"
+                />
+
+
+        </LinearLayout>
+
+        <!-- Menu  -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+
+            android:gravity="end" >
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/menu" />
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/confetti_up" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/tertiary"
+        android:fontFamily="@font/style1"
+        android:textSize="@dimen/style1"
+        android:gravity="center"
+        android:text="@string/congratMessage" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/tertiary"
+        android:fontFamily="@font/style5"
+        android:textSize="@dimen/style5"
+        android:gravity="center"
+        android:text="@string/congratMessagePartTwo" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:srcCompat="@drawable/confetti_down" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/tertiary"
+        android:fontFamily="@font/style5"
+        android:textSize="@dimen/style5"
+        android:gravity="center"
+        android:text="@string/replayQuestion" />
+    <Button
+        android:id="@+id/replay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="100dp"
+        android:onClick="onClick"
+
+        android:padding="10dp"
+
+        android:text="@string/replay_message"
+
+        android:textColor="@color/style1"
+        android:fontFamily="@font/style1"
+        android:textSize="@dimen/style1"
+
+        app:cornerRadius="@dimen/cornerRadius"
+        app:strokeColor="@color/primary"
+        app:strokeWidth="@dimen/stroke" />
+
+
+</LinearLayout>
