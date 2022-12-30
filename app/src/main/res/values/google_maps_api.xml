@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    //TODO : l'utilisation de la variable génère un bug, l'inscription de la clé dans le manifeste sans la variable fonctionne mieux.
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAYOiKhNmUQ5wXkDV-8Y4VEIUu6sdQa1JY</string>
 </resources>

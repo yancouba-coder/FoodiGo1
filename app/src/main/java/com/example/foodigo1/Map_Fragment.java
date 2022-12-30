@@ -70,6 +70,15 @@ public class Map_Fragment extends Fragment {
         Intent intent = new Intent(getActivity(), LocationService.class);
         getActivity().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Délier le service de l'activité
+        if (mBound) {
+            getActivity().unbindService(mConnection);
+            mBound = false;
+        }
+    }
 
     @Override
     public void onStop() {
@@ -94,15 +103,16 @@ public class Map_Fragment extends Fragment {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 mMap = googleMap;
+
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
                     // Si les permissions de localisation ne sont pas accordées, demandez-les
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             REQUEST_CODE);
-                } else {
-
-
+                    System.out.println("****************************Demande d'autorisation");
+                }
                 if (!mBound) {
+                    System.out.println("****************************Initialisation du service");
                     // Lier le service à l'activité
                     Intent intent = new Intent(getActivity(), LocationService.class);
                     getActivity().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -138,7 +148,7 @@ public class Map_Fragment extends Fragment {
 
                 }
             }
-                }
+
 
 
         });

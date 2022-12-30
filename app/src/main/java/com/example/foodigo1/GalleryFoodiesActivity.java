@@ -1,15 +1,19 @@
 package com.example.foodigo1;
 
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.security.identity.CipherSuiteNotSupportedException;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -30,7 +34,7 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery_foodies);
         manager.displayCapturedFoodie(this);
-        manager.readJson("captured.json");
+        manager.updatePoints(this); //mise à jour des points
     }
 
 
@@ -39,57 +43,79 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View view) {
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
-
+        Intent photo = null;
         switch (view.getId()) {
             case (R.id.play):
-                try {
-                    manager.writeJSON(manager.getJsonObject(), "captured.json");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                Intent i = null;
+                if(manager.gameIsComplete()){
+                    i = new Intent(this, GameCompleteActivity.class);
+                } else{
+                    i = new Intent(this, Maps3Activity.class);
                 }
+                if(i!=null){startActivity(i);}
                 break;
-
             case(R.id.home):
-                /*Intent main = new Intent(this, MainActivity.class);
-                System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
-                main.putExtra("callBy",this.getLocalClassName());
+
+                Intent main = new Intent(this, MainActivity.class);
                 startActivity(main);
-                /
-                 */
-               //filesdir= contextApp.getAssets();
-                AssetManager filesDir = getAssets();
-                File file = new File(String.valueOf(filesDir), "isCaptured.json");
-                try {
-                    manager.UdapteFoodInJson("ananas",true,file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                manager.displayCapturedFoodie(this);
                 break;
 
                 //Affichage du menu
             case (R.id.menu):
                 Intent menu = new Intent(this, MenuActivity.class);
-                System.out.println("***************************** this.getLocalClassName() : " + this.getLocalClassName());
-                menu.putExtra("callBy",this.getLocalClassName());
                 startActivity(menu);
                 break;
 
                 //Affichage de l'image du fruit si elle existe
             case (R.id.ananasPicture):
+                if (!(manager.isCaptured("ananas"))){ //le foodie n'est pas capturé donc il n'a pas de photo
+                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
+                }else{ //le foodie doit avoir une photo
+                    photo = new Intent(this, GalleryPhotoActivity.class);
+                }
+                break;
             case(R.id.avocatPicture):
+                if (!(manager.isCaptured("avocat"))){ //le foodie n'est pas capturé donc il n'a pas de photo
+                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
+                }else{ //le foodie doit avoir une photo
+                    photo = new Intent(this, GalleryPhotoActivity.class);
+                }
+                break;
             case(R.id.bananePicture):
+                if (!(manager.isCaptured("banane"))){ //le foodie n'est pas capturé donc il n'a pas de photo
+                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
+                }else{ //le foodie doit avoir une photo
+                    photo = new Intent(this, GalleryPhotoActivity.class);
+                }
+                break;
             case(R.id.pastequePicture):
+                if (!(manager.isCaptured("pasteque"))){ //le foodie n'est pas capturé donc il n'a pas de photo
+                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
+                }else{ //le foodie doit avoir une photo
+                    photo = new Intent(this, GalleryPhotoActivity.class);
+                }
+                break;
             case(R.id.manguePicture):
+                if (!(manager.isCaptured("mangue"))){ //le foodie n'est pas capturé donc il n'a pas de photo
+                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
+                }else{ //le foodie doit avoir une photo
+                    photo = new Intent(this, GalleryPhotoActivity.class);
+                }
+                break;
             case(R.id.pommesPicture):
-                Intent photo = new Intent(this, GalleryPhotoActivity.class);
-                photo.putExtra("callBy",view.getId());
-                startActivity(photo);
+                if (!(manager.isCaptured("pommes"))){ //le foodie n'est pas capturé donc il n'a pas de photo
+                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
+                }else{ //le foodie doit avoir une photo
+                    photo = new Intent(this, GalleryPhotoActivity.class);
+                }
                 break;
             default:
                 return;
+
+        }
+        if(photo != null){
+            photo.putExtra("callBy",view.getId());
+            startActivity(photo);
         }
     }
 
