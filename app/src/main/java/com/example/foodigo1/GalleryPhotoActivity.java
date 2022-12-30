@@ -10,9 +10,9 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("onCreate() de GalleryPhotoActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery_photo);
-
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
         manager.updatePoints(this); //mise à jour des points
         displayPhotoInImageView(manager); //mise à jour de la photo en fonction du foodie appelant
@@ -29,6 +29,7 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
     Retrourne la photo qui correspond au foodie depuis lequel l'activité à été appelé
      */
     private void displayPhotoInImageView(ManageFoodiesCaptured manager) {
+        System.out.println("displayPhotoInImageView() de GalleryPhotoActivity");
         Intent i = getIntent();
         int callBy =  i.getExtras().getInt("callBy");
         System.out.println("callBy : " + callBy);

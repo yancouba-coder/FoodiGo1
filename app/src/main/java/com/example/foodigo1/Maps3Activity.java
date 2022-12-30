@@ -32,16 +32,17 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
             case R.id.menu:
                  i = new Intent(this, MenuActivity.class);
-
+                 break;
             case R.id.photo_ico_black:
                  i = new Intent(this, PhotoActivity.class);
-
+                 break;
             case R.id.arrow_left_black:
             case R.id.grid_ico_black:
                 i = new Intent(this, GalleryFoodiesActivity.class);
-
+                break;
             case R.id.home:
                 i = new Intent(this, MainActivity.class);
+                break;
             default:
                 break;
 

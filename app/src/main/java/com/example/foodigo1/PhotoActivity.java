@@ -73,9 +73,10 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         };
         // Enregistrement du callback pour obtenir le résultat de l'Activity de prise de photo
         ActivityResultLauncher<Void> launcher = registerForActivityResult(takePicture, callback);
-        findViewById(R.id.back).setOnClickListener(v -> launcher.launch(null));
+        launcher.launch(null);
+        //findViewById(R.id.back).setOnClickListener(v -> launcher.launch(null));
 
-    }
+     }
 
 
 
@@ -274,11 +275,15 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         System.out.println("End createImageFile");
         return image;
     }
+
+    /*
+    Affiche l'image prise dans l'imageView
+     */
     public void changeImage(File image){
-// Charger l'image depuis le chemin de fichier en utilisant la méthode decodeFile() de BitmapFactory
+        // Charger l'image depuis le chemin de fichier en utilisant la méthode decodeFile() de BitmapFactory
         Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
 
-// Afficher l'image dans l'ImageView
+        // Afficher l'image dans l'ImageView
         photoFoodieCaptured.setImageBitmap(bitmap);
         System.out.println("End changeImage");
 
@@ -287,6 +292,25 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         System.out.println("Begin onClick");
-        //takePicture();
+        // onCreate() ajoute le laucher en setOnClickListner
+        // ActivityResultLauncher<Void> launcher = registerForActivityResult(takePicture, callback);
+        // findViewById(R.id.back).setOnClickListener(v -> launcher.launch(null));
+
+        switch (view.getId()) {
+            case (R.id.menu): //menu
+                Intent menu = new Intent(this, MenuActivity.class);
+                startActivity(menu);
+                break;
+            case (R.id.back): //retour
+                if (view.getParent() != null) {
+                    //on redirige vers l'activité qui appelle
+                    finish();
+                } else {
+                    //si on a perdu le prent on redirige vers l'acceuil
+                    startActivity(new Intent(this, MainActivity.class));
+                }
+                //revenir sur l'activité appelante'
+                break;
+        }
     }
 }
