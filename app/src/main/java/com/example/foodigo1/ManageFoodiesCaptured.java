@@ -1,22 +1,24 @@
 package com.example.foodigo1;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class ManageFoodiesCaptured {
 
@@ -26,6 +28,9 @@ public class ManageFoodiesCaptured {
             // private constructor to prevent external instantiation
         }
 
+        /*
+        Cette classe est uun singleton istancée par getInstnce() par le reste de l'application
+         */
         public static ManageFoodiesCaptured getInstance(Context context) {
             if (instance == null) {
                 instance = new ManageFoodiesCaptured();
@@ -33,6 +38,7 @@ public class ManageFoodiesCaptured {
             }
             return instance;
         }
+
         //Run the display methods to change color
         public void displayCapturedFoodie(GalleryFoodiesActivity gallery){
             displayCheckBox(gallery,"ananas", R.id.ananasCheck);
@@ -58,10 +64,23 @@ public class ManageFoodiesCaptured {
 
         }
 
+        /*
+        Affiche le foodie en couleur si il a été capturé sinon en gris dans MapsActivity
+         */
+        public void displayCapturedFoodieForMapsActivity(Maps3Activity activity){
+            displayImageFoodie(activity,"ananas",R.id.ananasImage,R.drawable.ananas,R.drawable.ananas_black);
+            displayImageFoodie(activity,"avocat",R.id.avocatImage,R.drawable.avocat,R.drawable.avocat_black);
+            displayImageFoodie(activity,"banane",R.id.bananeImage,R.drawable.banane,R.drawable.banane_black);
+            displayImageFoodie(activity,"pasteque",R.id.pastequeImage,R.drawable.pasteque,R.drawable.pasteque_black);
+            displayImageFoodie(activity,"mangue",R.id.mangueImage,R.drawable.mangue,R.drawable.mangue_black);
+            displayImageFoodie(activity,"pommes",R.id.pommesImage,R.drawable.pommes,R.drawable.pommes_black);
+
+        }
+
         //Affiche l'icone de la photo en couleur si le foodie a été capturé sinon en nuance de gris
-        private void displayPicture(GalleryFoodiesActivity gallery, String nameInJson, int idImageView, int imageColor, int imageBlack){
+        private void displayPicture(Activity activity, String nameInJson, int idImageView, int imageColor, int imageBlack){
             try {
-                ImageView iw = gallery.findViewById(idImageView);
+                ImageView iw = activity.findViewById(idImageView);
                 if (isCaptured(nameInJson)){iw.setImageResource(imageColor); } else {iw.setImageResource(imageBlack);}
             } catch (Exception e) {
                 e.printStackTrace();
@@ -69,9 +88,9 @@ public class ManageFoodiesCaptured {
         }
 
         //Affiche l'image en couleur si il a été capturé sinon en nuance de gris
-        private void displayImageFoodie(GalleryFoodiesActivity gallery,String nameInJson, int idImageView, int imageColor, int imageBlack){
+        private void displayImageFoodie(Activity activity,String nameInJson, int idImageView, int imageColor, int imageBlack){
             try {
-                ImageView iw = gallery.findViewById(idImageView);
+                ImageView iw = activity.findViewById(idImageView);
                 if (isCaptured(nameInJson)){iw.setImageResource(imageColor); } else {iw.setImageResource(imageBlack);}
             } catch (Exception e) {
                 e.printStackTrace();
@@ -79,19 +98,33 @@ public class ManageFoodiesCaptured {
         }
 
         //affiche la checkBox du foodie si il a été capturé
-        private void displayCheckBox(GalleryFoodiesActivity gallery,String nameInJson, int idCheck) {
+        private void displayCheckBox(Activity activity,String nameInJson, int idCheck) {
             try {
-                ImageView iw = gallery.findViewById(idCheck);
+                ImageView iw = activity.findViewById(idCheck);
                 if (isCaptured(nameInJson)){ iw.setVisibility(View.VISIBLE); } else {iw.setVisibility(View.INVISIBLE);}
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        /*
+
+         */
+        public void displayPhotoFoodieCaptured(GalleryPhotoActivity photoActivity, String nameInJson, int idImageView){
+            return;
+            //ImageView iv = photoActivity.findViewById(idImageView);
+            //int idDeLImageDansLeStockage = 1;
+            //TODO : à modifier
+            //iv.setImageResource(idDeLImageDansLeStockage);
+        }
+
+
         //Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
-        private Boolean isCaptured(String foodie) throws Exception {
+        private Boolean OLDisCaptured(String foodie) throws Exception {
+            //OLD method, actually not used
             JSONObject capturedJSON = readJson("captured.json");
             HashMap<String, Boolean> captured = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
+
             if (captured.containsKey(foodie)){
                 return captured.get(foodie);
             }else{
@@ -99,6 +132,10 @@ public class ManageFoodiesCaptured {
             }
         }
 
+
+        /*
+        Permet de lire les informations contenues dans un fichier JSON
+         */
         public JSONObject readJson(String filename){
 
             AssetManager assetManager = contextApp.getAssets();
@@ -126,195 +163,264 @@ public class ManageFoodiesCaptured {
             }
             return null;
         }
-        // other methods and fields go here
-public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename) throws IOException {
-            //On ouvre le fichier captured.json en mode écriture
-            //On récupére tout le contenu du fichier JSON dans un HashMap
-    JSONObject capturedJSON = readJson("captured.json");
-    HashMap<String, Boolean> foodies = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
-    Boolean replace = foodies.replace(foodname, isCaptured);
-
-    if(replace!=null){
-        System.out.println( foodname+" a été remplacé dans le Hashmap");
-        //On convertit le Hashmap en JSON object
-        Gson gson = new Gson();
-        String json = gson.toJson(foodies);
-        System.out.println(json);
-        //Puis on reécrit tout le hashmap dans le JSON
-
-        WriteToFile(contextApp, "captured.json", json);
-
-    }
-    else{
-        System.out.println(foodname + "n'a pas pu être remplacé");
-    }
-    }
 
 
-
-
-
-
-public static void WriteToFile(Context context, String filename, String str){
-    File file = contextApp.getFileStreamPath(filename);
-    if(!file.exists()) {
-        try {
-
-
-            FileOutputStream fos = context.openFileOutput(filename, context.MODE_PRIVATE);
-            fos.write(str.getBytes(StandardCharsets.UTF_8), 0, str.length());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        /*
+        Permet d'enregistrer la capture d'un foodie dans les préférences
+         */
+        public void writeToPreferences(String name, Boolean valueToSave){
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(name, valueToSave);
+            editor.apply();
+            showThePrefrerencesInConsole("writeToPreferences : ", R.string.nameOfPreferencesFile);
         }
 
-    }
-    else{
-        System.out.println("Le fichier n'existe pas");
 
-        System.out.println("Un nouveau fichier a été créé");
-
-    }
-}
-
-public void writeToFile(File f,String str) throws IOException{
-
-
-            File ff=contextApp.getExternalFilesDir("captured.json");
-            FileOutputStream fos= new FileOutputStream(ff);
-            fos.write(str.getBytes(StandardCharsets.UTF_8));
-            fos.close();
-
-}
-
-        /*getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view1, new UIComponentForGallery()).commit();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view2, new UIComponentForGallery()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view3, new UIComponentForGallery()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view4, new UIComponentForGallery()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view5, new UIComponentForGallery()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view6, new UIComponentForGallery()).commit();
-*/
-
-
-        /*        Map<String, String> map = new HashMap<>();
-                map.put("key1", "value1");
-                map.put("key2", "value2");
-
-                Gson gson = new Gson();
-                 final int REQUEST_WRITE_STORAGE = 1;
-
-                String json = gson.toJson(map);
-                int permissionCheck = ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    // Permission is not granted, request it
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            REQUEST_WRITE_STORAGE);
-                } else {
-                    // Permission is already granted, proceed with file write
-                    try {
-                        FileWriter writer = new FileWriter("captured.json");
-                    writer.write(json);
-                    writer.close();
-                    System.out.println("********************* SUCCES to try catch");
-                } catch (IOException e) {
-                    System.out.println("********************* ERROR to try catch");
-                    e.printStackTrace();
-                }*/
-    // ********************************* DEUXIEME ESSAI
-        /*// json will be a string representation of the map in JSON format, e.g. {"key1":"value1","key2":"value2"}
-        // Create a HashMap object and add some key-value pairs to it
-                HashMap<String, String> map = new HashMap<>();
-                map.put("key1", "value1");
-                map.put("key2", "value2");
-
-        // Create a Gson object
-                Gson gson = new Gson();
-
-        // Convert the HashMap to a JSON string
-                String jsonString = gson.toJson(map);
-
-        // Write the JSON string to a file
-                //FileOutputStream outputStream = null;
-                final int REQUEST_WRITE_STORAGE = 1;
-
-                int permissionCheck = ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    // Permission is not granted, request it
-                    System.out.println("********************* NOT THE FUCKING PERMISSION");
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            REQUEST_WRITE_STORAGE);
-                } else {
-                    System.out.println("********************* PERMISSION");
-                    FileOutputStream outputStream = null;
-
-        // Get the external files directory
-                    File filesDir = getExternalFilesDir(null);
-
-        // Create a file in the external files directory
-                    File file = new File(filesDir, "isCaptured.json");
-
-        // Write the JSON string to the file
-                    try {
-                        outputStream = new FileOutputStream(file);
-                        //outputStream.write(jsonString.getBytes());
-                        String test = "ta grand mere la pute";
-                        outputStream.write(test.getBytes(StandardCharsets.UTF_8));
-                        outputStream.close();
-                        System.out.println("********************* SUCCES to try catch");
-                    } catch (FileNotFoundException e) {
-                        System.out.println("********************* Error 1 to try catch");
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        System.out.println("********************* error 2 to try catch");
-                        e.printStackTrace();
-                    }
-                }*/
-    // ***************************** TROISIEME ESSAI
-    // Get an instance of the AssetManager//
-        public JSONObject getJsonObject() throws JSONException {
-            // tuto :
-            // https://medium.com/@nayantala259/android-how-to-read-and-write-parse-data-from-json-file-226f821e957a
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Name", "name test");
-            jsonObject.put("Enroll_No", 2323);
-            jsonObject.put("Mobile", 0);
-            jsonObject.put("Address", "adressTest");
-            System.out.println("*********************** jsonObject : "+ jsonObject);
-            return jsonObject;
+        /*
+        Supprime toutes les préférences
+         */
+        private void clearAllPreference(int idPref){
+            //Supprimer toutes les valeurs
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(idPref),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.clear();
+            editor.apply();
+            showThePrefrerencesInConsole("clearAllPreference : ", R.string.nameOfPreferencesFile);
         }
-    public void writeJSON(JSONObject jsonObject, String FILE_NAME) throws IOException {
-        System.out.println("*************** jsonObject : " + jsonObject);
-
-        // Convert JsonObject to String Format
-        /*String userString = jsonObject.toString();
-        File file = new File(getApplicationContext().getFilesDir(),FILE_NAME);
-        FileWriter fileWriter = new FileWriter(file);
-        fileWriter.write(userString);*/
 
 
-        String userString = jsonObject.toString();
-        FileWriter file = new FileWriter("myjson.json");
-        file.write(userString);
-        file.flush();
-        file.close();
-/*
-        // Define the File Path and its Name
-        File file = new File(getApplicationContext().getFilesDir(),FILE_NAME);
-        FileWriter fileWriter = new FileWriter(file);
-        //FileWriter fileWriter = new FileWriter("captured.txt");
-        fileWriter.write(userString);
-        */
-        /*BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write(userString);
-        bufferedWriter.close();
-        readJson("captured.json");*/
-        System.out.println("*********************** writeJSON passed");
-    }
+        /*
+        Retire une préference de la liste "capturedFoodie"
+         */
+        public void removeAPreference(String name){
+            //Supprime une seule valeur
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove(name);
+            editor.apply();
+            showThePrefrerencesInConsole("removeAPreference : ", R.string.nameOfPreferencesFile);
+        }
 
 
+        /*
+        public void UdapteFoodInJson( String foodname, boolean isCaptured, File filename) throws IOException {
+                    //On ouvre le fichier captured.json en mode écriture
+                    //On récupére tout le contenu du fichier JSON dans un HashMap
+            JSONObject capturedJSON = readJson("captured.json");
+            HashMap<String, Boolean> foodies = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
+            Boolean replace = foodies.replace(foodname, isCaptured);
+
+            if(replace!=null){
+                System.out.println( foodname+" a été remplacé dans le Hashmap");
+                //On convertit le Hashmap en JSON object
+                Gson gson = new Gson();
+                String json = gson.toJson(foodies);
+                System.out.println(json);
+                //Puis on reécrit tout le hashmap dans le JSON
+
+                //WriteToFile(contextApp, "captured.json", json);
+
+            }
+            else{
+                System.out.println(foodname + "n'a pas pu être remplacé");
+            }
+            }*/
+
+
+
+
+        /*
+        Affiche la lise des variables enregistrées dans les préférences dans la console
+         */
+        public void showThePrefrerencesInConsole(String strBefore, int nameOfPreferencce){
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(nameOfPreferencce),Context.MODE_PRIVATE);
+            System.out.println(strBefore + sharedPref.getAll().toString());
+        }
+
+
+        /*
+        Retourne un booléan indiquant si le foodie a déjà été capturé
+         */
+        public Boolean isCaptured(String name){
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
+            Boolean result = sharedPref.getBoolean(name,false);
+            return result;
+        }
+
+
+        /*
+        Initialise "captureFoodie" avec les valers à false, soir les foodies n'ont pas encore été capturé.
+         */
+        public void initPreferences(){
+            //préférences des foodies captured
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
+            if (!sharedPref.contains("ananas")){writeToPreferences("ananas",false);}
+            if (!sharedPref.contains("avocat")){writeToPreferences("avocat",false);}
+            if (!sharedPref.contains("banane")){writeToPreferences("banane",false);}
+            if (!sharedPref.contains("pasteque")){writeToPreferences("pasteque",false);}
+            if (!sharedPref.contains("mangue")){writeToPreferences("mangue",false);}
+            if (!sharedPref.contains("pommes")){writeToPreferences("pommes",false);}
+            showThePrefrerencesInConsole("initPreferences", R.string.nameOfPreferencesFile);
+
+            //preference des points
+            sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPointsSysteme),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("points", 0);
+            showThePrefrerencesInConsole("initPreferences", R.string.nameOfPointsSysteme);
+
+            //pas besoin d'initialiser les préférences des absolutePath des photos
+        }
+
+
+        /*
+        Permet de réinitialiser les préférences du jeu à l'état initial
+         */
+        public void reInitPreferences(){
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPreferencesFile),Context.MODE_PRIVATE);
+            clearAllPreference(R.string.nameOfPreferencesFile);
+            clearAllPreference(R.string.nameOfAbsolutePathPreference);
+            clearAllPreference(R.string.nameOfPointsSysteme);
+            initPreferences();
+            showThePrefrerencesInConsole("reInitPreferences", R.string.nameOfPreferencesFile);
+
+        }
+
+        /*
+        Permet d'enregistrer la capture d'un foodie
+        A utiliser lorsque le foodie a bien été capturé et qu'une photo a été prise -> absolutePath = chemin de la photo dans le stockage
+
+         */
+        public void newFoodieCaptured(String foodieName, String absolutePath){
+            writeToPreferences(foodieName,true);
+            addVictoryToPoints(getPointOfFoodie(foodieName));
+            addAbsolutePathToPreference(foodieName, absolutePath);
+        }
+
+
+        /*
+        Lorsque la photo du foodie est prise, le chemin de la photo est sauvegardé en tant que string dans les preferences
+         */
+        private void addAbsolutePathToPreference(String foodieName, String absolutePath) {
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfAbsolutePathPreference), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(foodieName, absolutePath);
+            editor.apply();
+            showThePrefrerencesInConsole("addAbsolutePathToPreference : ", R.string.nameOfAbsolutePathPreference);
+        }
+
+
+        /*
+        retourne le chemin du fichier de l'image enregistré sur le téléphone. Retourne null si le foodie n'a pas été capturé et leve
+        une exception si le foodie a été capturé mais que le chemin de la photo n'a pas été enregistré.
+         */
+        private String getAbsolutePathFromPreference(String foodieName) throws Exception {
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfAbsolutePathPreference), Context.MODE_PRIVATE);
+            String result = null;
+            if (isCaptured(foodieName)){ //le foodie a été capturé donc il a logiquement une photo
+                result = sharedPref.getString(foodieName,"");
+            }else{ // le foodie n'a pas encore été capturé
+                result=null;
+            }
+            if (result == ""){throw new Exception("le foodie n'a pas de photo");} //le foodie a été capturé mais il n'a pas de photo
+            return result;
+        }
+
+
+        /*
+        Met à jour l'affichage du score dans les vues
+         */
+        public void updatePoints(Activity activity){
+            TextView pointsView = activity.findViewById(R.id.points);
+            pointsView.setText(getPoints() + " XP");
+        }
+
+        /*
+        Retourne le score en cours du joueur et s'assure qu'il est correct, sinon il est mise à jour
+         */
+        public int getPoints(){
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPointsSysteme),Context.MODE_PRIVATE);
+            int pointsByRef = sharedPref.getInt("points",0);
+            List<String> foodieNames = Arrays.asList("ananas","avocat","banane","pasteque","mangue","pommes");
+            int pointsByCalcul = 0;
+            for (String foodie : foodieNames){
+                if (isCaptured(foodie)) {
+                    pointsByCalcul += this.getPointOfFoodie(foodie);
+                    //System.out.println("points des foodies : " + foodie + " a points : " + this.getPointOfFoodie(foodie));
+                }
+            }
+            if(pointsByCalcul !=pointsByRef){
+                System.out.println("ManageFoodiesCaptured.getPoints() : les points par référence : "+pointsByRef+ " ne sont pas égaux aux points par calculs : " + pointsByCalcul);
+                System.out.println("les points par reférence sont mise à jour avec les points par calculs");
+                this.updatePointsToPreference(pointsByCalcul);
+            }
+
+            return pointsByCalcul;
+        }
+
+        public List<String> getListOfFoodies() {
+            return Arrays.asList("ananas", "avocat", "banane", "pasteque", "mangue", "pommes");
+        }
+
+        /*
+        Modifie les points dans les preferences du jeu en remplacant par la nouvelle valeur
+         */
+        private void updatePointsToPreference(int points) {
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPointsSysteme),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            int newPoints = points; // la diff par rapport a addVictoryToPoints() est ici.
+            editor.putInt("points", newPoints);
+            editor.apply();
+            showThePrefrerencesInConsole("writeToPreferences : ", R.string.nameOfPointsSysteme);
+        }
+
+
+        /*
+        Modifie les points dans les preferences du jeu lors d'une victoire
+         */
+        private void addVictoryToPoints(int points) {
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPointsSysteme),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            int newPoints = sharedPref.getInt("points",0) + points;
+            editor.putInt("points", newPoints);
+            editor.apply();
+            showThePrefrerencesInConsole("writeToPreferences : ", R.string.nameOfPointsSysteme);
+        }
+
+
+        /*
+        Retourne le nombre de points que rapporte un foodie une fois capturés
+         */
+        private int getPointOfFoodie(String foodieName) {
+            switch (foodieName){
+                case "ananas":
+                    return contextApp.getResources().getInteger(R.integer.ananasXP);
+                case "avocat":
+                    return contextApp.getResources().getInteger(R.integer.avocatXP);
+                case "banane":
+                    return contextApp.getResources().getInteger(R.integer.bananeXP);
+                case "pasteque":
+                    return contextApp.getResources().getInteger(R.integer.pastequeXP);
+                case "mangue":
+                    return contextApp.getResources().getInteger(R.integer.mangueXP);
+                case "pommes":
+                    return contextApp.getResources().getInteger(R.integer.pommesXP);
+                default:
+                    System.out.println("getPointOfFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
+                    return 0 ;
+
+            }
+        }
+
+        /*
+        Permet de savoir si tout les foodies ont été capturés, renvoie false si il reste au moins un foodie à capturer.
+         */
+        public boolean gameIsComplete() {
+            for (String foodie : getListOfFoodies()){
+                if(!isCaptured(foodie)){
+                    return false;
+                }
+            }
+            return true;
+        }
 }
