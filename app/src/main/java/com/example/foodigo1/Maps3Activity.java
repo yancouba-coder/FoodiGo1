@@ -3,10 +3,7 @@ package com.example.foodigo1;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
+
 
 
 import android.annotation.SuppressLint;
@@ -15,7 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
+
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,7 +21,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Toast;
 
@@ -62,6 +59,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+
             mLocationService = binder.getService();
             mBound = true;
         }
@@ -206,18 +204,25 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
           //  }
         //});
+        //Intent intent = new Intent(this, LocationServiceForMaps3.class);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @SuppressLint("PotentialBehaviorOverride")
+            @SuppressLint({"PotentialBehaviorOverride", "SuspiciousIndentation"})
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
+                //startService(intent);
+                //bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+               // boolean isproche=false;
+
                 bitmap = marker.getPosition();
-               // mLocationService.getCurrentLocation();
+                mLocationService.getCurrentLocation();
                 Location location=mLocationService.getLocation();
+                onLocationChanged(location);
                 LatLng userPos= new LatLng(mLocationService.getLatitude(),mLocationService.getLongitude());
 
                 if(line!=null)
                 eraseLine();
                 drawLine(bitmap,userPos);
+
                 if(location!=null){
                     LatLng point=new LatLng(location.getLatitude(),location.getLongitude());
                     if(distanceAsyncTask !=null){
@@ -225,6 +230,18 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     }
                     distanceAsyncTask= new DistanceTask(Maps3Activity.this,bitmap);
                     distanceAsyncTask.execute(point);
+                     double distance= distanceAsyncTask.getDistance();
+
+
+
+                   /* @SuppressLint("ServiceCast")
+                    LocationServiceForMaps3 locationService = (LocationServiceForMaps3) getSystemService(LOCATION_SERVICE);
+
+//                   Définit l'objet bitmap dans la classe LocationService
+                    locationService.setBitmap(bitmap);
+
+                    */
+
 
                 }
                 else{
@@ -232,11 +249,13 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
                 }
 
+
                 return true;
             }
         });
 
     }
+
    public void putFoodiesOnMap2(GoogleMap map, double[] tableaudesLatitudes, double[] tableauDesLongitudes, double[] tableauDesDistances){
       int k=0; //indice des tables de coordonnees
        for (String foodie:manager.getListOfFoodies()){
@@ -375,6 +394,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onLocationChanged(@NonNull Location location) {
         //Log.e(TAG, "onLocationChanged: " + location);
+        System.out.println("*********MAP3:La localisation a changé dans ");
         mLocationService.getCurrentLocation();
         location=mLocationService.getLocation();
         LatLng point= new LatLng(location.getLatitude(),location.getLongitude());

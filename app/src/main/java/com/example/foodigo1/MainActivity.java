@@ -21,7 +21,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AddressFetcherTask.OnAddressFetchedListener{
     ManageFoodiesCaptured manager;
 
-    /********************************************/
+    /**********************Localisation**********************/
     private LocationService mLocationService;
     private boolean mBound = false;
     AddressFetcherTask task;

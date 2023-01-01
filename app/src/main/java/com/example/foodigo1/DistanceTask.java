@@ -14,6 +14,7 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
     private static final String TAG = "DistanceTask";
     private static final double THRESHOLD = 1; // en mètres
     private static final int MESSAGE_SHOW_POPUP = 1;
+    private double distance= 2;
 
     private Maps3Activity activity;
     private LatLng bitmap;
@@ -37,7 +38,14 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
     @Override
     protected Double doInBackground(LatLng... params) {
         LatLng point = params[0];
-        double distance = SphericalUtil.computeDistanceBetween(point, bitmap);
+        distance = SphericalUtil.computeDistanceBetween(point, bitmap);
+        /*while (distance > THRESHOLD && !isCancelled()) {
+            distance = SphericalUtil.computeDistanceBetween(point, bitmap);
+            Log.d(TAG, "La Distance est entrain de changer " + distance);
+        }
+
+         */
+
         Log.d(TAG, "Distance: " + distance);
         return distance;
     }
@@ -45,8 +53,13 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
     @Override
     protected void onPostExecute(Double distance) {
         if (distance < THRESHOLD) {
-            Message message = handler.obtainMessage(MESSAGE_SHOW_POPUP);
-            handler.sendMessage(message);
+            //Message message = handler.obtainMessage(MESSAGE_SHOW_POPUP);
+           // handler.sendMessage(message);
+            activity.montrerLepopUp();
         }
+    }
+
+    public double getDistance() {
+        return distance;
     }
 }
