@@ -2,7 +2,6 @@ package com.example.foodigo1;
 
 
 
-import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 
@@ -24,8 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 1000;
-    private static final float LOCATION_DISTANCE = 10f;
+    private static final int LOCATION_INTERVAL = 10;
+    private static final float LOCATION_DISTANCE = 0.3f;
     private double latitude, longitude, altitude;
     private Location location;
     FusedLocationProviderClient fusedLocationClient;
@@ -95,26 +94,23 @@ public class LocationService extends Service {
     public void onCreate() {
         Log.e(TAG, "onCreate");
         initializeLocationManager();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                mLocationManager.requestLocationUpdates(
-                        LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                        mLocationListeners[1]);
-            } catch (java.lang.SecurityException ex) {
-                Log.i(TAG, "fail to request location update, ignore", ex);
-            } catch (IllegalArgumentException ex) {
-                Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-            }
-            try {
-                mLocationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                        mLocationListeners[0]);
-            } catch (java.lang.SecurityException ex) {
-                Log.i(TAG, "fail to request location update, ignore", ex);
-            } catch (IllegalArgumentException ex) {
-                Log.d(TAG, "gps provider does not exist " + ex.getMessage());
-            }
+        try {
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                    mLocationListeners[1]);
+        } catch (java.lang.SecurityException ex) {
+            Log.i(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+        }
+        try {
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                    mLocationListeners[0]);
+        } catch (java.lang.SecurityException ex) {
+            Log.i(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
     }
     public double[] getCurrentLocation() {

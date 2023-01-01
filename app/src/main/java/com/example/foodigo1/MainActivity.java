@@ -21,6 +21,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ManageFoodiesCaptured manager;
 
 
+
+
+
+
     /********************************************************************************************
      ************************************** mainActivity() **************************************
      ********************************************************************************************/
@@ -147,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         System.out.println("MainActivity onResume: ");
-        //mLocationService.getCurrentLocation();
         // Afficher l'orientation du téléphone dans la console à chaque mise à jour
         if (serviceBound) {
             //String orientation = compassService.getOrientation();
