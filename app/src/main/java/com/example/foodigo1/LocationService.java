@@ -2,6 +2,7 @@ package com.example.foodigo1;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,18 +12,24 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;
-    private double latitude, longitude;
+    private double latitude, longitude, altitude;
+    private Location location;
+
     private LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER),
             new LocationListener(LocationManager.NETWORK_PROVIDER)
     };
+
 
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
@@ -36,7 +43,11 @@ public class LocationService extends Service {
         public void onLocationChanged(Location location) {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
+            //new DistanceTask(this,this.getBitmap());
+            //new DistanceTask(this, bitmap).execute(point);
+
         }
+
 
         @Override
         public void onProviderDisabled(String provider) {
@@ -101,7 +112,7 @@ public class LocationService extends Service {
             return null;
         }
 
-        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+         location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) {
             location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
@@ -109,6 +120,7 @@ public class LocationService extends Service {
         if (location != null) {
              this.latitude = location.getLatitude();
              this.longitude = location.getLongitude();
+                   this.altitude=location.getAltitude();
             return new double[] { latitude, longitude };
         } else {
             return null;
@@ -141,9 +153,25 @@ public class LocationService extends Service {
             }
         }
     }
+    public void montrerLepopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Distance inférieure à 1 mètre")
+                .setMessage("Vous êtes à moins de 1 mètre du bitmap")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
+    public Location getLocation() {
+        return location;
+    }
 
-
-
-
+    public double getAltitude() {
+        return altitude;
+    }
 }
