@@ -121,6 +121,28 @@ public class ManageFoodiesCaptured {
         }
 
 
+        /*
+        Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
+         */
+        public Drawable getDrawableFoodie(String foodieName){
+            switch (foodieName){
+                case "ananas":
+                    return contextApp.getDrawable(R.drawable.ananas);
+                case "avocat":
+                    return contextApp.getDrawable(R.drawable.avocat);
+                case "banane":
+                    return contextApp.getDrawable(R.drawable.banane);
+                case "pasteque":
+                    return contextApp.getDrawable(R.drawable.pasteque);
+                case "mangue":
+                    return contextApp.getDrawable(R.drawable.mangue);
+                case "pommes":
+                    return contextApp.getDrawable(R.drawable.pommes);
+                default:
+                    Log.e("manager.getDrawableFoodie() : ","getDrawableFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
+                    return null ;
+
+
         //Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
         private Boolean OLDisCaptured(String foodie) throws Exception {
             //OLD method, actually not used
@@ -428,6 +450,7 @@ public class ManageFoodiesCaptured {
     /*
     Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
      */
+    /*
     public int getDrawableFoodie(String foodieName){
         switch (foodieName){
             case "ananas":
@@ -447,5 +470,36 @@ public class ManageFoodiesCaptured {
                 return 0 ;
 
         }
+
+    }*/
+
+
+
+
+        private void listPhotos() {
+            // Obtenir le répertoire où sont enregistrées les photos
+            //retourne un objet File qui représente le répertoire où sont enregistrés les fichiers externes de l'application.
+            File photoDir = contextApp.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+            // Vérifier que le répertoire existe
+            if (photoDir != null) {
+                // Obtenir la liste des fichiers dans le répertoire
+                File[] photoFiles = photoDir.listFiles();
+
+                // Vérifier que la liste n'est pas vide
+                if (photoFiles != null) {
+                    // Parcourir la liste des fichiers et afficher leur nom
+                    for (File file : photoFiles) {
+                        if (file.isFile()) {
+                            System.out.println(file.getName());
+                        }
+                    }
+                }
+            }
+        }
+
+
+
     }
+
 }
