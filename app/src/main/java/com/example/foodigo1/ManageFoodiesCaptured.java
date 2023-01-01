@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
+
+import android.os.Environment;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -120,7 +124,29 @@ public class ManageFoodiesCaptured {
             //iv.setImageResource(idDeLImageDansLeStockage);
         }
 
+        /*
+        Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
+         */
+        public Drawable getDrawableFoodie(String foodieName){
+            switch (foodieName){
+                case "ananas":
+                    return contextApp.getResources().getDrawable(R.drawable.ananas);
+                case "avocat":
+                    return contextApp.getResources().getDrawable(R.drawable.avocat);
+                case "banane":
+                    return contextApp.getResources().getDrawable(R.drawable.banane);
+                case "pasteque":
+                    return contextApp.getResources().getDrawable(R.drawable.pasteque);
+                case "mangue":
+                    return contextApp.getResources().getDrawable(R.drawable.mangue);
+                case "pommes":
+                    return contextApp.getResources().getDrawable(R.drawable.pommes);
+                default:
+                    Log.e("manager.getDrawableFoodie() : ","getDrawableFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
+                    return null ;
 
+            }
+        }
         //Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
         private Boolean OLDisCaptured(String foodie) throws Exception {
             //OLD method, actually not used
@@ -291,7 +317,6 @@ public class ManageFoodiesCaptured {
         /*
         Permet d'enregistrer la capture d'un foodie
         A utiliser lorsque le foodie a bien été capturé et qu'une photo a été prise -> absolutePath = chemin de la photo dans le stockage
-
          */
         public void newFoodieCaptured(String foodieName, String absolutePath){
             writeToPreferences(foodieName,true);
@@ -408,7 +433,7 @@ public class ManageFoodiesCaptured {
                 case "pommes":
                     return contextApp.getResources().getInteger(R.integer.pommesXP);
                 default:
-                    System.out.println("getPointOfFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
+                    Log.e("manager.getPointOfFoodie() : ","getPointOfFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
                     return 0 ;
 
             }
@@ -425,6 +450,7 @@ public class ManageFoodiesCaptured {
             }
             return true;
         }
+
     /*
     Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
      */
@@ -448,4 +474,31 @@ public class ManageFoodiesCaptured {
 
         }
     }
+
+
+
+
+        private void listPhotos() {
+            // Obtenir le répertoire où sont enregistrées les photos
+            //retourne un objet File qui représente le répertoire où sont enregistrés les fichiers externes de l'application.
+            File photoDir = contextApp.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+            // Vérifier que le répertoire existe
+            if (photoDir != null) {
+                // Obtenir la liste des fichiers dans le répertoire
+                File[] photoFiles = photoDir.listFiles();
+
+                // Vérifier que la liste n'est pas vide
+                if (photoFiles != null) {
+                    // Parcourir la liste des fichiers et afficher leur nom
+                    for (File file : photoFiles) {
+                        if (file.isFile()) {
+                            System.out.println(file.getName());
+                        }
+                    }
+                }
+            }
+        }
+
+
 }
