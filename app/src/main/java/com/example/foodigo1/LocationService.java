@@ -15,9 +15,14 @@ import android.os.IBinder;
 import android.util.Log;
 
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
@@ -122,19 +127,39 @@ public class LocationService extends Service {
         }
 
          location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        Task<Location> locationTask = fusedLocationClient.getLastLocation();
+        locationTask.addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    // La tâche a réussi et a renvoyé une position. Vous pouvez obtenir la position en appelant getResult().
+                     location = task.getResult();
+                     latitude = location.getLatitude();
+                     longitude = location.getLongitude();
+                } else {
+                    // La tâche a échoué ou n'a pas renvoyé de position. Vous devriez gérer ceci en fonction de vos besoins.
+                }
+            }
+        });
+
+/*
         if (location == null) {
             location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
 
+ */
+
         if (location != null) {
-             this.latitude = location.getLatitude();
-             this.longitude = location.getLongitude();
-                   this.altitude=location.getAltitude();
+            // this.latitude = location.getLatitude();
+           //  this.longitude = location.getLongitude();
+                  // this.altitude=location.getAltitude();
                    System.out.println("********GEtCurrentLocation() Les locations ont été mis à jour !");
             return new double[] { latitude, longitude };
         } else {
             return null;
         }
+
     }
     public class LocalBinder extends Binder {
         public LocationService getService() {
