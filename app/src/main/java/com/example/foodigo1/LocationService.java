@@ -22,8 +22,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 1000;
-    private static final float LOCATION_DISTANCE = 10f;
+    private static final int LOCATION_INTERVAL = 10;
+    private static final float LOCATION_DISTANCE = 0.3f;
     private double latitude, longitude, altitude;
     private Location location;
 

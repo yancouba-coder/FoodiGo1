@@ -51,14 +51,16 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private DistanceTask distanceAsyncTask;
     /********************************************/
     private LocationService mLocationService;
+
     private boolean mBound = false;
     private LatLng bitmap;
     Polyline line;//pour tracer une ligne
-
+    /***********************SERVICE DE LOCALISATION*********************/
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+
 
             mLocationService = binder.getService();
             mBound = true;
@@ -82,6 +84,10 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
+       // Intent intent = new Intent(this, LocationService.class);
+       // bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //double[] location = mLocationService.getCurrentLocation();
+        //startService(intent);
         // Vérifier si le service est lié
         if (mBound) {
             // Appeler la méthode getCurrentLocation() sur l'instance du service
@@ -110,6 +116,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         // Lier le service à l'activité
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
         Intent i= getIntent();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -124,6 +131,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+       // mLocationService.getCurrentLocation();
+    }
 
     @Override
     public void onClick(View view) {
@@ -157,9 +169,17 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
+
         Intent i= getIntent();
         double latitude=i.getExtras().getDouble("latitude");
         double longitude=i.getExtras().getDouble("longitude");
+
+
+       /* double[] lesCoordonnees=mLocationService.getCurrentLocation();
+        double latitude=mLocationService.getLatitude();
+        double longitude=mLocationService.getLongitude();
+        */
+
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
         LatLng mapFrance= new LatLng(latitude,longitude);
 

@@ -33,7 +33,7 @@ public class LocationServiceForMaps3 extends Service {
             new LocationListener(LocationManager.GPS_PROVIDER),
             new LocationListener(LocationManager.NETWORK_PROVIDER)
     };
-    private LatLng bitmap;
+    private LatLng bitmap= new LatLng(5,5);
 
 
 
@@ -48,13 +48,13 @@ public class LocationServiceForMaps3 extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            Log.e(TAG, "onLocationChanged: " + location);
+            Log.e(TAG, " ****************Dans loc Servimap3 onLocationChanged: " + location);
             mLastLocation.set(location);
 
             LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
 
             if (distanceTask == null || distanceTask.getStatus() == AsyncTask.Status.FINISHED) {
-                distanceTask = new DistanceTask((Maps3Activity) getApplicationContext(), bitmap);
+                distanceTask = new DistanceTask((Maps3Activity) getApplicationContext(),bitmap);
                 distanceTask.execute(point);
             }
 
