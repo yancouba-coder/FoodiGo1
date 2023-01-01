@@ -45,13 +45,14 @@ public class LocationServiceForMaps3 extends Service {
             Log.e(TAG, "**************LocationListener " + provider);
             mLastLocation = new Location(provider);
         }
-
+//on
         @Override
         public void onLocationChanged(Location location) {
             Log.e(TAG, " ****************Dans loc Servimap3 onLocationChanged: " + location);
             mLastLocation.set(location);
 
             LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+
 
             if (distanceTask == null || distanceTask.getStatus() == AsyncTask.Status.FINISHED) {
                 distanceTask = new DistanceTask((Maps3Activity) getApplicationContext(),bitmap);

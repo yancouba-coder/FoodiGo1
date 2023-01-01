@@ -183,7 +183,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
         LatLng mapFrance= new LatLng(latitude,longitude);
 
-        mMap.addMarker(new MarkerOptions().position(mapFrance).title("Vous êtes ici"));
+
         LatLng position = new LatLng(latitude,longitude);
 
 
@@ -239,6 +239,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 Location location=mLocationService.getLocation();
                 onLocationChanged(location);
                 LatLng userPos= new LatLng(mLocationService.getLatitude(),mLocationService.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
 
                 if(line!=null)
                 eraseLine();
@@ -251,7 +252,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     }
                     distanceAsyncTask= new DistanceTask(Maps3Activity.this,bitmap);
                     distanceAsyncTask.execute(point);
-                     double distance= distanceAsyncTask.getDistance();
+                    double distance= distanceAsyncTask.getDistance();
 
 
 
