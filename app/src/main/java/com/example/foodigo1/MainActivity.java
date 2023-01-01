@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         manager.updatePoints(this);
     }
 
+
     @Override
     public void onClick(View view) {
         /*
@@ -221,5 +222,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     *     le SphericalUtil ne fonctionnait plus.
     *   - INFO : j'ai fait comme toi dans les notes, j'ai mis une note pour l'utilisation de la boussole
     * */
+
+    /****************************************/
+
+
+
+
+
 
 }

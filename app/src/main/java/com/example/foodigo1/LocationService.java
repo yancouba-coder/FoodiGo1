@@ -21,8 +21,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
-
-
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
@@ -34,14 +32,11 @@ public class LocationService extends Service {
 
 
 
-
-
     private LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER),
             new LocationListener(LocationManager.NETWORK_PROVIDER)
     };
     private LatLng bitmap;
-
 
 
 
@@ -63,7 +58,6 @@ public class LocationService extends Service {
            // new DistanceTask(this, bitmap).execute(point);
 
         }
-
 
         @Override
         public void onProviderDisabled(String provider) {
@@ -131,7 +125,7 @@ public class LocationService extends Service {
             return null;
         }
 
-         location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) {
             location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
@@ -172,11 +166,6 @@ public class LocationService extends Service {
                 }
             }
         }
-    }
-
-
-    public Location getLocation() {
-        return location;
     }
 
     public double getAltitude() {

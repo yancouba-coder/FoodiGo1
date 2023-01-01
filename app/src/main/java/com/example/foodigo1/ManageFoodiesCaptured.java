@@ -490,6 +490,7 @@ public class ManageFoodiesCaptured {
         }
 
     }
+<<<<<<< HEAD
 
 
                 private void listPhotos () {
@@ -515,6 +516,8 @@ public class ManageFoodiesCaptured {
                 }
 
 
+=======
+>>>>>>> parent of b90d5af (Calcul de distance en arrriére plan et positionnement des Foodies sur des endroits inoccopés)
 }
 
 
