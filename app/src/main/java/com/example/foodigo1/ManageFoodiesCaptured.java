@@ -130,17 +130,17 @@ public class ManageFoodiesCaptured {
         public Drawable getDrawableFoodie(String foodieName){
             switch (foodieName){
                 case "ananas":
-                    return contextApp.getResources().getDrawable(R.drawable.ananas);
+                    return contextApp.getDrawable(R.drawable.ananas);
                 case "avocat":
-                    return contextApp.getResources().getDrawable(R.drawable.avocat);
+                    return contextApp.getDrawable(R.drawable.avocat);
                 case "banane":
-                    return contextApp.getResources().getDrawable(R.drawable.banane);
+                    return contextApp.getDrawable(R.drawable.banane);
                 case "pasteque":
-                    return contextApp.getResources().getDrawable(R.drawable.pasteque);
+                    return contextApp.getDrawable(R.drawable.pasteque);
                 case "mangue":
-                    return contextApp.getResources().getDrawable(R.drawable.mangue);
+                    return contextApp.getDrawable(R.drawable.mangue);
                 case "pommes":
-                    return contextApp.getResources().getDrawable(R.drawable.pommes);
+                    return contextApp.getDrawable(R.drawable.pommes);
                 default:
                     Log.e("manager.getDrawableFoodie() : ","getDrawableFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
                     return null ;
@@ -454,6 +454,7 @@ public class ManageFoodiesCaptured {
     /*
     Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
      */
+    /*
     public int getDrawableFoodie(String foodieName){
         switch (foodieName){
             case "ananas":
@@ -473,7 +474,7 @@ public class ManageFoodiesCaptured {
                 return 0 ;
 
         }
-    }
+    }*/
 
 
 
