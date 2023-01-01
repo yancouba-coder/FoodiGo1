@@ -40,6 +40,8 @@
     <string name="pommesPoints">+300xp</string>
     <string name="pommes">Pommes</string>
     <string name="messageFoodieGallery">Capture les Foodies sur la carte et collectionne leur photo pour gagner des points !</string>
+    <string name="default_info_title">Sydney</string>
+    <string name="default_info_snippet">Coucou ici c est Sydney</string>
 
 
     <string name="nameOfPreferencesFile">capturedFoodie</string>
@@ -51,5 +53,6 @@
     <string name="congratMessage">Bravo !</string>
     <string name="congratMessagePartTwo">Tu as attrapé tout les foodies, tu peux être fier de toi !</string>
     <string name="replayMessage">Le jeu a été réinitialisé, tu peux désormais rejouer !</string>
+    <string name="YouAreHere">Vous êtes ici</string>
 
 </resources>

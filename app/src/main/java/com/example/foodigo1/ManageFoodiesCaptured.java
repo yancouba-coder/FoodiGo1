@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
+
 import android.os.Environment;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -416,7 +418,7 @@ public class ManageFoodiesCaptured {
         /*
         Retourne le nombre de points que rapporte un foodie une fois capturés
          */
-        private int getPointOfFoodie(String foodieName) {
+        public int getPointOfFoodie(String foodieName) {
             switch (foodieName){
                 case "ananas":
                     return contextApp.getResources().getInteger(R.integer.ananasXP);
@@ -449,6 +451,31 @@ public class ManageFoodiesCaptured {
             return true;
         }
 
+    /*
+    Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
+     */
+    public int getDrawableFoodie(String foodieName){
+        switch (foodieName){
+            case "ananas":
+                return R.drawable.ananas;
+            case "avocat":
+                return R.drawable.avocat;
+            case "banane":
+                return R.drawable.banane;
+            case "pasteque":
+                return R.drawable.pasteque;
+            case "mangue":
+                return R.drawable.mangue;
+            case "pommes":
+                return R.drawable.pommes;
+            default:
+                Log.e("manager.getDrawableFoodie() : ","getDrawableFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
+                return 0 ;
+
+        }
+    }
+
+
 
 
         private void listPhotos() {
@@ -472,5 +499,6 @@ public class ManageFoodiesCaptured {
                 }
             }
         }
+
 
 }
