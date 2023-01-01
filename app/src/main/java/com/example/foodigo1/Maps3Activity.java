@@ -181,7 +181,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         */
 
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
-        LatLng mapFrance= new LatLng(latitude,longitude);
+        LatLng mapUser= new LatLng(latitude,longitude);
 
 
         LatLng position = new LatLng(latitude,longitude);
@@ -204,11 +204,13 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mapFrance));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapFrance, 19.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapUser, 19.0f));
        //Le systeme de Zoom
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
+
 /*
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -233,6 +235,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 //startService(intent);
                 //bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
                // boolean isproche=false;
+                //.title(foodie +" est à " +fooddistance +"m").snippet("Points : " +foodie_Points)
+
 
                 bitmap = marker.getPosition();
                 mLocationService.getCurrentLocation();
@@ -253,6 +257,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     distanceAsyncTask= new DistanceTask(Maps3Activity.this,bitmap);
                     distanceAsyncTask.execute(point);
                     double distance= distanceAsyncTask.getDistance();
+                    marker.showInfoWindow();
 
 
 
