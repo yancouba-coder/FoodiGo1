@@ -110,6 +110,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         // Lier le service à l'activité
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
         Intent i= getIntent();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
