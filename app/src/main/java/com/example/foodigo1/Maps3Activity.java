@@ -51,6 +51,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private DistanceTask distanceAsyncTask;
     /********************************************/
     private LocationService mLocationService;
+
     private boolean mBound = false;
     private LatLng bitmap;
     Polyline line;//pour tracer une ligne
@@ -59,6 +60,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+
 
             mLocationService = binder.getService();
             mBound = true;
