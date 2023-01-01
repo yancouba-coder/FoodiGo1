@@ -236,7 +236,6 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
-
         Intent i= getIntent();
         double latitude=i.getExtras().getDouble("latitude");
         double longitude=i.getExtras().getDouble("longitude");
@@ -247,15 +246,10 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
         LatLng mapUser= new LatLng(latitude,longitude);
         LatLng position = new LatLng(latitude,longitude);
-
-
         /*double[] tableauDesLongitudes=i.getExtras().getDoubleArray("tableaudDesLongitudes");
         double[] tableauDesLatitude=i.getExtras().getDoubleArray("tableauDesLatitudes");
         double[] tableauDesDistances=i.getExtras().getDoubleArray("tableaudesDistances");
-
-
         putFoodiesOnMap2(mMap,tableauDesLatitude,tableauDesLongitudes,tableauDesDistances);
-
          */
 
         //Put all the foodies on the map
@@ -272,19 +266,12 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             @SuppressLint({"PotentialBehaviorOverride", "SuspiciousIndentation"})
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                //startService(intent);
-                //bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-               // boolean isproche=false;
-                //.title(foodie +" est à " +fooddistance +"m").snippet("Points : " +foodie_Points)
-
-
                 bitmap = marker.getPosition();
                 mLocationService.getCurrentLocation();
                 Location location=mLocationService.getLocation();
                 //onLocationChanged(location);
                 LatLng userPos= new LatLng(mLocationService.getLatitude(),mLocationService.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
-
                 if(line!=null)
                 eraseLine();
                 drawLine(bitmap,userPos);
