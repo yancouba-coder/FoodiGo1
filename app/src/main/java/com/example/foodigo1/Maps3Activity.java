@@ -51,6 +51,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private DistanceTask distanceAsyncTask;
     /********************************************/
     private LocationService mLocationService;
+
     private boolean mBound = false;
     private LatLng bitmap;
     Polyline line;//pour tracer une ligne
@@ -59,6 +60,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+
 
             mLocationService = binder.getService();
             mBound = true;
@@ -152,6 +154,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -265,7 +268,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                LatLng foodiePosition= new LatLng(tableaudesLatitudes[k],tableauDesLongitudes[k]);
                //transforme l'image et on le positionne
                BitmapDrawable bt;
-               bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
+               bt= (BitmapDrawable) getDrawable(manager.getIdOfDrawableFoodie(foodie));
                Bitmap btt= Bitmap.createScaledBitmap(bt.getBitmap(),195,195,false);
                mMap.addMarker(new MarkerOptions().position(foodiePosition)
                        .title(foodie +" est à " +tableauDesDistances[k] +"m").snippet("Points : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));
@@ -287,8 +290,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         // On le positionne sur la carte
         //
         int [] angleDepositionnement = {90, 270, 360, 180, 315, 45};
+
         int i=0;//indice angle de positionnement
         int minimumDistance= 2;
+
+
         for (String foodie:manager.getListOfFoodies()) {
             // Si il n'est pas capturé on le positionne
             if(!manager.isCaptured(foodie)){
@@ -314,7 +320,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 //Attention
                 //On doit positionner les foodies sur des routes
                 BitmapDrawable bt;
-                bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
+                bt= (BitmapDrawable) manager.getDrawableFoodie(foodie);
+                //bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
                 Bitmap btt= Bitmap.createScaledBitmap(bt.getBitmap(),195,195,false);
                 map.addMarker(new MarkerOptions().position(foodiePosition)
                         .title(foodie +" est à " +fooddistance +"m").snippet("Points : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));

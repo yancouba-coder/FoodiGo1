@@ -56,4 +56,5 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     }
     //logo, menu, foodies, map, photos
 
+
 }
