@@ -4,28 +4,28 @@ package com.example.foodigo1;
 
 import android.app.Service;
 import android.content.Context;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class LocationService extends Service {
+public class LocationServiceForMaps3 extends Service {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;
     private double latitude, longitude, altitude;
     private Location location;
+    DistanceTask distanceTask;
 
 
 
@@ -48,12 +48,15 @@ public class LocationService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            Log.e(TAG, "*************onLocationChanged: " + location);
+            Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
-            //new DistanceTask(this,this.getBitmap());
-            //new DistanceTask(this, bitmap).execute(point);
-            //LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-           // new DistanceTask(this, bitmap).execute(point);
+
+            LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+
+            if (distanceTask == null || distanceTask.getStatus() == AsyncTask.Status.FINISHED) {
+                distanceTask = new DistanceTask((Maps3Activity) getApplicationContext(), bitmap);
+                distanceTask.execute(point);
+            }
 
         }
 
@@ -98,7 +101,7 @@ public class LocationService extends Service {
             mLocationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
                     mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
+        } catch (SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
@@ -107,7 +110,7 @@ public class LocationService extends Service {
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
                     mLocationListeners[0]);
-        } catch (java.lang.SecurityException ex) {
+        } catch (SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
@@ -130,15 +133,14 @@ public class LocationService extends Service {
              this.latitude = location.getLatitude();
              this.longitude = location.getLongitude();
                    this.altitude=location.getAltitude();
-                   System.out.println("********GEtCurrentLocation() Les locations ont été mis à jour !");
             return new double[] { latitude, longitude };
         } else {
             return null;
         }
     }
     public class LocalBinder extends Binder {
-        public LocationService getService() {
-            return LocationService.this;
+        public LocationServiceForMaps3 getService() {
+            return LocationServiceForMaps3.this;
         }
     }
 
