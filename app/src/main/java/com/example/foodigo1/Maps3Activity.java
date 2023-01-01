@@ -1,37 +1,54 @@
 package com.example.foodigo1;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
-public class Maps3Activity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
+public class Maps3Activity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationSource.OnLocationChangedListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     //Officiel Maps activity
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     ManageFoodiesCaptured manager;
+    DistanceTask distanceAsyncTask;
     /********************************************/
     private LocationService mLocationService;
 
@@ -136,6 +153,76 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             case R.id.home:
                 i = new Intent(this, MainActivity.class);
                 break;
+            case R.id.ananasImage:
+                if(manager.isCaptured("ananas")){
+
+                    montrerLepopUpForFoodie("Ananas","Bravo ! Vous avez déjà capturé l'ananas \uD83D\uDE0A");
+
+                }
+                else{
+                    montrerLepopUpForFoodie("Ananas"," Ananas n'est pas encore capturé \uD83D\uDE43");
+
+                }
+                break;
+            case R.id.avocatImage:
+                if(manager.isCaptured("avocat")){
+
+                    montrerLepopUpForFoodie("Avocat","Bravo ! Vous avez déjà capturé l'avocat \uD83D\uDE0A");
+
+                }
+                else{
+                    montrerLepopUpForFoodie("Avocat"," Avocat n'est pas encore capturé \uD83D\uDE43");
+
+                }
+                break;
+
+            case R.id.bananeImage:
+                if(manager.isCaptured("banane")){
+
+                    montrerLepopUpForFoodie("Banane","Bravo ! Vous avez déjà capturé la banane \uD83D\uDE0A");
+
+                }
+                else{
+                    montrerLepopUpForFoodie("Banane"," Banane n'est pas encore capturé \uD83D\uDE43");
+
+                }
+                break;
+            case R.id.pastequeImage:
+                if(manager.isCaptured("pasteque")){
+
+                    montrerLepopUpForFoodie("Pasteque","Bravo ! Vous avez déjà capturé Pasteque \uD83D\uDE0A");
+
+                }
+                else{
+                    montrerLepopUpForFoodie("Pasteque"," Pasteque n'est pas encore capturé \uD83D\uDE43");
+
+                }
+                break;
+
+            case R.id.mangueImage:
+                if(manager.isCaptured("mangue")){
+
+                    montrerLepopUpForFoodie("Mangue","Bravo ! Vous avez déjà capturé la mangue \uD83D\uDE0A");
+
+                }
+                else{
+                    montrerLepopUpForFoodie("Mangue"," Manque n'est pas encore capturé \uD83D\uDE43");
+
+                }
+                break;
+
+            case R.id.pommesImage:
+                if(manager.isCaptured("pommes")){
+
+                    montrerLepopUpForFoodie("Pommes","Bravo ! Vous avez déjà capturé les Pommes \uD83D\uDE0A");
+
+                }
+                else{
+                    montrerLepopUpForFoodie("Pommes"," Les pommes n'ont pas été capturé \uD83D\uDE43");
+
+                }
+                break;
+
             default:
                 break;
 
@@ -153,17 +240,12 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         Intent i= getIntent();
         double latitude=i.getExtras().getDouble("latitude");
         double longitude=i.getExtras().getDouble("longitude");
-
-
        /* double[] lesCoordonnees=mLocationService.getCurrentLocation();
         double latitude=mLocationService.getLatitude();
         double longitude=mLocationService.getLongitude();
         */
-
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
         LatLng mapUser= new LatLng(latitude,longitude);
-
-
         LatLng position = new LatLng(latitude,longitude);
 
 
@@ -172,17 +254,12 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         double[] tableauDesDistances=i.getExtras().getDoubleArray("tableaudesDistances");
 
 
-
         putFoodiesOnMap2(mMap,tableauDesLatitude,tableauDesLongitudes,tableauDesDistances);
 
          */
 
         //Put all the foodies on the map
-        try {
-            putFoodiesOnMap(mMap,position);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        putFoodiesOnMap(mMap,position);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
@@ -191,36 +268,6 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
 
-/*
-=======
-        // Calculer la position initiale à 100 mètres à l'ouest (270 degrés) de latLng
-        LatLng anaPosition = SphericalUtil.computeOffsetOrigin(position, 100, 270);
-
-        //Put all the foodies on the map
-        putFoodiesOnMap(mMap,position);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mapFrance));
-        // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapFrance, 19.0f));
-       //Le systeme de Zoom
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-
->>>>>>> parent of b90d5af (Calcul de distance en arrriére plan et positionnement des Foodies sur des endroits inoccopés)
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng latLng) {
-                /*
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(latLng.latitude + " KG " + latLng.longitude);
-                googleMap.clear();
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
-                googleMap.addMarker(markerOptions);
-                /
-                 */
-          //  }
-        //});
-        //Intent intent = new Intent(this, LocationServiceForMaps3.class);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @SuppressLint({"PotentialBehaviorOverride", "SuspiciousIndentation"})
             @Override
@@ -234,7 +281,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 bitmap = marker.getPosition();
                 mLocationService.getCurrentLocation();
                 Location location=mLocationService.getLocation();
-                onLocationChanged(location);
+                //onLocationChanged(location);
                 LatLng userPos= new LatLng(mLocationService.getLatitude(),mLocationService.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
 
@@ -250,21 +297,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     distanceAsyncTask= new DistanceTask(Maps3Activity.this,bitmap);
                     distanceAsyncTask.execute(point);
                     double distance= distanceAsyncTask.getDistance();
-                    marker.setSnippet("Est à "+ (int)distance +"m");
+                    marker.setSnippet("est à "+ (int)distance +"m");
                     marker.showInfoWindow();
-
-
-
-
-                   /* @SuppressLint("ServiceCast")
-                    LocationServiceForMaps3 locationService = (LocationServiceForMaps3) getSystemService(LOCATION_SERVICE);
-
-//                   Définit l'objet bitmap dans la classe LocationService
-                    locationService.setBitmap(bitmap);
-
-                    */
-
-
                 }
                 else{
                     Toast.makeText(Maps3Activity.this,"Impossible de récupérer votre position actuelle",Toast.LENGTH_LONG);
@@ -279,19 +313,22 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
     }
 
-   public void putFoodiesOnMap2(GoogleMap map, double[] tableaudesLatitudes, double[] tableauDesLongitudes, double[] tableauDesDistances){
-      int k=0; //indice des tables de coordonnees
-       for (String foodie:manager.getListOfFoodies()){
-           if(!manager.isCaptured(foodie)){
-               int foodie_Points= manager.getPointOfFoodie(foodie);
+   public void putFoodiesOnMap2(GoogleMap map, double[] tableaudesLatitudes, double[] tableauDesLongitudes, double[] tableauDesDistances) {
+       int k = 0; //indice des tables de coordonnees
+       for (String foodie : manager.getListOfFoodies()) {
+           if (!manager.isCaptured(foodie)) {
+               int foodie_Points = manager.getPointOfFoodie(foodie);
                //On crée une position libre sur une route ou autres
-               LatLng foodiePosition= new LatLng(tableaudesLatitudes[k],tableauDesLongitudes[k]);
+               LatLng foodiePosition = new LatLng(tableaudesLatitudes[k], tableauDesLongitudes[k]);
                //transforme l'image et on le positionne
                BitmapDrawable bt;
-               bt= (BitmapDrawable) getDrawable(manager.getIdOfDrawableFoodie(foodie));
-               Bitmap btt= Bitmap.createScaledBitmap(bt.getBitmap(),195,195,false);
+               bt = (BitmapDrawable) getDrawable(manager.getIdOfDrawableFoodie(foodie));
+               Bitmap btt = Bitmap.createScaledBitmap(bt.getBitmap(), 195, 195, false);
                mMap.addMarker(new MarkerOptions().position(foodiePosition)
-                       .title(foodie +" est à " +tableauDesDistances[k] +"m").snippet("Points : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));
+                       .title(foodie + " est à " + tableauDesDistances[k] + "m").snippet("Points : " + foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));
+           }
+       }
+   }
                //
     //Une fonction qui permet de positionner tout les foodies sur la carte
     // C'est un void
@@ -306,9 +343,6 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
         int i=0;//indice angle de positionnement
         int minimumDistance= 2;
-        int i=0;
-        int minimumDistance= 10 ;
-
         for (String foodie:manager.getListOfFoodies()) {
             // Si il est pas capturé on le positionne
             if(!manager.isCaptured(foodie)){
@@ -325,14 +359,12 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 bt= (BitmapDrawable) manager.getDrawableFoodie(foodie);
                 //bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
                 Bitmap btt= Bitmap.createScaledBitmap(bt.getBitmap(),195,195,false);
-<<<<<<< HEAD
 
                 map.addMarker(new MarkerOptions().position(foodiePosition)
                         .title(foodie ).snippet(" est à " +fooddistance +"m \nPoints : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));
-=======
+
                 mMap.addMarker(new MarkerOptions().position(foodiePosition)
-                        .title(foodie +" est à " +fooddistance +"m").snippet("Points : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));
->>>>>>> parent of b90d5af (Calcul de distance en arrriére plan et positionnement des Foodies sur des endroits inoccopés)
+                        .title(foodie +"\n" +foodie_Points).snippet("Points : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));
                 //
 
 
@@ -341,8 +373,6 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
         }
 
-
-<<<<<<< HEAD
     }
     //public void pupFoodOnMaps(LatLng userPosition, )
     public void drawLine(LatLng pointA, LatLng pointB){
@@ -404,7 +434,25 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
+    public void montrerLepopUpForFoodie(String foodiname, String description) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(foodiname)
+                .setMessage(description)
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
     @Override
@@ -415,9 +463,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         location=mLocationService.getLocation();
         LatLng point= new LatLng(location.getLatitude(),location.getLongitude());
         new DistanceTask(this, bitmap).execute(point);
-=======
 
->>>>>>> parent of b90d5af (Calcul de distance en arrriére plan et positionnement des Foodies sur des endroits inoccopés)
 
     }
 }

@@ -490,14 +490,11 @@ public class ManageFoodiesCaptured {
         }
 
     }
-<<<<<<< HEAD
-
 
                 private void listPhotos () {
                     // Obtenir le répertoire où sont enregistrées les photos
                     //retourne un objet File qui représente le répertoire où sont enregistrés les fichiers externes de l'application.
                     File photoDir = contextApp.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
                     // Vérifier que le répertoire existe
                     if (photoDir != null) {
                         // Obtenir la liste des fichiers dans le répertoire
@@ -516,8 +513,6 @@ public class ManageFoodiesCaptured {
                 }
 
 
-=======
->>>>>>> parent of b90d5af (Calcul de distance en arrriére plan et positionnement des Foodies sur des endroits inoccopés)
 }
 
 

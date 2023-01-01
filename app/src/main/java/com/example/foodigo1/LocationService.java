@@ -37,6 +37,9 @@ public class LocationService extends Service {
     };
     private LatLng bitmap;
 
+    public Location getLocation() {
+        return location;
+    }
 
 
     private class LocationListener implements android.location.LocationListener {
@@ -121,7 +124,7 @@ public class LocationService extends Service {
             return null;
         }
 
-        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) {
             location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
@@ -129,7 +132,8 @@ public class LocationService extends Service {
         if (location != null) {
              this.latitude = location.getLatitude();
              this.longitude = location.getLongitude();
-                   this.altitude=location.getAltitude();
+             this.altitude=location.getAltitude();
+
                    System.out.println("********GEtCurrentLocation() Les locations ont été mis à jour !");
             return new double[] { latitude, longitude };
         } else {
