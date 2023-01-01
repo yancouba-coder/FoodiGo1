@@ -173,8 +173,6 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         Intent i= getIntent();
         double latitude=i.getExtras().getDouble("latitude");
         double longitude=i.getExtras().getDouble("longitude");
-
-
        /* double[] lesCoordonnees=mLocationService.getCurrentLocation();
         double latitude=mLocationService.getLatitude();
         double longitude=mLocationService.getLongitude();
@@ -183,9 +181,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
         LatLng mapUser= new LatLng(latitude,longitude);
 
-
         LatLng position = new LatLng(latitude,longitude);
-
 
         /*double[] tableauDesLongitudes=i.getExtras().getDoubleArray("tableaudDesLongitudes");
         double[] tableauDesLatitude=i.getExtras().getDoubleArray("tableauDesLatitudes");
@@ -198,11 +194,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
          */
 
         //Put all the foodies on the map
-        try {
-            putFoodiesOnMap(mMap,position);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
@@ -210,6 +202,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
        //Le systeme de Zoom
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
+        try {
+            putFoodiesOnMap(mMap,position);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 /*
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
