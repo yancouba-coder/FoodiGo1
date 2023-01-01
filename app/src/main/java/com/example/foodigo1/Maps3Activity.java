@@ -289,8 +289,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         // On le positionne sur la carte
         //
         int [] angleDepositionnement = {90, 270, 360, 180, 315, 45};
+
         int i=0;//indice angle de positionnement
         int minimumDistance= 2;
+
+
         for (String foodie:manager.getListOfFoodies()) {
             // Si il n'est pas capturé on le positionne
             if(!manager.isCaptured(foodie)){
@@ -316,7 +319,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 //Attention
                 //On doit positionner les foodies sur des routes
                 BitmapDrawable bt;
-                bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
+                bt= (BitmapDrawable) manager.getDrawableFoodie(foodie);
+                //bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
                 Bitmap btt= Bitmap.createScaledBitmap(bt.getBitmap(),195,195,false);
                 map.addMarker(new MarkerOptions().position(foodiePosition)
                         .title(foodie +" est à " +fooddistance +"m").snippet("Points : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));
