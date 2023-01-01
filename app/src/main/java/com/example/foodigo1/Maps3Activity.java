@@ -152,6 +152,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -265,7 +266,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                LatLng foodiePosition= new LatLng(tableaudesLatitudes[k],tableauDesLongitudes[k]);
                //transforme l'image et on le positionne
                BitmapDrawable bt;
-               bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
+               bt= (BitmapDrawable) getDrawable(manager.getIdOfDrawableFoodie(foodie));
                Bitmap btt= Bitmap.createScaledBitmap(bt.getBitmap(),195,195,false);
                mMap.addMarker(new MarkerOptions().position(foodiePosition)
                        .title(foodie +" est à " +tableauDesDistances[k] +"m").snippet("Points : " +foodie_Points).icon(BitmapDescriptorFactory.fromBitmap(btt)));

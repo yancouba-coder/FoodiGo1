@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
          manager = ManageFoodiesCaptured.getInstance(this);
         manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
         //TODO : a effacer dans la version de deploiement, c'est pour le test
@@ -56,20 +58,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case (R.id.play):
                 Intent i = null;
-                System.out.println("*******************La localisation est" +mLocationService.getCurrentLocation());
-                double latitude= mLocationService.getLatitude();
-                double longitude=mLocationService.getLongitude();
+                System.out.println("*******************La localisation est" + mLocationService.getCurrentLocation());
+                double latitude = mLocationService.getLatitude();
+                double longitude = mLocationService.getLongitude();
 
-                if(manager.gameIsComplete()){
+                if (manager.gameIsComplete()) {
                     i = new Intent(this, GameCompleteActivity.class);
-                } else{
+                } else {
                     i = new Intent(this, Maps3Activity.class);
-                    i.putExtra("latitude",latitude);
-                    i.putExtra("longitude",longitude);
+                    i.putExtra("latitude", latitude);
+                    i.putExtra("longitude", longitude);
                 }
-                if(i!=null){startActivity(i);}
+                if (i != null) {
+                    startActivity(i);
+                }
                 break;
-            case(R.id.home):
+            case (R.id.home):
 
                 Intent main = new Intent(this, MainActivity.class);
                 startActivity(main);
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return;
 
         }
-
+    }
 
 
     /********************************************************************************************
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     *     donc rajouter ca dessus.
     *   - En testant le code, ma position ne change pas lorsque je me déplace, donc je n'ai pas la
     *     notif comme quoi je suis proche du foodie.
-    *   - Dans le manager, quelle classe on doiot garder pour le getDrawable ?
+    *
     *
     *       INFORMATIONS
     *   - INFO : j'ai du factoriser nos 2 codes a/n du onStart() et du onStop(), c'est ok ?
