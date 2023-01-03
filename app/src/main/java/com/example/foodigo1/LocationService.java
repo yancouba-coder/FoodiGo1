@@ -1,7 +1,7 @@
 package com.example.foodigo1;
 
 
-
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 
@@ -16,10 +16,19 @@ import android.util.Log;
 import android.os.ResultReceiver;
 
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
+
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
@@ -28,7 +37,6 @@ public class LocationService extends Service {
     private double latitude, longitude, altitude;
     private Location location;
     FusedLocationProviderClient fusedLocationClient;
-
 
 
     private LocationListener[] mLocationListeners = new LocationListener[]{
@@ -57,7 +65,7 @@ public class LocationService extends Service {
             //new DistanceTask(this,this.getBitmap());
             //new DistanceTask(this, bitmap).execute(point);
             //LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-           // new DistanceTask(this, bitmap).execute(point);
+            // new DistanceTask(this, bitmap).execute(point);
 
         }
 
@@ -76,23 +84,28 @@ public class LocationService extends Service {
             Log.e(TAG, "onStatusChanged: " + provider);
         }
     }
+
     private final IBinder mBinder = new LocalBinder();
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
+
     void initializeLocationManager() {
         Log.e(TAG, "initializeLocationManager");
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
     }
+
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");
@@ -116,6 +129,7 @@ public class LocationService extends Service {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
     }
+
     public double[] getCurrentLocation() {
         // Vérifiez les permissions de localisation
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -130,16 +144,17 @@ public class LocationService extends Service {
         }
 
         if (location != null) {
-             this.latitude = location.getLatitude();
-             this.longitude = location.getLongitude();
-             this.altitude=location.getAltitude();
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+            this.altitude = location.getAltitude();
 
-                   System.out.println("********GEtCurrentLocation() Les locations ont été mis à jour !");
-            return new double[] { latitude, longitude };
+            System.out.println("********GEtCurrentLocation() Les locations ont été mis à jour !");
+            return new double[]{latitude, longitude};
         } else {
             return null;
         }
     }
+
     public class LocalBinder extends Binder {
         public LocationService getService() {
             return LocationService.this;
@@ -147,12 +162,13 @@ public class LocationService extends Service {
     }
 
     public double getLatitude() {
-        return latitude;
+        return this.latitude;
     }
 
     public double getLongitude() {
-        return longitude;
+        return this.longitude;
     }
+
     @Override
     public void onDestroy() {
         Log.e(TAG, "onDestroy");
@@ -171,7 +187,44 @@ public class LocationService extends Service {
     public double getAltitude() {
         return altitude;
     }
+
     public void setBitmap(LatLng bitmap) {
         this.bitmap = bitmap;
     }
+
+    public Task<Location> getCurrentLocationWithTask() {
+        // Créez une instance de FusedLocationProviderClient
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Créez une tâche de retour de valeur
+        TaskCompletionSource<Location> taskSource = new TaskCompletionSource<>();
+        // Appelez la méthode getLastLocation asynchrone de FusedLocationProviderClient
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // La localisation a été récupérée avec succès, définissez la valeur de retour de la tâche et terminez-la
+                        taskSource.setResult(location);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // La localisation n'a pas pu être récupérée, terminez la tâche avec une erreur
+                        taskSource.setException(e);
+                    }
+                });
+        // Retournez la tâche de retour de valeur
+        return taskSource.getTask();
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.foodigo1;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -35,6 +38,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
@@ -42,18 +47,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class Maps3Activity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationSource.OnLocationChangedListener {
+public class Maps3Activity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationSource.OnLocationChangedListener{
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     //Officiel Maps activity
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     ManageFoodiesCaptured manager;
     DistanceTask distanceAsyncTask;
+
+    /**************LOC SERV2*****************/
+
     /********************************************/
     private LocationService mLocationService;
 
+
     private boolean mBound = false;
     private LatLng bitmap;
+    private double latitude, longitude;
     Polyline line;//pour tracer une ligne
     /***********************SERVICE DE LOCALISATION*********************/
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -65,6 +75,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             mLocationService = binder.getService();
             mBound = true;
         }
+
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
@@ -92,11 +103,14 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         if (mBound) {
             // Appeler la méthode getCurrentLocation() sur l'instance du service
             double[] location = mLocationService.getCurrentLocation();
+            latitude=mLocationService.getLatitude();
+            longitude=mLocationService.getLongitude();
             if (location != null) {
                 // Utiliser la latitude et la longitude ici
             }
         }
     }
+
 
     @Override
     protected void onStop() {
@@ -116,6 +130,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         // Lier le service à l'activité
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        startService(intent);
 
         Intent i= getIntent();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -126,6 +141,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
          manager= ManageFoodiesCaptured.getInstance(this);
         manager.displayCapturedFoodieForMapsActivity(this);
         manager.updatePoints(this);
+
     }
 
     @Override
@@ -237,15 +253,19 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
         Intent i= getIntent();
-        double latitude=i.getExtras().getDouble("latitude");
-        double longitude=i.getExtras().getDouble("longitude");
+        mLocationService.getCurrentLocation();
+        Log.e(TAG,"On Map READYLa longitude est "+mLocationService.getLocation().getLongitude() +"et la latitude " +mLocationService.getLocation().getLatitude());
+       // double latitude=i.getExtras().getDouble("latitude");
+        //double longitude=i.getExtras().getDouble("longitude");
        /* double[] lesCoordonnees=mLocationService.getCurrentLocation();
         double latitude=mLocationService.getLatitude();
         double longitude=mLocationService.getLongitude();
         */
+        latitude=mLocationService.getLocation().getLatitude();
+        longitude=mLocationService.getLocation().getLongitude();
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
-        LatLng mapUser= new LatLng(latitude,longitude);
-        LatLng position = new LatLng(latitude,longitude);
+        LatLng mapUser= new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
+        //LatLng position = new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
         /*double[] tableauDesLongitudes=i.getExtras().getDoubleArray("tableaudDesLongitudes");
         double[] tableauDesLatitude=i.getExtras().getDoubleArray("tableauDesLatitudes");
         double[] tableauDesDistances=i.getExtras().getDoubleArray("tableaudesDistances");
@@ -253,7 +273,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
          */
 
         //Put all the foodies on the map
-        putFoodiesOnMap(mMap,position);
+        try {
+            putFoodiesOnMap(mMap,mapUser);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
@@ -270,7 +294,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 mLocationService.getCurrentLocation();
                 Location location=mLocationService.getLocation();
                 //onLocationChanged(location);
-                LatLng userPos= new LatLng(mLocationService.getLatitude(),mLocationService.getLongitude());
+                LatLng userPos= new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
                 if(line!=null)
                 eraseLine();
@@ -320,7 +344,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     //Une fonction qui permet de positionner tout les foodies sur la carte
     // C'est un void
     //
-    public void putFoodiesOnMap(GoogleMap map, LatLng userPostion){
+    public void putFoodiesOnMap(GoogleMap map, LatLng userPostion) throws IOException {
         //On parcour la liste des foodies
         // si il est pas capturé
         // On le positionne sur la carte
@@ -342,6 +366,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 //
                 //Attention
                 //On doit positionner les foodies sur des routes
+
                 BitmapDrawable bt;
                 bt= (BitmapDrawable) manager.getDrawableFoodie(foodie);
                 //bt= (BitmapDrawable) getDrawable(manager.getDrawableFoodie(foodie));
@@ -453,4 +478,9 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
 
     }
+
+
+
+
+
 }

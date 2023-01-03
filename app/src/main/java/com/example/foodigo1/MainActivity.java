@@ -67,15 +67,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case (R.id.play):
                 Intent i = null;
                 System.out.println("*******************La localisation est" + mLocationService.getCurrentLocation());
-                double latitude = mLocationService.getLatitude();
-                double longitude = mLocationService.getLongitude();
-
                 if (manager.gameIsComplete()) {
                     i = new Intent(this, GameCompleteActivity.class);
                 } else {
                     i = new Intent(this, Maps3Activity.class);
-                    i.putExtra("latitude", latitude);
-                    i.putExtra("longitude", longitude);
+
                 }
                 if (i != null) {
                     startActivity(i);
