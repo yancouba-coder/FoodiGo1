@@ -1,10 +1,17 @@
 package com.example.foodigo1;
 
+import static android.content.ContentValues.TAG;
+
+
+
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
@@ -12,7 +19,7 @@ import com.google.maps.android.SphericalUtil;
 public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
 
     private static final String TAG = "DistanceTask";
-    private static final double THRESHOLD = 1; // en mètres
+    private static final double THRESHOLD = 2; // en mètres
     private static final int MESSAGE_SHOW_POPUP = 1;
     private double distance= 2;
 
@@ -62,4 +69,5 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
     public double getDistance() {
         return distance;
     }
+
 }

@@ -54,6 +54,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private GoogleMap mMap;
     ManageFoodiesCaptured manager;
     DistanceTask distanceAsyncTask;
+    public final int TAKE_PICTURE_DISTANCE=1;
 
     /**************LOC SERV2*****************/
 
@@ -308,6 +309,10 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     distanceAsyncTask= new DistanceTask(Maps3Activity.this,bitmap);
                     distanceAsyncTask.execute(point);
                     double distance= distanceAsyncTask.getDistance();
+
+                    if(distance<TAKE_PICTURE_DISTANCE)
+                        startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
+
                     marker.setSnippet("est à "+ (int)distance +"m");
                     marker.showInfoWindow();
                 }
@@ -429,8 +434,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
     public void montrerLepopUp() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Distance inférieure à 1 mètre")
-                .setMessage("Vous êtes à moins de 1 mètre du Foodie")
+        builder.setTitle("Distance inférieure à 2 mètre")
+                .setMessage("Vous êtes à moins de 2 mètre du Foodie")
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -470,14 +475,59 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onLocationChanged(@NonNull Location location) {
         //Log.e(TAG, "onLocationChanged: " + location);
+        //On change la position du bitmap de l'utilisteur
         System.out.println("*********MAP3:La localisation a changé dans ");
         mLocationService.getCurrentLocation();
         location=mLocationService.getLocation();
         LatLng point= new LatLng(location.getLatitude(),location.getLongitude());
         new DistanceTask(this, bitmap).execute(point);
+        //if(distance<TAKE_PICTURE_DISTANCE)
+        //              startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
 
 
     }
+
+    //Elle se déclanche quand on est à moins de 1 m
+    // la fonction fait un nouvel intent sur l'activité de l'appareil photo
+    //On crée l'intent de l'appareil photo dans la fonction
+    // dans l'activité on lui passe en paramétre le nom du foodie
+    //on démarre l'ativité photo
+    //on met en extrat la position du foodie et la position de l'utilisateur
+    //En tout on a 5 valeurs
+    public void startCameraActivity(LatLng userPosition, LatLng foodiePosition, String foodieName, int distance ){
+      if (distance<=1){
+          Intent iCamera = new Intent(this, CameraActvity2.class);
+           //User positions
+          double userLatitude=userPosition.latitude;
+          double userLongitude=userPosition.longitude;
+          //Foodie positions
+
+          double foodieLatitude=foodiePosition.latitude;
+          double foodieLongitude=foodiePosition.longitude;
+          //Send positions and foodie name
+
+          iCamera.putExtra("userLatitude",userLatitude);
+          iCamera.putExtra("userLongitude",userLongitude);
+
+          iCamera.putExtra("foodieLatitude",foodieLatitude);
+          iCamera.putExtra("foodieLongitude",foodieLongitude);
+
+          iCamera.putExtra("foodieName", foodieName);
+          startActivity(iCamera);
+          Log.e(TAG,"Démarrage de l'activité Photo");
+
+      }
+      else
+      {
+          Toast.makeText(Maps3Activity.this,"Vous n'êtes pas à moins de 1 métres",Toast.LENGTH_LONG);
+          Log.e(TAG,"Vous n'êtes pas à moins de 1m");
+
+      }
+
+
+
+    }
+
 
 
 
