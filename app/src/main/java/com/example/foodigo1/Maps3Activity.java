@@ -312,9 +312,12 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
                     if(distance<TAKE_PICTURE_DISTANCE)
                         startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
+                    else{
+                        marker.setSnippet("est à "+ (int)distance +"m");
+                        marker.showInfoWindow();
+                    }
 
-                    marker.setSnippet("est à "+ (int)distance +"m");
-                    marker.showInfoWindow();
+
                 }
                 else{
                     Toast.makeText(Maps3Activity.this,"Impossible de récupérer votre position actuelle",Toast.LENGTH_LONG);
@@ -481,6 +484,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         location=mLocationService.getLocation();
         LatLng point= new LatLng(location.getLatitude(),location.getLongitude());
         new DistanceTask(this, bitmap).execute(point);
+
         //if(distance<TAKE_PICTURE_DISTANCE)
         //              startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
 
