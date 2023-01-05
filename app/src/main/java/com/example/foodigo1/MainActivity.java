@@ -65,18 +65,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         */
         switch (view.getId()) {
             case (R.id.play):
+               // mLocationService.getCurrentLocation();
+
                 Intent i = null;
-                System.out.println("*******************La localisation est" + mLocationService.getCurrentLocation());
+              //  System.out.println("*******************La localisation est" + mLocationService.getCurrentLocation());
                 if (manager.gameIsComplete()) {
                     i = new Intent(this, GameCompleteActivity.class);
                 } else {
-                    i = new Intent(this, Maps3Activity.class);
+                    i = new Intent(this, GalleryFoodiesActivity.class);
 
                 }
                 if (i != null) {
                     startActivity(i);
                 }
                 break;
+
+
             case (R.id.home):
 
                 Intent main = new Intent(this, MainActivity.class);
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Affichage du menu
             case (R.id.menu):
                 Intent menu = new Intent(this, MenuActivity.class);
+                menu = new Intent(this, MenuActivity.class);
                 startActivity(menu);
                 break;
             default:
@@ -115,14 +120,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mBound = false;
         }
     };
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         // Délier le service de l'activité
-        if (mBound) {
+       /* if (mBound) {
             unbindService(mConnection);
             mBound = false;
         }
+
+        */
     }
 
     /********************************************************************************************
@@ -154,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         System.out.println("MainActivity onResume: ");
+
         // Afficher l'orientation du téléphone dans la console à chaque mise à jour
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -178,8 +188,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             // Permission has already been granted
         }
-        //A enlever aprés
-        //fetchAddresses(44.858635,-0.5581200000000001);
+
+
 
     }
 
@@ -200,13 +210,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /** SERVICE LOCALISATION **/
         super.onStart();
         // Vérifier si le service est lié
-        if (mBound) {
+       /* if (mBound) {
             // Appeler la méthode getCurrentLocation() sur l'instance du service
             double[] location = mLocationService.getCurrentLocation();
             if (location != null) {
                 // Utiliser la latitude et la longitude ici
             }
         }
+
+        */
     }
 
     @Override
@@ -224,10 +236,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /** SERVICE LOCALISATION **/
         // Délier le service de l'activité
-        if (mBound) {
+       /* if (mBound) {
             unbindService(mConnection);
             mBound = false;
         }
+
+        */
     }
 
 
@@ -264,8 +278,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(this, LocationService.class);
-                    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+                   // Intent intent = new Intent(this, LocationService.class);
+                    //bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 
                     // permission was granted, yay! Do the
@@ -285,6 +299,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+
 
 
 }
