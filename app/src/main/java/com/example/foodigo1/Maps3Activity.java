@@ -2,11 +2,16 @@ package com.example.foodigo1;
 
 import static android.content.ContentValues.TAG;
 
+
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -45,17 +51,20 @@ import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class Maps3Activity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationSource.OnLocationChangedListener{
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
+    //private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE =298090 ;
     //Officiel Maps activity
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     ManageFoodiesCaptured manager;
     DistanceTask distanceAsyncTask;
     public final int TAKE_PICTURE_DISTANCE=1;
+    private HashMap<String,LatLng> foodies_positions;
 
     /**************LOC SERV2*****************/
 
@@ -63,10 +72,34 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private LocationService mLocationService;
 
 
+
     private boolean mBound = false;
     private LatLng bitmap;
     private double latitude, longitude;
     Polyline line;//pour tracer une ligne
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        //askPermission();
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps3);
+        // Lier le service à l'activité
+        Intent intent = new Intent(this, LocationService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        startService(intent);
+
+        Intent i= getIntent();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        //Fragment fragment= new Map_Fragment();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.fragCarte,fragment).commit();
+        manager= ManageFoodiesCaptured.getInstance(this);
+        manager.displayCapturedFoodieForMapsActivity(this);
+        manager.updatePoints(this);
+
+
+    }
     /***********************SERVICE DE LOCALISATION*********************/
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -97,22 +130,23 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-       // Intent intent = new Intent(this, LocationService.class);
-       // bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        //double[] location = mLocationService.getCurrentLocation();
-        //startService(intent);
+      //askPermission();
+/*
+        Intent intent = new Intent(this, LocationService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        double[] location = mLocationService.getCurrentLocation();
+        startService(intent);
+
+ */
         // Vérifier si le service est lié
-        if (mBound) {
-            // Appeler la méthode getCurrentLocation() sur l'instance du service
-            double[] location = mLocationService.getCurrentLocation();
-            latitude=mLocationService.getLatitude();
-            longitude=mLocationService.getLongitude();
-            if (location != null) {
-                // Utiliser la latitude et la longitude ici
-            }
-        }
+
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //askPermission();
+    }
 
     @Override
     protected void onStop() {
@@ -125,31 +159,27 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     }
 
     /****************************************/
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps3);
-        // Lier le service à l'activité
-        Intent intent = new Intent(this, LocationService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        startService(intent);
 
-        Intent i= getIntent();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        //Fragment fragment= new Map_Fragment();
-        //getSupportFragmentManager().beginTransaction().replace(R.id.fragCarte,fragment).commit();
-         manager= ManageFoodiesCaptured.getInstance(this);
-        manager.displayCapturedFoodieForMapsActivity(this);
-        manager.updatePoints(this);
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        askPermission();
+
+
+        Log.e(TAG,"Actvitivté on résume");
        // mLocationService.getCurrentLocation();
+        if (mBound) {
+            // Appeler la méthode getCurrentLocation() sur l'instance du service
+            double[] location = mLocationService.getCurrentLocation();
+            latitude=mLocationService.getLocation().getLatitude();
+            longitude=mLocationService.getLocation().getLongitude();
+            if (location != null) {
+                // Utiliser la latitude et la longitude ici
+            }
+        }
+
+
     }
 
     @Override
@@ -247,6 +277,36 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         }
         if (i !=null) startActivity(i);
     }
+    public void askPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                montrerLepopUpForFoodie("Autorisation","Cette apllication a besoin d'accéder à votre position ");
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                Log.e(TAG,"Permission non accordées");
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSION_REQUEST_CODE);
+
+                // LOCATION_PERMISSION_REQUEST_CODE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } /*else {
+           // mLocationService.getCurrentLocation();
+            // Permission has already been granted
+        }
+        */
+
+
+    }
 
 
     @SuppressLint("PotentialBehaviorOverride")
@@ -255,8 +315,9 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
         Intent i= getIntent();
-        mLocationService.getCurrentLocation();
-        Log.e(TAG,"On Map READYLa longitude est "+mLocationService.getLocation().getLongitude() +"et la latitude " +mLocationService.getLocation().getLatitude());
+        Log.e(TAG,"La location est :"+mLocationService.getCurrentLocation());
+
+        //Log.e(TAG,"On Map READYLa longitude est "+mLocationService.getLocation().getLongitude() +"et la latitude " +mLocationService.getLocation().getLatitude());
        // double latitude=i.getExtras().getDouble("latitude");
         //double longitude=i.getExtras().getDouble("longitude");
        /* double[] lesCoordonnees=mLocationService.getCurrentLocation();
@@ -363,6 +424,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         // On le positionne sur la carte
         //
         int [] angleDepositionnement = {90, 270, 360, 180, 315, 45};
+        foodies_positions=new HashMap<>();
 
 
         int i=0;//indice angle de positionnement
@@ -378,6 +440,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 double fooddistance= foodiePoids*minimumDistance;
 
                 LatLng foodiePosition = SphericalUtil.computeOffsetOrigin(userPostion,fooddistance, angleDepositionnement[i]);
+                foodies_positions.put(foodie,foodiePosition);
+                Log.e(TAG,"Le hashmap contien" +foodies_positions.get(foodie));
                 //
                 //Attention
                 //On doit positionner les foodies sur des routes
@@ -538,6 +602,37 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(this, LocationService.class);
+                    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    //mLocationService.getLocation();
+
+                } else {
+                    montrerLepopUp();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+
+    }
+
 
 
 
