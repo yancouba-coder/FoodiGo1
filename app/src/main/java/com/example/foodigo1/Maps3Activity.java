@@ -45,8 +45,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
@@ -64,7 +62,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     ManageFoodiesCaptured manager;
     DistanceTask distanceAsyncTask;
     public final int TAKE_PICTURE_DISTANCE=1;
+
+    private String foodieClicked;
+
     private HashMap<String,LatLng> foodies_positions;
+
 
     /**************LOC SERV2*****************/
 
@@ -341,7 +343,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mMap.addMarker(new MarkerOptions().position(mapFrance).title("Vous êtes ici"));
+        mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
@@ -357,6 +359,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             @SuppressLint({"PotentialBehaviorOverride", "SuspiciousIndentation"})
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
+                foodieClicked = marker.getTitle();
                 bitmap = marker.getPosition();
                 mLocationService.getCurrentLocation();
                 Location location=mLocationService.getLocation();
@@ -505,8 +508,38 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         }
         return isBat;
     }
+    public void callAugmentedImageActivity(String foodieName){
 
+        Intent appPhoto = new Intent(this, AugmentedImageActivity.class);
+
+        LatLng positionFoodie = foodies_positions.get(foodieName);
+        LatLng userPos= new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
+
+        double userLatitude=userPos.latitude;
+        double userLongitude=userPos.longitude;
+        //Foodie positions
+
+        double foodieLatitude=positionFoodie.latitude;
+        double foodieLongitude=positionFoodie.longitude;
+        //Send positions and foodie name
+
+        appPhoto.putExtra("userLatitude",userLatitude);
+        appPhoto.putExtra("userLongitude",userLongitude);
+
+        appPhoto.putExtra("foodieLatitude",foodieLatitude);
+        appPhoto.putExtra("foodieLongitude",foodieLongitude);
+
+        appPhoto.putExtra("foodieName", foodieName);
+        startActivity(appPhoto);
+        Log.e(TAG,"Démarrage de l'activité Photo");
+
+        this.finish();
+
+
+
+    }
     public void montrerLepopUp() {
+        String foodieName = foodieClicked;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Distance inférieure à 2 mètre")
                 .setMessage("Vous êtes à moins de 2 mètre du Foodie")
@@ -516,15 +549,17 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Prendre une photo", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        callAugmentedImageActivity(foodieName);
                     }
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     public void montrerLepopUpForFoodie(String foodiname, String description) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(foodiname)

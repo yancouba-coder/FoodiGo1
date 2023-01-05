@@ -125,7 +125,7 @@ public class CompassService extends Service implements SensorEventListener {
     /*
     Retrourne une direction qui correspond à la direction que doit suivre le joueur pour aller vers le fooodie.
      */
-    public String getDirection(double latitudeTarget, double longitudeTarget, double latitudeUser, double longitudeUser) {
+    public String getDirectionOfFoodie(double latitudeTarget, double longitudeTarget, double latitudeUser, double longitudeUser) {
         // Calcule la différence entre les coordonnées de la cible et de l'utilisateur
         // On converti les coordonnées en un vecteur qui a pour origine l'utilisateur et qui se dirige vers la cible.
         // vectorAngleInDegrees renvoie la direction du vecteur dans l'espace en degré. Cette direction nous permet de diviser
@@ -190,6 +190,20 @@ public class CompassService extends Service implements SensorEventListener {
             return "";
         }
         */
+    }
+
+    /*
+    Le téléphone de l'utilisateur est orienté vers le foodie
+     */
+    public Boolean userIsFrontOfFoodie(double foodieLatitude, double foodieLongitude, double userLatitude, double userLongitude){
+        String orientationPhone = getOrientation();
+        String direction = getDirectionOfFoodie(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+
+        if (orientationPhone == direction){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
