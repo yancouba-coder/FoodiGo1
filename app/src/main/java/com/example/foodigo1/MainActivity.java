@@ -178,8 +178,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             // Permission has already been granted
         }
-        //A enlever aprés
-        //fetchAddresses(44.858635,-0.5581200000000001);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Request permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    11);
+        } else {
+            Log.d(TAG, "Permission CAMERA : granted " );
+        }
 
     }
 

@@ -9,11 +9,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,12 +24,31 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class PhotoActivity extends AppCompatActivity implements View.OnClickListener {
+
+    /**TODO:Coder l'appel de l'activité selon le schéma suivant :
+
+        Lorsque que l'activité est appelée on recupère l'extra qui contient le nom du foodie en cours de capture
+        Si pas d'extra = > exit
+        on appelle CompassService.getDirection() en lui passant en paramètre la localisation du foodie et de l'user
+        Ces localisations sont aussi dans les extras de l'intent
+
+        //Détecter le foodie avec l'orientation
+        On prend la photo
+        On rajoute le bitmap
+
+        on appelle manager.newFoodieCaptured pour enregistrer les points.
+
+     **/
+
     private static final int RETOUR_START_ACTIVITY = 1;
     String photoPath = null;
     ImageView photoFoodieCaptured = null;
@@ -37,6 +57,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     private File photoFile;
     private String currentPhotoPath;
     private Bitmap bitmap;
+    String imageFileName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +88,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
             public void onActivityResult(Bitmap result) {
                 // Traitement du résultat de l'Activity de prise de photo une fois qu'elle a été terminée
 
-                MediaStore.Images.Media.insertImage(getContentResolver(), result, "nom image", "description");
+                MediaStore.Images.Media.insertImage(getContentResolver(), result, "result", "description");
                 onPictureTaken(result);
             }
         };
@@ -83,38 +104,134 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     private void onPictureTaken(Bitmap imageBitmap) {
 
         // Définir la largeur et la hauteur souhaitées pour l'image redimensionnée
-        int width = 700;
-        int height = 1200;
+        //int width = 700;
+        //int height = 1200;
 
-// Redimensionner l'image
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, true);
+        // Redimensionner l'image
+        //Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, true);
+        Log.d(TAG + "imageBitmap", imageBitmap.toString());
 
-        // Affecter l'image à l'objet ImageView
-        photoFoodieCaptured.setImageBitmap(scaledBitmap);
+
+        //Tentative 03/01 ci dessous
+        //rendre la photo mutable
+        Bitmap imageBitmap2 = Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            Log.d(TAG + "image2Bitmap", imageBitmap2.toString());
+        Bitmap imageBitmapMutable = imageBitmap2.copy(Bitmap.Config.ARGB_8888, true);
+            Log.d(TAG + "imageBitmap", imageBitmap.toString());
+
+
+        //rendre l'overlay mutable
+        Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.mangue); //contient le foodie
+        Bitmap overlayMutable = overlay.copy(Bitmap.Config.ARGB_8888, true);
+            Log.d(TAG + "overlay", overlayMutable.toString());
+
+        //contient la photo prise par l'appareil
+        Canvas canvas = new Canvas(imageBitmapMutable);
+        Log.d("***canvas.getWidth()", String.valueOf(canvas.getWidth()));
+        Log.d("***canvas.getHeight()", String.valueOf(canvas.getHeight()));
+        //rajoute le foodie
+
+        canvas.drawBitmap(overlayMutable,0,0,null);
+            Log.d(TAG + "canvas", canvas.toString());
+
+            Log.d("canvas.getWidth()", String.valueOf(canvas.getWidth()));
+            Log.d("canvas.getHeight()", String.valueOf(canvas.getHeight()));
+        Bitmap image = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(image);
+            Log.d(TAG + "image", image.toString());
+
+        //Code 31/12
+        // Affecter l'image à l'objet ImageView.
+        photoFoodieCaptured.setImageBitmap(image);
+
         // Enregistrer l'image dans la galerie
-        saveImageToGallery(imageBitmap);
+        MediaStore.Images.Media.insertImage(getContentResolver(), overlay, "overlay" +imageFileName, "description"); //ok foodie sur foond noir
+        //MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmap, "imageBitmap" +imageFileName, "description"); //photo mauvaise qualité
+        //MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmapMutable, "imageBitmapMutable" +imageFileName, "description"); //noir
+        //MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmapMutable, "imageBitmapMutableimageBitmapMutable" +imageFileName, "description"); //nooir
+        //MediaStore.Images.Media.insertImage(getContentResolver(), image, "image" +imageFileName, "description"); //noir
+
+        saveImageToGallery(image);
+        //
+
+        //String name = "png_20230103_232525_5672569259693202380.png";
+//
+        //
+        //png_20230103_231827_6155174513089271067.png
+        //String name = imageFileName ;
+
+        //String path = "/storage/emulated/0/Android/data/com.example.foodigo1/files/Pictures/" + name;
+        //Uri imageUri = Uri.parse("file://" + path);
+
+        //photoFoodieCaptured.setImageURI(imageUri);
+        photoFoodieCaptured.setImageBitmap(BitmapFactory.decodeFile("/storage/emulated/0/Android/data/com.example.foodigo1/files/Pictures/png_20230103_234211_4954648300228741631.png"));
+    }
+    public static Bitmap decodeBitmapFromFile(String filePath, Rect outPadding, int reqWidth, int reqHeight) throws FileNotFoundException {
+
+        // Convert String to File
+        File file = new File(filePath);
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(new FileInputStream(file), outPadding, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeStream(new FileInputStream(file), outPadding, options);
+
+    }
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
-    private void saveImageToGallery(Bitmap imageBitmap) {
+
+    private String saveImageToGallery(Bitmap imageBitmap) {
         // Vérifiez si le répertoire de l'appareil photo existe
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        Log.d("DIRECTORY_PICTURES = ", storageDir.getAbsolutePath() + " , list =  " + storageDir.listFiles().length);
+        File[] files = storageDir.listFiles();
+        for (File file : files) {
+            System.out.println(file.getName());
+        }
+
         if (!storageDir.exists()) {
             if (!storageDir.mkdirs()) {
                 Log.e(TAG, "Failed to create directory");
-                return;
+                return null;
             }
         }
 
         // Créez un nom de fichier unique
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+         imageFileName = "png_" + timeStamp + "_";
 
 
         try {
             // Créez un fichier temporaire
             photoFile = File.createTempFile(
                     imageFileName,  /* prefix */
-                    ".jpg",         /* suffix */
+                    ".png",         /* suffix */
                     storageDir      /* directory */
             );
 
@@ -123,7 +240,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
 
             // Écrivez l'image dans le fichier
             FileOutputStream out = new FileOutputStream(photoFile);
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -132,10 +249,11 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         // Ajoutez la photo à la galerie
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri contentUri = Uri.fromFile(photoFile);
-        System.out.println("Path de la photto = " + photoFile.getPath());
+        System.out.println("Path de la photo = " + photoFile.getPath());
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
-//TODO : modifier ouu effacer les lignes si dessus
+        return photoFile.getAbsolutePath();
+
     }
 
 

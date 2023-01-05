@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.foodigo1.augmentedimage.AugmentedImageActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
@@ -160,7 +161,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                  i = new Intent(this, MenuActivity.class);
                  break;
             case R.id.photo_ico_black:
-                 i = new Intent(this, PhotoActivity.class);
+                 i = new Intent(this, AugmentedImageActivity.class);
                  break;
             case R.id.arrow_left_black:
             case R.id.grid_ico_black:
@@ -279,13 +280,17 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         } catch (IOException e) {
             e.printStackTrace();
         }
+        mMap.addMarker(new MarkerOptions().position(mapFrance).title("Vous êtes ici"));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapUser, 19.0f));
        //Le systeme de Zoom
         mMap.getUiSettings().setZoomControlsEnabled(true);
+
+
         mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
+
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @SuppressLint({"PotentialBehaviorOverride", "SuspiciousIndentation"})
@@ -361,7 +366,9 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
 
         int i=0;//indice angle de positionnement
+
         int minimumDistance= 2;
+
         for (String foodie:manager.getListOfFoodies()) {
             // Si il est pas capturé on le positionne
             if(!manager.isCaptured(foodie)){

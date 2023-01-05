@@ -138,7 +138,9 @@ public class LocationService extends Service {
             return null;
         }
 
+
         location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         if (location == null) {
             location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
