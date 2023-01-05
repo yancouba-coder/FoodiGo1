@@ -126,7 +126,9 @@ public class LocationService extends Service {
             return null;
         }
 
-         location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //location = mLocationManager.getCurrentLocation(LocationManager.GPS_PROVIDER,);
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         Task<Location> locationTask = fusedLocationClient.getLastLocation();
         locationTask.addOnCompleteListener(new OnCompleteListener<Location>() {

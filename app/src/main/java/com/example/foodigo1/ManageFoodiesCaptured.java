@@ -146,8 +146,8 @@ public class ManageFoodiesCaptured {
             }
         }
 
-                //Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
-                private Boolean OLDisCaptured (String foodie) throws Exception {
+        //Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
+            private Boolean OLDisCaptured (String foodie) throws Exception {
                     //OLD method, actually not used
                     JSONObject capturedJSON = readJson("captured.json");
                     HashMap<String, Boolean> captured = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
@@ -158,7 +158,6 @@ public class ManageFoodiesCaptured {
                         throw new Exception("The foodie " + foodie + " doesn't exist");
                     }
                 }
-
 
 
         /*
@@ -465,54 +464,54 @@ public class ManageFoodiesCaptured {
                     }
                     return true;
                 }
-    /*
-    Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
-     */
+        /*
+        Cette fonction retourne l'image en couleur du foodie qui lui ai passé en paramètre.
+         */
 
-    public int getIdOfDrawableFoodie(String foodieName){
-        switch (foodieName){
-            case "ananas":
-                return R.drawable.ananas;
-            case "avocat":
-                return R.drawable.avocat;
-            case "banane":
-                return R.drawable.banane;
-            case "pasteque":
-                return R.drawable.pasteque;
-            case "mangue":
-                return R.drawable.mangue;
-            case "pommes":
-                return R.drawable.pommes;
-            default:
-                Log.e("manager.getDrawableFoodie() : ","getDrawableFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
-                return 0 ;
+        public int getIdOfDrawableFoodie(String foodieName){
+            switch (foodieName){
+                case "ananas":
+                    return R.drawable.ananas;
+                case "avocat":
+                    return R.drawable.avocat;
+                case "banane":
+                    return R.drawable.banane;
+                case "pasteque":
+                    return R.drawable.pasteque;
+                case "mangue":
+                    return R.drawable.mangue;
+                case "pommes":
+                    return R.drawable.pommes;
+                default:
+                    Log.e("manager.getDrawableFoodie() : ","getDrawableFoodie() appelé mais foodieName ne correspond à aucune valeur connue. foodieName : " + foodieName);
+                    return 0 ;
+
+            }
 
         }
 
-    }
 
+        private void listPhotos () {
+            // Obtenir le répertoire où sont enregistrées les photos
+            //retourne un objet File qui représente le répertoire où sont enregistrés les fichiers externes de l'application.
+            File photoDir = contextApp.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-                private void listPhotos () {
-                    // Obtenir le répertoire où sont enregistrées les photos
-                    //retourne un objet File qui représente le répertoire où sont enregistrés les fichiers externes de l'application.
-                    File photoDir = contextApp.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            // Vérifier que le répertoire existe
+            if (photoDir != null) {
+                // Obtenir la liste des fichiers dans le répertoire
+                File[] photoFiles = photoDir.listFiles();
 
-                    // Vérifier que le répertoire existe
-                    if (photoDir != null) {
-                        // Obtenir la liste des fichiers dans le répertoire
-                        File[] photoFiles = photoDir.listFiles();
-
-                        // Vérifier que la liste n'est pas vide
-                        if (photoFiles != null) {
-                            // Parcourir la liste des fichiers et afficher leur nom
-                            for (File file : photoFiles) {
-                                if (file.isFile()) {
-                                    System.out.println(file.getName());
-                                }
-                            }
+                // Vérifier que la liste n'est pas vide
+                if (photoFiles != null) {
+                    // Parcourir la liste des fichiers et afficher leur nom
+                    for (File file : photoFiles) {
+                        if (file.isFile()) {
+                            System.out.println(file.getName());
                         }
                     }
                 }
+            }
+        }
 
 
 }
