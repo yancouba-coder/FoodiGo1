@@ -491,15 +491,15 @@ public class ManageFoodiesCaptured {
         }
 
 
-        private void listPhotos () {
-            // Obtenir le répertoire où sont enregistrées les photos
-            //retourne un objet File qui représente le répertoire où sont enregistrés les fichiers externes de l'application.
-            File photoDir = contextApp.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                private void listPhotos () {
+                    // Obtenir le répertoire où sont enregistrées les photos
+                    //retourne un objet File qui représente le répertoire où sont enregistrés les fichiers externes de l'application.
+                    File photoDir = contextApp.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                    // Vérifier que le répertoire existe
+                    if (photoDir != null) {
+                        // Obtenir la liste des fichiers dans le répertoire
+                        File[] photoFiles = photoDir.listFiles();
 
-            // Vérifier que le répertoire existe
-            if (photoDir != null) {
-                // Obtenir la liste des fichiers dans le répertoire
-                File[] photoFiles = photoDir.listFiles();
 
                 // Vérifier que la liste n'est pas vide
                 if (photoFiles != null) {

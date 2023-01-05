@@ -1,5 +1,6 @@
 package com.example.foodigo1;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -7,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final int LOCATION_PERMISSION_REQUEST_CODE =298090 ;
     ManageFoodiesCaptured manager;
 
 
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-         manager = ManageFoodiesCaptured.getInstance(this);
+        manager = ManageFoodiesCaptured.getInstance(this);
         manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
         //TODO : a effacer dans la version de deploiement, c'est pour le test
         manager.writeToPreferences("avocat", true);
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         manager.updatePoints(this);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -63,15 +67,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case (R.id.play):
                 Intent i = null;
                 System.out.println("*******************La localisation est" + mLocationService.getCurrentLocation());
-                double latitude = mLocationService.getLatitude();
-                double longitude = mLocationService.getLongitude();
-
                 if (manager.gameIsComplete()) {
                     i = new Intent(this, GameCompleteActivity.class);
                 } else {
                     i = new Intent(this, Maps3Activity.class);
-                    i.putExtra("latitude", latitude);
-                    i.putExtra("longitude", longitude);
+
                 }
                 if (i != null) {
                     startActivity(i);
@@ -155,11 +155,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         System.out.println("MainActivity onResume: ");
         // Afficher l'orientation du téléphone dans la console à chaque mise à jour
-        if (serviceBound) {
-            //String orientation = compassService.getOrientation();
-            //System.out.println("Orientation: " + orientation);
-            //Log.d(TAG, "Orientation: " + orientation);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSION_REQUEST_CODE);
+
+                // LOCATION_PERMISSION_REQUEST_CODE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
         }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
@@ -170,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Log.d(TAG, "Permission CAMERA : granted " );
         }
+
     }
 
 
@@ -220,23 +240,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    /*
-    * Notes pour le zoom avec Yancouba:
-    *
-    *       QUESTIONS
-    *   - depuis la mainActivity, le bouton jouer doit amener sur la galerie foodie, c'est
-    *     le bouton jouoer de la galerieFoodie qui amene sur la maps donc il faut déplacer
-    *     le code dans galerieFoodie. De plus le menu lui aussi peu ouvrir la carte. On doit
-    *     donc rajouter ca dessus.
-    *   - En testant le code, ma position ne change pas lorsque je me déplace, donc je n'ai pas la
-    *     notif comme quoi je suis proche du foodie.
-    *
-    *
-    *       INFORMATIONS
-    *   - INFO : j'ai du factoriser nos 2 codes a/n du onStart() et du onStop(), c'est ok ?
-    *   - INFO : j'ai du refaire la manip pour forcer la synchronisation des dépendances car
-    *     le SphericalUtil ne fonctionnait plus.
-    *   - INFO : j'ai fait comme toi dans les notes, j'ai mis une note pour l'utilisation de la boussole
-    * */
+
+    /****************************************/
+
+
+    public void montrerLepopUp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Permission")
+                .setMessage("La permission doit être accordée !")
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(this, LocationService.class);
+                    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    //mLocationService.getLocation();
+
+                } else {
+                    montrerLepopUp();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+
+    }
+
 
 }
