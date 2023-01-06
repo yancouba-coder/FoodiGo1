@@ -30,6 +30,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.example.foodigo1.CompassService;
+import com.example.foodigo1.ManageFoodiesCaptured;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedImage;
@@ -77,6 +80,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private GLSurfaceView surfaceView;
   private ImageView fitToScanView;
   private RequestManager glideRequestManager;
+  private ManageFoodiesCaptured manager;
+  private CompassService compassService ;
 
   private boolean installRequested;
 
@@ -97,7 +102,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   // the
   // database.
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
-
+  String foodieNameOnCapture;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -117,13 +122,50 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
     fitToScanView = findViewById(R.id.image_view_fit_to_scan);
     glideRequestManager = Glide.with(this);
-    glideRequestManager
-            .load(R.drawable.mangue)
-        //.load(Uri.parse("file:///android_asset/fit_to_scan.png"))
-        .into(fitToScanView);
+
+    manager = ManageFoodiesCaptured.getInstance(this);
+    foodieNameOnCapture = getIntent().getExtras().getString("foodieName");
+
+    // déplacé dans le onResume()
+    //onTheGoodDirection(foodieNameOnCapture);
+
+    compassService = new CompassService();
 
     installRequested = false;
   }
+
+  //quand le téléphone pointe dans la bonne direction
+  private void onTheGoodDirection(String foodieName){
+    //TODO : vérifie que le tel pointe dans la bonne direction
+
+    // ce qui a été pasé en paramètre
+    /*
+    appPhoto.putExtra("userLatitude",userLatitude);
+    appPhoto.putExtra("userLongitude",userLongitude);
+
+    appPhoto.putExtra("foodieLatitude",foodieLatitude);
+    appPhoto.putExtra("foodieLongitude",foodieLongitude);
+
+    appPhoto.putExtra("foodieName", foodieName);
+*/
+
+
+    /*
+    Affiche l'image du foodie en couleur au centre de l'écran
+    */
+    glideRequestManager
+            //manager.getIdOfDrawableFoodie(foodieName) : retourne l'id qui correspond à l'image en couleur du foodie
+            .load(manager.getIdOfDrawableFoodie(foodieName))
+            //.load(Uri.parse("file:///android_asset/fit_to_scan.png"))
+            .into(fitToScanView);
+
+    fitToScanView.setVisibility(View.VISIBLE); //affiche le foodie
+
+    //TODO : enregistrer la photo avec le foodie et récup le path
+    String path = null;
+
+    manager.newFoodieCaptured(foodieName, path);
+  };
 
   @Override
   protected void onDestroy() {
@@ -142,6 +184,13 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   @Override
   protected void onResume() {
     super.onResume();
+//position du joueur
+    double userLatitude=getIntent().getExtras().getDouble("userLatitude");
+    double userLongitude=getIntent().getExtras().getDouble("userLongitude");
+
+    //Foodie positions
+    double foodieLatitude=getIntent().getExtras().getDouble("foodieLatitude");
+    double foodieLongitude=getIntent().getExtras().getDouble("foodieLongitude");
 
     if (session == null) {
       Exception exception = null;
@@ -203,7 +252,14 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     surfaceView.onResume();
     displayRotationHelper.onResume();
 
-    fitToScanView.setVisibility(View.VISIBLE);
+    //si le téléphone pointe vers le foodie renvoie true
+
+    if (compassService.userIsFrontOfFoodie(foodieLatitude,foodieLongitude,userLatitude,userLongitude)){
+      onTheGoodDirection(foodieNameOnCapture);
+    }
+
+
+    //fitToScanView.setVisibility(View.VISIBLE);
   }
 
   @Override

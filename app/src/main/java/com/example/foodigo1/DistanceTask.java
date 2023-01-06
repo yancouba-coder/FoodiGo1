@@ -32,6 +32,7 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
         this.activity = activity;
         this.bitmap = bitmap;
         this.looper = Looper.myLooper();
+
         this.handler = new android.os.Handler(looper) {
             @Override
             public void handleMessage(Message msg) {
