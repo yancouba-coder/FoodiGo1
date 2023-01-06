@@ -17,6 +17,7 @@
 package com.example.foodigo1.augmentedimage;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -135,12 +136,12 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   public double getFoodieLongitude() {
     return foodieLongitude;
   }
-
+  AugmentedImageActivity act;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+     act = this;
     setContentView(R.layout.activity_photo_api_arcore);
     surfaceView = findViewById(R.id.surfaceview);
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
@@ -227,8 +228,11 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   @Override
   protected void onResume() {
     super.onResume();
-    compassService = new CompassService();
-    compassService.setOnDirectionChangedListener(this);
+/*** SERVICE BOUSSOLE **/
+    Intent intent = new Intent(this, CompassService.class);
+    // conection au service boussole
+    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
     onResumeBis();
 
     if (session == null) {
@@ -489,9 +493,13 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private ServiceConnection serviceConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
+      Log.d(TAG,"onServiceConnected");
       CompassService.CompassBinder binder = (CompassService.CompassBinder) service;
       compassService = binder.getService();
       compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+
+      compassService.setOnDirectionChangedListener(act);
+      act.compassService = compassService;
       serviceBound = true;
       Log.d("onServiceConnected", String.valueOf(serviceBound));
     }
@@ -558,6 +566,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     Intent intent = new Intent(this, CompassService.class);
     // conection au service boussole
     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    compassService = new CompassService();
 
     /** SERVICE LOCALISATION **/
     super.onStart();
