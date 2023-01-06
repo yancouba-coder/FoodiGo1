@@ -11,6 +11,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.example.foodigo1.augmentedimage.AugmentedImageActivity;
+
 
 public class CompassService extends Service implements SensorEventListener {
     private static final String TAG = "CompassService";
@@ -24,7 +26,19 @@ public class CompassService extends Service implements SensorEventListener {
     private String orientation = "N";
 
     // Instance de CompassBinder pour lier le service à l'activité
-    private final IBinder binder = new CompassBinder();
+    private IBinder binder = new CompassBinder();
+    Double foodieLatitude;
+    Double foodieLongitude;
+    Double userLatitude;
+    Double userLongitude;
+
+    public void notifyThePosition(double foodieLatitude, double foodieLongitude, double userLatitude, double userLongitude) {
+        Log.d(TAG, "notifyThePosition" );
+        this.foodieLatitude = foodieLatitude;
+        this.foodieLongitude = foodieLongitude;
+        this.userLatitude = userLatitude;
+        this.userLongitude = userLongitude;
+    }
 
     // Classe interne pour lier le service à l'activité
     public class CompassBinder extends Binder {
@@ -32,9 +46,11 @@ public class CompassService extends Service implements SensorEventListener {
             return CompassService.this;
         }
     }
-
+    String orientationPhone;
+    String directionToGetTheFoodie;
 
     @Override
+
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
@@ -70,10 +86,16 @@ public class CompassService extends Service implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
+
+
+
     @Override
     public IBinder onBind(Intent intent) {
-        System.out.println("CompassService ; onBind");
-        return binder;
+        System.out.println("CompassService ; onBind ");
+        System.out.println("CompassService ; orientationPhone " + orientationPhone);
+        System.out.println("CompassService ; directionToGetTheFoodie " + directionToGetTheFoodie);
+        return this.binder;
+        //return binder;
     }
 
     @Override
@@ -102,9 +124,27 @@ public class CompassService extends Service implements SensorEventListener {
                 } else if (azimuth >= 292.5 && azimuth < 337.5) {
                     orientation = "NW";
                 }
+                orientationPhone = orientation;
+                Log.e("Juste before the if : ", orientationPhone + directionToGetTheFoodie + orientation);
+                //Log.d(TAG, String.valueOf(foodieLatitude + foodieLongitude + userLatitude + userLongitude));
+                if (directionToGetTheFoodie ==null &&
+                        foodieLatitude != null &&
+                        foodieLongitude != null &&
+                        userLatitude != null &&
+                        userLongitude != null  ){
+                    userIsFrontOfFoodie(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+                }
+                Log.e("Juste after the null if : ", orientationPhone + directionToGetTheFoodie + orientation);
+                //setOnDirectionChangedListener(AugmentedImageActivity.class);
+                System.out.println(mListener);
+                if (orientationPhone == directionToGetTheFoodie && mListener != null) {
+                    mListener.onDirectionChanged(directionToGetTheFoodie);
+                    Log.e("In the if : orientationPhone == orientation ", orientationPhone + directionToGetTheFoodie + orientation);
+
+                }
 
                 // Affichez ou utilisez l'orientation N S E W
-                //Log.d(TAG, "Orientation: " + orientation);
+                Log.d(TAG, "Orientation: " + orientation);
             }
     }
 
@@ -196,17 +236,32 @@ public class CompassService extends Service implements SensorEventListener {
     Le téléphone de l'utilisateur est orienté vers le foodie
      */
     public Boolean userIsFrontOfFoodie(double foodieLatitude, double foodieLongitude, double userLatitude, double userLongitude){
-        String orientationPhone = getOrientation();
-        String direction = getDirectionOfFoodie(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+        orientationPhone = getOrientation();
 
-        if (orientationPhone == direction){
+
+        directionToGetTheFoodie = getDirectionOfFoodie(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+
+        Log.e("orientationPhone ",orientationPhone);
+        Log.e("direction ",directionToGetTheFoodie);
+        if (orientationPhone == directionToGetTheFoodie){
+
             return true;
         }else{
             return false;
         }
     }
 
+    public interface OnDirectionChangedListener {
+        void onDirectionChanged(String direction);
+    }
+    private OnDirectionChangedListener mListener;
+
+    public void setOnDirectionChangedListener(OnDirectionChangedListener listener) {
+        mListener = listener;
+        Log.e(TAG, "setOnDirectionChangedListener" + mListener);
+    }
 
 
 }
+
 

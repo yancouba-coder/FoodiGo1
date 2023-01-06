@@ -16,10 +16,17 @@
 
 package com.example.foodigo1.augmentedimage;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -27,12 +34,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.example.foodigo1.CompassService;
 import com.example.foodigo1.ManageFoodiesCaptured;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedImage;
@@ -73,7 +81,10 @@ import com.example.foodigo1.common.rendering.BackgroundRenderer;
  * href="https://developers.google.com/ar/develop/java/augmented-images/">Recognize and Augment
  * Images</a>.
  */
-public class AugmentedImageActivity extends AppCompatActivity implements GLSurfaceView.Renderer {
+public class AugmentedImageActivity extends AppCompatActivity implements GLSurfaceView.Renderer, CompassService.OnDirectionChangedListener{
+
+
+
   private static final String TAG = AugmentedImageActivity.class.getSimpleName();
 
   // Rendering. The Renderers are created here, and initialized when the GL surface is created.
@@ -104,10 +115,33 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
   String foodieNameOnCapture;
 
+  double userLatitude;
+  double userLongitude;
+  //Foodie positions
+  double foodieLatitude;
+  double foodieLongitude;
+  public double getUserLatitude() {
+    return userLatitude;
+  }
+
+  public double getUserLongitude() {
+    return userLongitude;
+  }
+
+  public double getFoodieLatitude() {
+    return foodieLatitude;
+  }
+
+
+  public double getFoodieLongitude() {
+    return foodieLongitude;
+  }
+  AugmentedImageActivity act;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+     act = this;
     setContentView(R.layout.activity_photo_api_arcore);
     surfaceView = findViewById(R.id.surfaceview);
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
@@ -129,13 +163,23 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     // déplacé dans le onResume()
     //onTheGoodDirection(foodieNameOnCapture);
 
-    compassService = new CompassService();
+
 
     installRequested = false;
+
+     userLatitude=getIntent().getExtras().getDouble("userLatitude");
+     userLongitude=getIntent().getExtras().getDouble("userLongitude");
+
+    //Foodie positions
+     foodieLatitude=getIntent().getExtras().getDouble("foodieLatitude");
+     foodieLongitude=getIntent().getExtras().getDouble("foodieLongitude");
+    //compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+
   }
 
   //quand le téléphone pointe dans la bonne direction
   private void onTheGoodDirection(String foodieName){
+    Log.e(TAG,"onTheGoodDirection");
     //TODO : vérifie que le tel pointe dans la bonne direction
 
     // ce qui a été pasé en paramètre
@@ -184,13 +228,12 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   @Override
   protected void onResume() {
     super.onResume();
-//position du joueur
-    double userLatitude=getIntent().getExtras().getDouble("userLatitude");
-    double userLongitude=getIntent().getExtras().getDouble("userLongitude");
+/*** SERVICE BOUSSOLE **/
+    Intent intent = new Intent(this, CompassService.class);
+    // conection au service boussole
+    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-    //Foodie positions
-    double foodieLatitude=getIntent().getExtras().getDouble("foodieLatitude");
-    double foodieLongitude=getIntent().getExtras().getDouble("foodieLongitude");
+    onResumeBis();
 
     if (session == null) {
       Exception exception = null;
@@ -253,8 +296,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     displayRotationHelper.onResume();
 
     //si le téléphone pointe vers le foodie renvoie true
+    compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
 
     if (compassService.userIsFrontOfFoodie(foodieLatitude,foodieLongitude,userLatitude,userLongitude)){
+      //compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
       onTheGoodDirection(foodieNameOnCapture);
     }
 
@@ -426,6 +471,143 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       }
     }
   }
+
+
+  @Override
+  public void onDirectionChanged(String direction) {
+    Log.e("************* direction = ", direction);
+    //position du joueur
+
+    //compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+    onTheGoodDirection(foodieNameOnCapture);
+  }
+
+
+
+  /********************************************************************************************
+   ************************************* SERVICE BOUSSOLE *************************************
+   ********************************************************************************************/
+
+  private boolean serviceBound = false;
+
+  private ServiceConnection serviceConnection = new ServiceConnection() {
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+      Log.d(TAG,"onServiceConnected");
+      CompassService.CompassBinder binder = (CompassService.CompassBinder) service;
+      compassService = binder.getService();
+      compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+
+      compassService.setOnDirectionChangedListener(act);
+      act.compassService = compassService;
+      serviceBound = true;
+      Log.d("onServiceConnected", String.valueOf(serviceBound));
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+      serviceBound = false;
+      Log.d("onServiceDisconnected", String.valueOf(serviceBound));
+    }
+  };
+
+
+  private void onResumeBis() {
+    super.onResume();
+    System.out.println("MainActivity onResume: ");
+
+    // Afficher l'orientation du téléphone dans la console à chaque mise à jour
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+      Log.e(TAG, "Permission not granted  ACCESS_FINE_LOCATION ");
+      // Permission is not granted
+      // Should we show an explanation?
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+              Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+        // Show an explanation to the user *asynchronously* -- don't block
+        // this thread waiting for the user's response! After the user
+        // sees the explanation, try again to request the permission.
+      } else {
+        // No explanation needed; request the permission
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                298091);
+
+        // LOCATION_PERMISSION_REQUEST_CODE is an
+        // app-defined int constant. The callback method gets the
+        // result of the request.
+      }
+    } else {
+      // Permission has already been granted
+    }
+
+
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+      // Permission is not granted
+      // Request permission
+      Log.e(TAG, "Permission not granted  CAMERA ");
+      ActivityCompat.requestPermissions(this,
+              new String[]{Manifest.permission.CAMERA},
+              11);
+    } else {
+      Log.d(TAG, "Permission CAMERA : granted " );
+    }
+
+
+  }
+
+  @Override
+  protected void onStart() {
+    System.out.println("AugmentedImageActivity onStart: ");
+
+    /*** SERVICE BOUSSOLE **/
+    Intent intent = new Intent(this, CompassService.class);
+    // conection au service boussole
+    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    compassService = new CompassService();
+
+    /** SERVICE LOCALISATION **/
+    super.onStart();
+    // Vérifier si le service est lié
+       /* if (mBound) {
+            // Appeler la méthode getCurrentLocation() sur l'instance du service
+            double[] location = mLocationService.getCurrentLocation();
+            if (location != null) {
+                // Utiliser la latitude et la longitude ici
+            }
+        }
+
+        */
+
+  }
+
+  @Override
+  protected void onStop() {
+
+    System.out.println("MainActivity onStop: ");
+    super.onStop();
+
+    /** SERVICE BOUSSOLE **/
+    if (serviceBound) {
+      //deconnection du service boussole
+      unbindService(serviceConnection);
+      serviceBound = false;
+    }
+
+    /** SERVICE LOCALISATION **/
+    // Délier le service de l'activité
+       /* if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+
+        */
+  }
+
+
+
 
 
 }

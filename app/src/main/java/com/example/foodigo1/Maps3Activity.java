@@ -65,6 +65,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     public final int TAKE_PICTURE_DISTANCE=1;
 
     private String foodieClicked;
+    private Double distanceToFoodie;
 
     private HashMap<String,LatLng> foodies_positions;
 
@@ -315,6 +316,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        distanceToFoodie = 1000.;
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
         Intent i= getIntent();
@@ -386,21 +388,27 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     eraseLine();
                 drawLine(bitmap, userPos);
 
-                if (location != null) {
-                    LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-                    if (distanceAsyncTask != null) {
-                        distanceAsyncTask.cancel(true);
-                    }
-                    distanceAsyncTask = new DistanceTask(Maps3Activity.this, bitmap);
-                    distanceAsyncTask.execute(point);
-                    double distance = distanceAsyncTask.getDistance();
+                if(location!=null){
+                    LatLng point=new LatLng(location.getLatitude(),location.getLongitude());
 
-                    if (distance < TAKE_PICTURE_DISTANCE)
-                        startCameraActivity(userPos, bitmap, marker.getTitle(), (int) distance);
-                    else {
-                        marker.setSnippet("est à " + (int) distance + "m");
+                    /*if(distanceAsyncTask !=null){
+                        distanceAsyncTask.cancel(true);
+                    }*/
+                    //distanceAsyncTask = new DistanceTask(Maps3Activity.this,bitmap);
+                    //distanceAsyncTask.execute(point);
+                    distanceToFoodie = SphericalUtil.computeDistanceBetween(point,bitmap);
+                    //distanceToFoodie = distanceAsyncTask.getDistance();
+                    Log.e("************* distance : ", String.valueOf(distanceToFoodie));
+/*
+                    if(distance<TAKE_PICTURE_DISTANCE)
+                        startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
+                    else{
+
+ */
+                    marker.setTitle(foodieClicked);
+                        marker.setSnippet("est à "+ distanceToFoodie.intValue() +"m");
                         marker.showInfoWindow();
-                    }
+                    //}
 
 
                 } else {
@@ -528,6 +536,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     public void callAugmentedImageActivity(String foodieName){
 
         Intent appPhoto = new Intent(this, AugmentedImageActivity.class);
+Log.d("foodies_positions", foodies_positions.toString());
+        Log.d("foodies_positions.get(foodieName)", foodies_positions.get(foodieName).toString());
 
         LatLng positionFoodie = foodies_positions.get(foodieName);
         LatLng userPos= new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
@@ -698,9 +708,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-
-
-
-
+    public void notifyNewDistance(Double distance) {
+        Log.d("notifyNewDistance : ", distance.toString());
+         this.distanceToFoodie = distance;
+    }
 }
