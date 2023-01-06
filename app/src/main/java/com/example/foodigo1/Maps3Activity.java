@@ -341,7 +341,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mMap.addMarker(new MarkerOptions().position(mapFrance).title("Vous êtes ici"));
+        mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
