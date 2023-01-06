@@ -31,6 +31,7 @@ import android.os.IBinder;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.foodigo1.augmentedimage.AugmentedImageActivity;
@@ -319,31 +320,31 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         Intent i= getIntent();
         Log.e(TAG,"La location est :"+mLocationService.getCurrentLocation());
 
-        //Log.e(TAG,"On Map READYLa longitude est "+mLocationService.getLocation().getLongitude() +"et la latitude " +mLocationService.getLocation().getLatitude());
-       // double latitude=i.getExtras().getDouble("latitude");
-        //double longitude=i.getExtras().getDouble("longitude");
-       /* double[] lesCoordonnees=mLocationService.getCurrentLocation();
-        double latitude=mLocationService.getLatitude();
-        double longitude=mLocationService.getLongitude();
-        */
+
         latitude=mLocationService.getLocation().getLatitude();
         longitude=mLocationService.getLocation().getLongitude();
         System.out.println("*************MAPS3 : La latitude est: " +latitude +  " La longitude est " +longitude);
         LatLng mapUser= new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
-        //LatLng position = new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
-        /*double[] tableauDesLongitudes=i.getExtras().getDoubleArray("tableaudDesLongitudes");
-        double[] tableauDesLatitude=i.getExtras().getDoubleArray("tableauDesLatitudes");
-        double[] tableauDesDistances=i.getExtras().getDoubleArray("tableaudesDistances");
-        putFoodiesOnMap2(mMap,tableauDesLatitude,tableauDesLongitudes,tableauDesDistances);
-         */
 
         //Put all the foodies on the map
         try {
             putFoodiesOnMap(mMap,mapUser);
         } catch (IOException e) {
             e.printStackTrace();
+
         }
-        mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
+        // Créez une nouvelle instance de l'objet MarkerOptions
+        MarkerOptions markerOptions = new MarkerOptions();
+
+// Définissez les options du marker, telles que sa position et son titre
+        markerOptions.position(mapUser).title("Vous êtes ici");
+
+// Ajoutez le marker à la carte en utilisant la méthode addMarker de l'objet GoogleMap
+        Marker markerU = mMap.addMarker(markerOptions);
+
+// Donnez un identifiant au marker en utilisant la méthode setTag de l'objet Marker
+        markerU.setTag("userFirstPositionMarker");
+       // mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
@@ -359,39 +360,54 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             @SuppressLint({"PotentialBehaviorOverride", "SuspiciousIndentation"})
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
+                //Pour ne pas considérer la position du User comme un Foodie
+                if (marker.getTag() != "userFirstPositionMarker") {
+
                 foodieClicked = marker.getTitle();
                 bitmap = marker.getPosition();
                 mLocationService.getCurrentLocation();
-                Location location=mLocationService.getLocation();
+                Location location = mLocationService.getLocation();
                 //onLocationChanged(location);
-                LatLng userPos= new LatLng(mLocationService.getLocation().getLatitude(),mLocationService.getLocation().getLongitude());
-                mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
-                if(line!=null)
-                eraseLine();
-                drawLine(bitmap,userPos);
+                LatLng userPos = new LatLng(mLocationService.getLocation().getLatitude(), mLocationService.getLocation().getLongitude());
+                    // Créez une nouvelle instance de l'objet MarkerOptions
+                    MarkerOptions markerOptions = new MarkerOptions();
 
-                if(location!=null){
-                    LatLng point=new LatLng(location.getLatitude(),location.getLongitude());
-                    if(distanceAsyncTask !=null){
+                    // Définissez les options du marker, telles que sa position et son titre
+                    markerOptions.position(userPos).title("Vous êtes ici");
+
+                    // Ajoutez le marker à la carte en utilisant la méthode addMarker de l'objet GoogleMap
+                    Marker userMarker = mMap.addMarker(markerOptions);
+
+                        // Donnez un identifiant au marker en utilisant la méthode setTag de l'objet Marker
+                    marker.setTag("userFirstPositionMarker");
+                    // mMap.addMa
+                //mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
+                if (line != null)
+                    eraseLine();
+                drawLine(bitmap, userPos);
+
+                if (location != null) {
+                    LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+                    if (distanceAsyncTask != null) {
                         distanceAsyncTask.cancel(true);
                     }
-                    distanceAsyncTask= new DistanceTask(Maps3Activity.this,bitmap);
+                    distanceAsyncTask = new DistanceTask(Maps3Activity.this, bitmap);
                     distanceAsyncTask.execute(point);
-                    double distance= distanceAsyncTask.getDistance();
+                    double distance = distanceAsyncTask.getDistance();
 
-                    if(distance<TAKE_PICTURE_DISTANCE)
-                        startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
-                    else{
-                        marker.setSnippet("est à "+ (int)distance +"m");
+                    if (distance < TAKE_PICTURE_DISTANCE)
+                        startCameraActivity(userPos, bitmap, marker.getTitle(), (int) distance);
+                    else {
+                        marker.setSnippet("est à " + (int) distance + "m");
                         marker.showInfoWindow();
                     }
 
 
-                }
-                else{
-                    Toast.makeText(Maps3Activity.this,"Impossible de récupérer votre position actuelle",Toast.LENGTH_LONG);
+                } else {
+                    Toast.makeText(Maps3Activity.this, "Impossible de récupérer votre position actuelle", Toast.LENGTH_LONG);
 
                 }
+            }
 
 
                 return true;
@@ -400,6 +416,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         });
 
     }
+
 
    public void putFoodiesOnMap2(GoogleMap map, double[] tableaudesLatitudes, double[] tableauDesLongitudes, double[] tableauDesDistances) {
        int k = 0; //indice des tables de coordonnees
@@ -557,6 +574,18 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     }
                 });
         AlertDialog dialog = builder.create();
+
+// Récupérez l'objet Button correspondant au bouton "Annuler"
+        Button cancelButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+// Définissez la couleur du texte du bouton à noir
+        cancelButton.setTextColor(Color.BLACK);
+
+// Récupérez l'objet Button correspondant au bouton "OK"
+        Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+// Définissez la couleur du texte du bouton à noir
+        okButton.setTextColor(Color.BLACK);
+
+        dialog.show();
         dialog.show();
     }
 
