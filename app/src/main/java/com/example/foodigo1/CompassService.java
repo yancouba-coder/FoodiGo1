@@ -26,7 +26,7 @@ public class CompassService extends Service implements SensorEventListener {
     private String orientation = "N";
 
     // Instance de CompassBinder pour lier le service à l'activité
-    private final IBinder binder = new CompassBinder();
+    private IBinder binder = new CompassBinder();
     Double foodieLatitude;
     Double foodieLongitude;
     Double userLatitude;
@@ -86,13 +86,16 @@ public class CompassService extends Service implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
+
+
+
     @Override
     public IBinder onBind(Intent intent) {
         System.out.println("CompassService ; onBind ");
         System.out.println("CompassService ; orientationPhone " + orientationPhone);
         System.out.println("CompassService ; directionToGetTheFoodie " + directionToGetTheFoodie);
-
-        return binder;
+        return this.binder;
+        //return binder;
     }
 
     @Override
