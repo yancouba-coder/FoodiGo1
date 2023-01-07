@@ -67,6 +67,7 @@ public class LocationService extends Service {
             //LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
             // new DistanceTask(this, bitmap).execute(point);
 
+
         }
 
         @Override
