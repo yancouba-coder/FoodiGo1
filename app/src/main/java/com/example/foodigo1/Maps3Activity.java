@@ -40,6 +40,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -63,7 +64,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private GoogleMap mMap;
     ManageFoodiesCaptured manager;
     DistanceTask distanceAsyncTask;
-    public final int TAKE_PICTURE_DISTANCE=2;
+    public static final int TAKE_PICTURE_DISTANCE=2;
+    private  MarkerOptions userMarker;
 
     private Maps3Activity act;
     private String foodieClicked;
@@ -354,27 +356,37 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
 
         }
+        /*
         // Créez une nouvelle instance de l'objet MarkerOptions
         MarkerOptions markerOptions = new MarkerOptions();
 
-// Définissez les options du marker, telles que sa position et son titre
+       // Définissez les options du marker, telles que sa position et son titre
         markerOptions.position(mapUser).title("Vous êtes ici");
 
-// Ajoutez le marker à la carte en utilisant la méthode addMarker de l'objet GoogleMap
+       // Ajoutez le marker à la carte en utilisant la méthode addMarker de l'objet GoogleMap
         Marker markerU = mMap.addMarker(markerOptions);
 
-// Donnez un identifiant au marker en utilisant la méthode setTag de l'objet Marker
+       // Donnez un identifiant au marker en utilisant la méthode setTag de l'objet Marker
         markerU.setTag("userFirstPositionMarker");
        // mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
+
+         */
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapUser));
         // On affiche une carte zoomé sur le lieu ou se trouve l'utilisateur
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapUser, 19.0f));
        //Le systeme de Zoom
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        userMarker=new MarkerOptions().position(mapUser).title("Vous êtes ici");
+        mMap.addMarker(userMarker).setTag("userFirstPositionMarker");
+       /* CircleOptions circleOptions = new CircleOptions()
+         .center(mapUser)
+        .radius(10)
+           .strokeColor(Color.RED)
+            .strokeWidth(5);
+        mMap.addCircle(circleOptions);
 
-
-        mMap.addMarker(new MarkerOptions().position(mapUser).title("Vous êtes ici"));
+        */
 
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -389,8 +401,12 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 mLocationService.getCurrentLocation();
                 Location location = mLocationService.getLocation();
                 //onLocationChanged(location);
+                //Set the marker of user
                 LatLng userPos = new LatLng(mLocationService.getLocation().getLatitude(), mLocationService.getLocation().getLongitude());
-                    // Créez une nouvelle instance de l'objet MarkerOptions
+                userMarker.position(userPos);
+                mMap.addMarker(userMarker);
+                // Créez une nouvelle instance de l'objet MarkerOptions
+                    /*
                     MarkerOptions markerOptions = new MarkerOptions();
 
                     // Définissez les options du marker, telles que sa position et son titre
@@ -401,14 +417,16 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
                         // Donnez un identifiant au marker en utilisant la méthode setTag de l'objet Marker
                     marker.setTag("userFirstPositionMarker");
-                    // mMap.addMa
+                    /
+                     */
+                // mMap.addMa
                 //mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
                 if (line != null)
                     eraseLine();
                 drawLine(foodiePositionOnMap, userPos);
 
-                if(location!=null){
-                    LatLng point=new LatLng(location.getLatitude(),location.getLongitude());
+                if (location != null) {
+                    LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
 
                     /*if(distanceAsyncTask !=null){
                         distanceAsyncTask.cancel(true);
@@ -418,15 +436,17 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     distanceToFoodie = SphericalUtil.computeDistanceBetween(point, foodiePositionOnMap);
                     //distanceToFoodie = distanceAsyncTask.getDistance();
                     Log.e("************* distance : ", String.valueOf(distanceToFoodie));
-/*
-                    if(distance<TAKE_PICTURE_DISTANCE)
-                        startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
-                    else{
+                    //distanceAsyncTask= new DistanceTask(Maps3Activity.this, point, foodies_positions);
+                   // distanceAsyncTask.execute(point);
 
- */
+                   if(distanceToFoodie<TAKE_PICTURE_DISTANCE)
+                        montrerLepopUp(foodieClicked);
+                    //else{
+
+
                     marker.setTitle(foodieClicked);
-                        marker.setSnippet("est à "+ distanceToFoodie.intValue() +"m");
-                        marker.showInfoWindow();
+                    marker.setSnippet("est à " + distanceToFoodie.intValue() + "m");
+                    marker.showInfoWindow();
                     //}
 
 
@@ -476,13 +496,13 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
         int i=0;//indice angle de positionnement
 
-            int minimumDistance= 1;
+            int minimumDistance= TAKE_PICTURE_DISTANCE;
 
         for (String foodie:manager.getListOfFoodies()) {
             // Si il est pas capturé on le positionne
             if(!manager.isCaptured(foodie)){
                 int foodie_Points= manager.getPointOfFoodie(foodie);
-                double foodiePoids= foodie_Points/100;
+                double foodiePoids= foodie_Points/100 ;
 
                 double fooddistance= foodiePoids*minimumDistance;
 
@@ -640,7 +660,7 @@ Log.d("foodies_positions", foodies_positions.toString());
                         callAugmentedImageActivity(foodieName);
                         Log.e(TAG, " ********************************** L'activité va finish");
                         takeAPhoto = true;
-                        act.finish();
+                        //act.finish();
 
                     }
 
@@ -680,8 +700,12 @@ Log.d("foodies_positions", foodies_positions.toString());
         System.out.println("*********MAP3:La localisation a changé dans ");
         mLocationService.getCurrentLocation();
 
-            location=mLocationService.getLocation();
+        location=mLocationService.getLocation();
         LatLng point= new LatLng(location.getLatitude(),location.getLongitude());
+        userMarker.position(point);
+        mMap.addMarker(userMarker);
+        //distanceAsyncTask= new DistanceTask(this, point, foodies_positions);
+        //distanceAsyncTask.execute(point);
 
         //TODO : on parcours la liste des foodies_positions et si un des foodie a une distance inférieure à TAKE_PICTURE_DISTANCE metres alors on fairt la suite
         for (Map.Entry foodie_position : foodies_positions.entrySet()){
@@ -689,6 +713,9 @@ Log.d("foodies_positions", foodies_positions.toString());
             Log.d("distanceToFoodie : ", "On se trouve à " + distanceToFoodie + " mètres de " + foodie_position.getKey());
             if (distanceToFoodie < TAKE_PICTURE_DISTANCE) montrerLepopUp((String) foodie_position.getKey());
         }
+
+
+
         //new DistanceTask(this, bitmap).execute(point);
 
         //if(distance<TAKE_PICTURE_DISTANCE)
