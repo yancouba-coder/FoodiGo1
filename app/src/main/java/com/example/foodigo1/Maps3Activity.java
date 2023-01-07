@@ -502,6 +502,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     public void eraseLine() {
         line.remove();
     }
+
     public boolean isRoad(LatLng foodiePosition) throws IOException {
         boolean isRoad=false;
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
