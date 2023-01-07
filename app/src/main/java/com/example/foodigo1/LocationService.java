@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -61,7 +62,10 @@ public class LocationService extends Service {
         @Override
         public void onLocationChanged(Location location) {
             Log.e(TAG, "*************onLocationChanged: " + location);
+
+
             mLastLocation.set(location);
+            if (mListener != null) mListener.onLocationChanged(location);
             //new DistanceTask(this,this.getBitmap());
             //new DistanceTask(this, bitmap).execute(point);
             //LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
@@ -230,4 +234,13 @@ public class LocationService extends Service {
         return taskSource.getTask();
     }
 
+    public interface OnLocationChangedListener {
+        void onLocationChanged(Location location);
+    }
+    private LocationService.OnLocationChangedListener mListener;
+
+    public void setOnLocationChangedListener(LocationService.OnLocationChangedListener listener) {
+        mListener = listener;
+        Log.e(TAG, "setOnLocationChangedListener" + mListener);
+    }
 }
