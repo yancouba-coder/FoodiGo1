@@ -3,11 +3,13 @@ package com.example.foodigo1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 public class GalleryPhotoActivity extends AppCompatActivity implements View.OnClickListener {
-
+    String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("onCreate() de GalleryPhotoActivity");
@@ -15,8 +17,12 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_gallery_photo);
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
         manager.updatePoints(this); //mise à jour des points
-        displayPhotoInImageView(manager); //mise à jour de la photo en fonction du foodie appelant
+        //displayPhotoInImageView(manager); //mise à jour de la photo en fonction du foodie appelant
+        path = getIntent().getExtras().getString("path");
+        ImageView photoFoodieCaptured = findViewById(R.id.photoFoodieCaptured);
+        Uri imageUri = Uri.parse("file://" + path);
 
+        photoFoodieCaptured.setImageURI(imageUri);
     }
 
     //TODO : cette classe ne fonctionne pas encore comme elle le devrait car version de test.
@@ -25,9 +31,10 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
     // une photo si elle a été appelée depuis l'icone appareil photo de la map
 
 
+
     /*
     Retrourne la photo qui correspond au foodie depuis lequel l'activité à été appelé
-     */
+     *//*
     private void displayPhotoInImageView(ManageFoodiesCaptured manager) {
         System.out.println("displayPhotoInImageView() de GalleryPhotoActivity");
         Intent i = getIntent();
@@ -52,12 +59,12 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    /*
+    *//*
     Affiche la photo du foodie si elle est déjà prise et enregistrée
-     */
+     *//*
     private void callManagerDisplayPhotoFoodieCaptured(String name, ManageFoodiesCaptured manager){
         manager.displayPhotoFoodieCaptured(this,name,R.id.photoFoodieCaptured);
-    }
+    }*/
 
 
     /*

@@ -6,7 +6,19 @@
     tools:context=".augmentedimage.AugmentedImageActivity">
 
 
-    <android.opengl.GLSurfaceView
+
+            <Button
+                android:id="@+id/close"
+                android:onClick="onClick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="1dp"
+                android:layout_margin="10dp"
+                android:paddingVertical="1dp"
+                android:text="Fermer" />
+
+
+        <android.opengl.GLSurfaceView
         android:id="@+id/surfaceview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -20,4 +32,18 @@
         android:scaleType="fitCenter"
         />
 
+    <Button
+        android:id="@+id/takePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_corner"
+        android:fontFamily="@font/style2"
+        android:onClick="onClick"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:text="Prendre la photo"
+        android:textColor="@color/style1"
+        android:textSize="@dimen/style2" />
 </FrameLayout>
