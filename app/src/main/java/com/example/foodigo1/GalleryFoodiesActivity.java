@@ -44,6 +44,7 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
         Intent photo = null;
+        String foodieName = null;
         switch (view.getId()) {
             case (R.id.play):
                 Intent i = null;
@@ -68,51 +69,40 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
 
                 //Affichage de l'image du fruit si elle existe
             case (R.id.ananasPicture):
-                if (!(manager.isCaptured("ananas"))){ //le foodie n'est pas capturé donc il n'a pas de photo
-                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
-                }else{ //le foodie doit avoir une photo
-                    photo = new Intent(this, GalleryPhotoActivity.class);
-                }
+                foodieName = "ananas";
                 break;
             case(R.id.avocatPicture):
-                if (!(manager.isCaptured("avocat"))){ //le foodie n'est pas capturé donc il n'a pas de photo
-                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
-                }else{ //le foodie doit avoir une photo
-                    photo = new Intent(this, GalleryPhotoActivity.class);
-                }
+                foodieName = "avocat";
                 break;
             case(R.id.bananePicture):
-                if (!(manager.isCaptured("banane"))){ //le foodie n'est pas capturé donc il n'a pas de photo
-                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
-                }else{ //le foodie doit avoir une photo
-                    photo = new Intent(this, GalleryPhotoActivity.class);
-                }
+                foodieName = "banane";
                 break;
             case(R.id.pastequePicture):
-                if (!(manager.isCaptured("pasteque"))){ //le foodie n'est pas capturé donc il n'a pas de photo
-                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
-                }else{ //le foodie doit avoir une photo
-                    photo = new Intent(this, GalleryPhotoActivity.class);
-                }
+                foodieName = "pasteque";
                 break;
             case(R.id.manguePicture):
-                if (!(manager.isCaptured("mangue"))){ //le foodie n'est pas capturé donc il n'a pas de photo
-                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
-                }else{ //le foodie doit avoir une photo
-                    photo = new Intent(this, GalleryPhotoActivity.class);
-                }
+                foodieName = "mangue";
                 break;
             case(R.id.pommesPicture):
-                if (!(manager.isCaptured("pommes"))){ //le foodie n'est pas capturé donc il n'a pas de photo
-                    Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
-                }else{ //le foodie doit avoir une photo
-                    photo = new Intent(this, GalleryPhotoActivity.class);
-                }
+                foodieName = "pommes";
                 break;
             default:
                 return;
 
         }
+        if (foodieName != null){
+            if (!(manager.isCaptured(foodieName))){ //le foodie n'est pas capturé donc il n'a pas de photo
+                Toast.makeText(this, R.string.messageErrorFoodieNotcaptured, Toast.LENGTH_LONG).show();
+            }else{ //le foodie doit avoir une photo
+                photo = new Intent(this, GalleryPhotoActivity.class);
+                try {
+                    photo.putExtra("path",manager.getAbsolutePathFromPreference(foodieName));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         if(photo != null){
             photo.putExtra("callBy",view.getId());
             startActivity(photo);

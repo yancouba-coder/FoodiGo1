@@ -23,13 +23,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.hardware.camera2.CaptureRequest;
+import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.contentcapture.ContentCaptureSession;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -40,7 +47,9 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.example.foodigo1.CompassService;
+import com.example.foodigo1.GalleryFoodiesActivity;
 import com.example.foodigo1.ManageFoodiesCaptured;
+import com.example.foodigo1.Maps3Activity;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedImage;
@@ -54,8 +63,13 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,8 +95,7 @@ import com.example.foodigo1.common.rendering.BackgroundRenderer;
  * href="https://developers.google.com/ar/develop/java/augmented-images/">Recognize and Augment
  * Images</a>.
  */
-public class AugmentedImageActivity extends AppCompatActivity implements GLSurfaceView.Renderer, CompassService.OnDirectionChangedListener{
-
+public class AugmentedImageActivity extends AppCompatActivity implements GLSurfaceView.Renderer, CompassService.OnDirectionChangedListener, View.OnClickListener {
 
 
   private static final String TAG = AugmentedImageActivity.class.getSimpleName();
@@ -92,7 +105,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private ImageView fitToScanView;
   private RequestManager glideRequestManager;
   private ManageFoodiesCaptured manager;
-  private CompassService compassService ;
+  private CompassService compassService;
 
   private boolean installRequested;
 
@@ -120,6 +133,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   //Foodie positions
   double foodieLatitude;
   double foodieLongitude;
+
   public double getUserLatitude() {
     return userLatitude;
   }
@@ -136,12 +150,13 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   public double getFoodieLongitude() {
     return foodieLongitude;
   }
+
   AugmentedImageActivity act;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-     act = this;
+    act = this;
     setContentView(R.layout.activity_photo_api_arcore);
     surfaceView = findViewById(R.id.surfaceview);
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
@@ -164,22 +179,21 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     //onTheGoodDirection(foodieNameOnCapture);
 
 
-
     installRequested = false;
 
-     userLatitude=getIntent().getExtras().getDouble("userLatitude");
-     userLongitude=getIntent().getExtras().getDouble("userLongitude");
+    userLatitude = getIntent().getExtras().getDouble("userLatitude");
+    userLongitude = getIntent().getExtras().getDouble("userLongitude");
 
     //Foodie positions
-     foodieLatitude=getIntent().getExtras().getDouble("foodieLatitude");
-     foodieLongitude=getIntent().getExtras().getDouble("foodieLongitude");
+    foodieLatitude = getIntent().getExtras().getDouble("foodieLatitude");
+    foodieLongitude = getIntent().getExtras().getDouble("foodieLongitude");
     //compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
 
   }
 
   //quand le téléphone pointe dans la bonne direction
-  private void onTheGoodDirection(String foodieName){
-    Log.e(TAG,"onTheGoodDirection");
+  private void onTheGoodDirection(String foodieName) {
+    Log.e(TAG, "onTheGoodDirection");
     //TODO : vérifie que le tel pointe dans la bonne direction
 
     // ce qui a été pasé en paramètre
@@ -208,8 +222,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     //TODO : enregistrer la photo avec le foodie et récup le path
     String path = null;
 
-    manager.newFoodieCaptured(foodieName, path);
-  };
+    //manager.newFoodieCaptured(foodieName, path);
+  }
+
+  ;
 
   @Override
   protected void onDestroy() {
@@ -256,7 +272,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
         session = new Session(/* context = */ this);
       } catch (UnavailableArcoreNotInstalledException
-          | UnavailableUserDeclinedInstallationException e) {
+              | UnavailableUserDeclinedInstallationException e) {
         message = "Please install ARCore";
         exception = e;
       } catch (UnavailableApkTooOldException e) {
@@ -296,9 +312,9 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     displayRotationHelper.onResume();
 
     //si le téléphone pointe vers le foodie renvoie true
-    compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+    compassService.notifyThePosition(foodieLatitude, foodieLongitude, userLatitude, userLongitude);
 
-    if (compassService.userIsFrontOfFoodie(foodieLatitude,foodieLongitude,userLatitude,userLongitude)){
+    if (compassService.userIsFrontOfFoodie(foodieLatitude, foodieLongitude, userLatitude, userLongitude)) {
       //compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
       onTheGoodDirection(foodieNameOnCapture);
     }
@@ -325,8 +341,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     super.onRequestPermissionsResult(requestCode, permissions, results);
     if (!CameraPermissionHelper.hasCameraPermission(this)) {
       Toast.makeText(
-              this, "Camera permissions are needed to run this application", Toast.LENGTH_LONG)
-          .show();
+                      this, "Camera permissions are needed to run this application", Toast.LENGTH_LONG)
+              .show();
       if (!CameraPermissionHelper.shouldShowRequestPermissionRationale(this)) {
         // Permission denied with checking "Do not ask again".
         CameraPermissionHelper.launchPermissionSettings(this);
@@ -416,9 +432,9 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   }
 
   private void drawAugmentedImages(
-      Frame frame, float[] projmtx, float[] viewmtx, float[] colorCorrectionRgba) {
+          Frame frame, float[] projmtx, float[] viewmtx, float[] colorCorrectionRgba) {
     Collection<AugmentedImage> updatedAugmentedImages =
-        frame.getUpdatedTrackables(AugmentedImage.class);
+            frame.getUpdatedTrackables(AugmentedImage.class);
 
     // Iterate to update augmentedImageMap, remove elements we cannot draw.
     for (AugmentedImage augmentedImage : updatedAugmentedImages) {
@@ -433,18 +449,18 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
         case TRACKING:
           // Have to switch to UI Thread to update View.
           this.runOnUiThread(
-              new Runnable() {
-                @Override
-                public void run() {
-                  fitToScanView.setVisibility(View.GONE);
-                }
-              });
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      fitToScanView.setVisibility(View.GONE);
+                    }
+                  });
 
           // Create a new anchor for newly found images.
           if (!augmentedImageMap.containsKey(augmentedImage.getIndex())) {
             Anchor centerPoseAnchor = augmentedImage.createAnchor(augmentedImage.getCenterPose());
             augmentedImageMap.put(
-                augmentedImage.getIndex(), Pair.create(augmentedImage, centerPoseAnchor));
+                    augmentedImage.getIndex(), Pair.create(augmentedImage, centerPoseAnchor));
           }
           break;
 
@@ -464,7 +480,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       switch (augmentedImage.getTrackingState()) {
         case TRACKING:
           augmentedImageRenderer.draw(
-              viewmtx, projmtx, augmentedImage, centerAnchor, colorCorrectionRgba);
+                  viewmtx, projmtx, augmentedImage, centerAnchor, colorCorrectionRgba);
           break;
         default:
           break;
@@ -483,7 +499,6 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   }
 
 
-
   /********************************************************************************************
    ************************************* SERVICE BOUSSOLE *************************************
    ********************************************************************************************/
@@ -493,10 +508,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private ServiceConnection serviceConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-      Log.d(TAG,"onServiceConnected");
+      Log.d(TAG, "onServiceConnected");
       CompassService.CompassBinder binder = (CompassService.CompassBinder) service;
       compassService = binder.getService();
-      compassService.notifyThePosition(foodieLatitude,foodieLongitude,userLatitude,userLongitude);
+      compassService.notifyThePosition(foodieLatitude, foodieLongitude, userLatitude, userLongitude);
 
       compassService.setOnDirectionChangedListener(act);
       act.compassService = compassService;
@@ -514,7 +529,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
   private void onResumeBis() {
     super.onResume();
-    System.out.println("MainActivity onResume: ");
+    System.out.println("Augmented  onResume: ");
 
     // Afficher l'orientation du téléphone dans la console à chaque mise à jour
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -552,7 +567,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
               new String[]{Manifest.permission.CAMERA},
               11);
     } else {
-      Log.d(TAG, "Permission CAMERA : granted " );
+      Log.d(TAG, "Permission CAMERA : granted ");
     }
 
 
@@ -607,7 +622,175 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   }
 
 
+  @Override
+  public void onClick(View v) {
+    Intent i = null;
+    switch (v.getId()) {
+      case R.id.close:
+        i = new Intent(this, GalleryFoodiesActivity.class);
+
+        break;
+      case R.id.takePicture:
+        Toast.makeText(this, "La photo a été enregistrée", Toast.LENGTH_LONG).show();
+        //TODO : gérer l'enregistrement de la photo
+        buttonScreenshot(v); //image du foodie et du bouton sur fond noir
+        //takeScrenshotv2(); // tout noir
+        //takeScreenshot();//image du foodie sur fond noir
+        i = new Intent(this, GalleryFoodiesActivity.class);
+      default:
+        break;
+    }
+    if (i != null) startActivity(i);
+    this.finish();
+  }
+
+  /*
+    private void takePicture() {
+      // Créez un objet Intent pour lancer l'application de capture d'écran du système
+      Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+      // Créez un fichier dans lequel enregistrer l'image capturée
+      File imageFile = File.createTempFile("screenshot", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+      // Définissez le fichier créé comme destination de l'image capturée
+      intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
+      // Appelez l'application de capture d'écran du système
+      startActivityForResult(intent, REQUEST_CODE_SCREENSHOT);
+
+      if (requestCode == REQUEST_CODE_SCREENSHOT && resultCode == RESULT_OK) {
+        // Récupérez le chemin de l'image capturée
+        Uri imageUri = data.getData();
+        String imagePath = imageUri.getPath();
+        // Vous pouvez maintenant accéder à l'image en utilisant le chemin stocké dans la variable imagePath
+        // ...
+      }
+    }
+  */
+  private void takeScreenshot() {
+
+    Date now = new Date();
+    android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+    try {
+      // image naming and path  to include sd card  appending name you choose for file
+      String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+
+      // create bitmap screen capture
+      View v1 = getWindow().getDecorView().getRootView();
+      v1.setDrawingCacheEnabled(true);
+      Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+
+      v1.setDrawingCacheEnabled(false);
+
+      File imageFile = new File(mPath);
+
+      // Enregistrer l'image dans la galerie
+      saveImageInPhoneGallery(bitmap);
+
+      FileOutputStream outputStream = new FileOutputStream(imageFile);
+      int quality = 100;
+      bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+      outputStream.flush();
+      outputStream.close();
+
+      //openScreenshot(imageFile);
+    } catch (Throwable e) {
+      // Several error may come out with file handling or DOM
+      e.printStackTrace();
+    }
+  }
+
+  private void openScreenshot(File imageFile) {
+    Intent intent = new Intent();
+    intent.setAction(Intent.ACTION_VIEW);
+    Uri uri = Uri.fromFile(imageFile);
+    intent.setDataAndType(uri, "image/*");
+    startActivity(intent);
+  }
+
+  public void saveImageInPhoneGallery(Bitmap bitmap) {
+    String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+    MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "overlay" + imageFileName, "description");
+    String path = getContentResolver() + "/" + imageFileName;
+    manager.newFoodieCaptured(foodieNameOnCapture, path);
+    Toast.makeText(this, "SAave as : " + path, Toast.LENGTH_LONG).show();
+
+  }
+
+  public void takeScrenshotv2() {
+    GLSurfaceView surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
+    //ImageView imageView = (ImageView) findViewById(R.id.image_view_fit_to_scan);
+
+// Activer le cache de dessin pour la GLSurfaceView et l'ImageView
+    surfaceView.setDrawingCacheEnabled(true);
+    //imageView.setDrawingCacheEnabled(true);
+
+// Dessiner la GLSurfaceView et l'ImageView dans le cache de dessin
+    surfaceView.buildDrawingCache();
+    //imageView.buildDrawingCache();
+
+// Récupérer les instances de Bitmap du cache de dessin de la GLSurfaceView et de l'ImageView
+    Bitmap surfaceViewBitmap = surfaceView.getDrawingCache();
+    //Bitmap imageViewBitmap = imageView.getDrawingCache();
+
+// Créer une nouvelle instance de Bitmap pour stocker l'image de la superposition de la GLSurfaceView et de l'ImageView
+    //Bitmap mergedBitmap = Bitmap.createBitmap(surfaceViewBitmap.getWidth(), surfaceViewBitmap.getHeight(), surfaceViewBitmap.getConfig());
+
+// Créer un nouvel objet Canvas à partir de la Bitmap fusionnée
+    //Canvas canvas = new Canvas(mergedBitmap);
+
+// Dessiner les Bitmap de la GLSurfaceView et de l'ImageView dans l'objet Canvas
+    //canvas.setBitmap(surfaceViewBitmap);
+    //canvas.setBitmap(imageViewBitmap);
+    //canvas.drawBitmap(surfaceViewBitmap, 0, 0, null);
+    //canvas.drawBitmap(imageViewBitmap, 0, 0, null);
+    //Bitmap image = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+    //canvas.setBitmap(image);
+// Enregistrer l'image fusionnée dans un fichier
+    //saveImageInPhoneGallery(image);
+    saveImageInPhoneGallery(surfaceViewBitmap);
 
 
+// TODO : à tester
+  }
 
+  public void buttonScreenshot(View view) {
+    View view1 = view.getRootView();
+//        View view1 = getWindow().getDecorView().getRootView();
+
+    Bitmap bitmap = Bitmap.createBitmap(view1.getWidth(), view1.getHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    view1.draw(canvas);
+    File fileScreenshot = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            Calendar.getInstance().getTime().toString() + ".jpg");
+    String path = fileScreenshot.getAbsolutePath();
+    manager.newFoodieCaptured(foodieNameOnCapture, path);
+    try {
+      FileOutputStream fileOutputStream = new FileOutputStream(fileScreenshot);
+      bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+      fileOutputStream.flush();
+      fileOutputStream.close();
+      Log.d("buttonScreenshot", "succes");
+    } catch (Exception e) {
+      Log.e("buttonScreenshot", "erroor");
+
+    }
+  }
+
+
+  public void takeScreenshotv3() {
+    GLSurfaceView surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
+
+// Obtenir la session de capture de contenu de la GLSurfaceView
+    //ContentCaptureSession captureSession = surfaceView.getContentCaptureSession();
+    //public static final int SCREEN_CAPTURE_INTENT = 8;
+
+// Créer une nouvelle instance de CaptureRequest
+    //captureSession.cap
+    //CaptureRequest request = captureSession.createCaptureRequest(SCREEN_CAPTURE_INTENT);
+
+// Déclencher l'enregistrement de la capture d'écran
+    //captureSession.capture(request, null, null);
+
+  }
 }
+
