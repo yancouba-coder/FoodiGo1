@@ -334,6 +334,7 @@ public class ManageFoodiesCaptured {
                     writeToPreferences(foodieName, true);
                     addVictoryToPoints(getPointOfFoodie(foodieName));
                     addAbsolutePathToPreference(foodieName, absolutePath);
+                    //TODO : enlever dans foodies_positions la position du foodie
                 }
 
 
@@ -353,7 +354,7 @@ public class ManageFoodiesCaptured {
         retourne le chemin du fichier de l'image enregistré sur le téléphone. Retourne null si le foodie n'a pas été capturé et leve
         une exception si le foodie a été capturé mais que le chemin de la photo n'a pas été enregistré.
          */
-                private String getAbsolutePathFromPreference (String foodieName) throws Exception {
+                public String getAbsolutePathFromPreference (String foodieName) throws Exception {
                     SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfAbsolutePathPreference), Context.MODE_PRIVATE);
                     String result = null;
                     if (isCaptured(foodieName)) { //le foodie a été capturé donc il a logiquement une photo
@@ -501,17 +502,17 @@ public class ManageFoodiesCaptured {
                         File[] photoFiles = photoDir.listFiles();
 
 
-                // Vérifier que la liste n'est pas vide
-                if (photoFiles != null) {
-                    // Parcourir la liste des fichiers et afficher leur nom
-                    for (File file : photoFiles) {
-                        if (file.isFile()) {
-                            System.out.println(file.getName());
+                        // Vérifier que la liste n'est pas vide
+                        if (photoFiles != null) {
+                            // Parcourir la liste des fichiers et afficher leur nom
+                            for (File file : photoFiles) {
+                                if (file.isFile()) {
+                                    System.out.println(file.getName());
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
 
 
 }
