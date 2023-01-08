@@ -48,6 +48,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 //i = new Intent(this, GalleryPhotoActivity.class);
                 i = new Intent(this, PhotoActivity.class);
                 break;
+            case R.id.settings:
+                i= new Intent(this, SettingsActivity.class);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + view.getId());
 
