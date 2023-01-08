@@ -1,5 +1,6 @@
 # FoodiGo1
 Bienvenu dans Foodigo. 
+
 Foodigo est un jeu mobile developpé pour Android. 
 Nous avons développé ce Jeu dans le cadre de notre formation de Master 2 MIAGE à l'université de Bordeaux.
 Cejeu qui utilise les API : Google maps, Boussole et l'appareil photo et la réalité augmentée (ARCore).
