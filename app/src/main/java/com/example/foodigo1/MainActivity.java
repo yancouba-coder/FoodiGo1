@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         manager = ManageFoodiesCaptured.getInstance(this);
-        //manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
+        manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
         //manager.reInitPreferences();
         //TODO : a effacer dans la version de deploiement, c'est pour le test
         //manager.writeToPreferences("avocat", true);
