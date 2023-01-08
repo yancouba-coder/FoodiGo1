@@ -390,8 +390,6 @@ public class ManageFoodiesCaptured {
         }
     }
 
-
-
         /* *************************************************************************************************/
         /* ******************************************* Points **********************************************/
 
@@ -476,6 +474,287 @@ public class ManageFoodiesCaptured {
             return pointsByCalcul;
         }
 
+        /* *************************************************************************************************/
+        /* *************************************** Les tottems *********************************************/
+
+        /*
+        Stocker le choix du totem
+        */
+
+        public void writeToPreferenceTotem(String totemName){
+
+            SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPrefencesTotem), Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.putString("Totemname", totemName);
+          }
+
+            public String getTotem(){
+
+                SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPrefencesTotem), Context.MODE_PRIVATE);
+
+                String result= sharedPref.getString("Totemname","Licorne");
+
+                return result;
+
+            }
+
+    // si c'est >200 et <600 image 2
+
+
+
+
+            //si c'est > 600
+
+            public Drawable getDrawaleByPoints(String totemName, int points){
+
+                if(points<200)
+
+                    return getDrawableTotem1(totemName);
+
+                else if(points>200 && points<600)
+
+                    return getDrawableTotem2(totemName);
+
+                else
+
+                   return  getDrawableTotem3(totemName);
+
+            }
+
+
+
+
+
+
+
+            public Drawable getDrawableTotem1(String totemName) {
+
+                switch (totemName) {
+
+                    case "Buldog":
+
+                        return contextApp.getDrawable(R.drawable.bulldog_1);
+
+                    case "Elephant":
+
+                        return contextApp.getDrawable(R.drawable.elefant_1);
+
+                    case "Giraffe":
+
+                        return contextApp.getDrawable(R.drawable.giraffe_1);
+
+                    case "Cheval":
+
+                        return contextApp.getDrawable(R.drawable.horse_1);
+
+                    case "Cochon":
+
+                        return contextApp.getDrawable(R.drawable.pig_1);
+
+                    case "Licorne":
+
+                        return contextApp.getDrawable(R.drawable.unicorn_1);
+
+                    default:
+
+                        Log.e("manager.getDrawableFoodie() : ", "getDrawableFoodie() appelé mais totem ne correspond à aucune valeur connue. : " + totemName);
+
+                        return null;
+
+                }
+
+            }
+
+            public Drawable getDrawableTotem2(String totemName) {
+
+                switch (totemName) {
+
+                    case "Buldog":
+
+                        return contextApp.getDrawable(R.drawable.bulldog_2);
+
+                    case "Elephant":
+
+                        return contextApp.getDrawable(R.drawable.elefant_2);
+
+                    case "Giraffe":
+
+                        return contextApp.getDrawable(R.drawable.giraffe_2);
+
+                    case "Cheval":
+
+                        return contextApp.getDrawable(R.drawable.horse_2);
+
+                    case "Cochon":
+
+                        return contextApp.getDrawable(R.drawable.pig_2);
+
+                    case "Licorne":
+
+                        return contextApp.getDrawable(R.drawable.unicorn_2);
+
+                    default:
+
+                        Log.e("manager.getDrawableFoodie() : ", "getDrawableFoodie() appelé mais totem ne correspond à aucune valeur connue.  : " + totemName);
+
+                        return null;
+
+                }
+
+            }
+
+            public Drawable getDrawableTotem3(String totemName) {
+
+                switch (totemName) {
+
+                    case "Buldog":
+
+                        return contextApp.getDrawable(R.drawable.bulldog_3);
+
+                    case "Elephant":
+
+                        return contextApp.getDrawable(R.drawable.elefant_3);
+
+                    case "Giraffe":
+
+                        return contextApp.getDrawable(R.drawable.giraffe_3);
+
+                    case "Cheval":
+
+                        return contextApp.getDrawable(R.drawable.horse_3);
+
+                    case "Cochon":
+
+                        return contextApp.getDrawable(R.drawable.pig_3);
+
+                    case "Licorne":
+
+                        return contextApp.getDrawable(R.drawable.unicorn_3);
+
+                    default:
+
+                        Log.e("manager.getDrawableFoodie() : ", "getDrawableFoodie() appelé mais totem ne correspond à aucune valeur connue.  : " + totemName);
+
+                        return null;
+
+                }
+
+
+
+
+
+        /* *************************************************************************************************/
+        /* ************************ Ancienne méthodes liées aux fichiers JSON ******************************/
+
+        /*
+        Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
+        N'est plus utilisé, on a opté pour les préférences.
+         */
+        /*
+        private Boolean OLDisCaptured (String foodie) throws Exception {
+                //OLD method, actually not used
+                JSONObject capturedJSON = readJson("captured.json");
+                HashMap<String, Boolean> captured = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
+
+                if (captured.containsKey(foodie)) {
+                    return captured.get(foodie);
+                } else {
+                    throw new Exception("The foodie " + foodie + " doesn't exist");
+                }
+
+            }
+
+         */
+
+
+
+
+    public String getTotemNameWithTotemid(int buttonRadId){
+
+        String result="";
+
+        switch (buttonRadId){
+
+            case R.id.buldogImage:
+
+                result="Buldog";
+
+            case R.id.elephantImage:
+
+                result= "Elephant";
+
+            case R.id.Giraffe:
+
+                result= "Giraffe";
+
+            case R.id.horseImage:
+
+                result= "Cheval";
+
+            case R.id.cochonImage:
+
+                result= "Cochon";
+
+            case R.id.LicorneImage:
+
+                result= "Licorne";
+
+        }
+
+        return result;
+
+
+
+
+    }
+
+    public Drawable getTotemDrawable(int id){
+
+        switch (id){
+
+            case R.id.buldogImage:
+
+                return contextApp.getDrawable(R.drawable.bulldog_1);
+
+            case R.id.elephantImage:
+
+
+                return contextApp.getDrawable(R.drawable.elefant_1);
+
+            case R.id.Giraffe:
+
+                return contextApp.getDrawable(R.drawable.giraffe_1);
+
+            case R.id.horseImage:
+
+                return contextApp.getDrawable(R.drawable.horse_1);
+
+            case R.id.cochonImage:
+
+                return contextApp.getDrawable(R.drawable.pig_1);
+
+            case R.id.LicorneImage:
+
+                return contextApp.getDrawable(R.drawable.unicorn_1);
+
+            default:
+
+                return contextApp.getDrawable(R.drawable.unicorn_1);
+
+
+
+
+        }
+
+
+
+
+
+
+
+    }
 
 
         /* *************************************************************************************************/
@@ -562,7 +841,7 @@ public class ManageFoodiesCaptured {
             }
             }*/
 
-}
 
+}
 
 
