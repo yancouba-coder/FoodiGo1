@@ -27,13 +27,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.os.IBinder;
 
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+
 import android.widget.Toast;
 
 import com.example.foodigo1.augmentedimage.AugmentedImageActivity;
@@ -53,7 +52,7 @@ import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -76,16 +75,16 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private String foodieClicked;
     private Double distanceToFoodie;
     private Circle circle;
-
+    Boolean takeAPhoto = false;
 
 
     private Marker userMarker;
     private HashMap<String,LatLng> foodies_positions;
 
 
-    /**************LOC SERV2*****************/
+    /* *************LOC SERV2*****************/
 
-    /********************************************/
+    /* *******************************************/
     private LocationService mLocationService;
     /*private static Maps3Activity instance;
     private Maps3Activity(){} //empty constructor
@@ -223,9 +222,9 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             case R.id.menu:
                  i = new Intent(this, MenuActivity.class);
                  break;
-            case R.id.photo_ico_black:
+            /*case R.id.photo_ico_black:
                  i = new Intent(this, AugmentedImageActivity.class);
-                 break;
+                 break;*/
             case R.id.arrow_left_black:
             case R.id.grid_ico_black:
                 System.out.println("*******************La localisation est" +mLocationService.getCurrentLocation()[0]);;
@@ -501,7 +500,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     fooddistance=maxDistance;
 
                 LatLng foodiePosition = SphericalUtil.computeOffsetOrigin(userPostion,fooddistance, angleDepositionnement[i]);
-             /**Si on ne veut pas placer les foodies sur des batiments**/
+             /* *Si on ne veut pas placer les foodies sur des batiments**/
                /* while (isBatiment(foodiePosition)){
                     fooddistance=fooddistance+1;
                     foodiePosition = SphericalUtil.computeOffsetOrigin(userPostion,fooddistance, angleDepositionnement[i]);
@@ -629,21 +628,27 @@ Log.d("foodies_positions", foodies_positions.toString());
                     .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            
                             dialog.dismiss();
+                            isPopUpAppear = false;
                         }
                     })
                     .setPositiveButton("Prendre une photo", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            isPopUpAppear = false;
                             callAugmentedImageActivity(foodieName);
+                            takeAPhoto = true;
+                            act.finish();
+
                         }
                     });
             AlertDialog dialog = builder.create();
-            dialog.show();
+            if(!takeAPhoto) dialog.show();
 
         }
-        isPopUpAppear = false;
+
 /*
 // Récupérez l'objet Button correspondant au bouton "Annuler"
         Button cancelButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
@@ -661,29 +666,28 @@ Log.d("foodies_positions", foodies_positions.toString());
 
     }
 
-    //Boolean takeAPhoto = false;
     public void montrerLepopUp(String foodieName) {
         if (!isPopUpAppear) {
             isPopUpAppear = true;
 
-
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
             AlertDialog dialog = builder.setTitle("Distance inférieure à " + TAKE_PICTURE_DISTANCE + " mètre")
                     .setMessage("Vous êtes à moins de " + TAKE_PICTURE_DISTANCE + " mètre de " + foodieName)
                     .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            isPopUpAppear = false;
                         }
                     })
                     .setPositiveButton("Prendre une photo", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            isPopUpAppear = false;
                             callAugmentedImageActivity(foodieName);
                             Log.e(TAG, " ********************************** L'activité va finish");
-                            //takeAPhoto = true;
+                            takeAPhoto = true;
                             act.finish();
 
                         }
@@ -708,26 +712,35 @@ Log.d("foodies_positions", foodies_positions.toString());
             //Button buttonOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             // buttonOK.setBackgroundColor(Color.BLACK);
             // buttonOK.setTextColor(Color.WHITE);
-            dialog.show();
+            if(!takeAPhoto) dialog.show();
 
         }
-        isPopUpAppear = false;
+        //isPopUpAppear = false;
     }
     public void montrerLepopUpForFoodie(String foodieName, String description) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(foodieName).setMessage(description);
+        String message ;
+        if (manager.isCaptured(foodieName)) {
+            message = "Voir la photo";
+        }else{
+            message = "OK";
+        }
         AlertDialog dialog=builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("Voir la photo", new DialogInterface.OnClickListener() {
+                .setPositiveButton(message, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        callPhotoActivity(foodieName);
-                        act.finish();
+                        if (message !="OK"){ //cas voir la photo
+                            callPhotoActivity(foodieName);
+                            act.finish();
+                        }
+
                     }
                 }).create();
 
@@ -793,6 +806,7 @@ Log.d("foodies_positions", foodies_positions.toString());
     //on démarre l'ativité photo
     //on met en extrat la position du foodie et la position de l'utilisateur
     //En tout on a 5 valeurs
+    /*
     public void startCameraActivity(LatLng userPosition, LatLng foodiePosition, String foodieName, int distance ){
       if (distance<=1){
           Intent iCamera = new Intent(this, CameraActvity2.class);
@@ -826,6 +840,8 @@ Log.d("foodies_positions", foodies_positions.toString());
 
 
     }
+
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {

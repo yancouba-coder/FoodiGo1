@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -25,19 +26,10 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_gallery_photo);
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
         manager.updatePoints(this); //mise à jour des points
-        //displayPhotoInImageView(manager); //mise à jour de la photo en fonction du foodie appelant
-        /*foodieName = getIntent().getExtras().getString("foodieName");
 
-        ImageView photoFoodieCaptured = findViewById(R.id.photoFoodieCaptured);
-        Uri imageUri = null;
-        try {
-            imageUri = Uri.parse("file://" + manager.getAbsolutePathFromPreference(foodieName));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-        // Récupérez le nom de la foodie à partir de l'Intent
-        //exemple de la mangue
         foodieName = getIntent().getExtras().getString("foodieName");
+        TextView tw = findViewById(R.id.foodieName);
+        tw.setText(foodieName);
         String path = null;
         manager.showThePrefrerencesInConsole("foodieName = " + foodieName + "Les préférence : ",R.string.nameOfAbsolutePathPreference);
         try {

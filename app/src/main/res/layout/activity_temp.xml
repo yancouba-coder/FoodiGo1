@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".tempActivity">
+    tools:context=".TempActivity">
 
     <TextureView
         android:id="@+id/texture"
@@ -20,7 +20,11 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
-        android:text="Le foodie a bien été pris en photo" />
+        android:textSize="@dimen/style5"
+        android:fontFamily="@font/style5"
+        android:textColor="@color/style6"
+        android:layout_margin="30dp"
+        android:text="@string/confirmationPhoto" />
 
     <Button
         android:id="@+id/btnTake"
@@ -34,7 +38,7 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="50dp"
         android:background="@drawable/rounded_corner"
-        android:text="Continuer" />
+        android:text="@string/continuer" />
 
     <LinearLayout
         android:layout_width="wrap_content"

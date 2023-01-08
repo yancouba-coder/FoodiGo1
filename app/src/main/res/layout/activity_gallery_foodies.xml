@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/style4"
-            android:text="Foodies"
+            android:text="@string/nameOfGalleryActivity"
             android:textColor="@color/style4"
 
             android:textSize="@dimen/style4" />

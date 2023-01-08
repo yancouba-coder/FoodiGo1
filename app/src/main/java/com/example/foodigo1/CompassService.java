@@ -11,7 +11,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.example.foodigo1.augmentedimage.AugmentedImageActivity;
 
 
 public class CompassService extends Service implements SensorEventListener {

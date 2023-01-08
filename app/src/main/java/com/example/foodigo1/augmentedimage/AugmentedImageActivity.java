@@ -17,50 +17,26 @@
 package com.example.foodigo1.augmentedimage;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.ImageFormat;
-import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CameraMetadata;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
-import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.Image;
-import android.media.ImageReader;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
-import android.util.Size;
-import android.util.SparseIntArray;
-import android.view.Surface;
-import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -70,7 +46,7 @@ import com.bumptech.glide.RequestManager;
 import com.example.foodigo1.CompassService;
 import com.example.foodigo1.GalleryFoodiesActivity;
 import com.example.foodigo1.ManageFoodiesCaptured;
-import com.example.foodigo1.tempActivity;
+import com.example.foodigo1.TempActivity;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedImage;
@@ -88,16 +64,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -178,7 +149,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     return foodieLongitude;
   }
 
-  AugmentedImageActivity act;
+  private AugmentedImageActivity act;
+  Boolean isOnTheGoodDirection = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -262,18 +234,6 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     Log.e(TAG, "onTheGoodDirection");
     //TODO : vérifie que le tel pointe dans la bonne direction
 
-    // ce qui a été pasé en paramètre
-    /*
-    appPhoto.putExtra("userLatitude",userLatitude);
-    appPhoto.putExtra("userLongitude",userLongitude);
-
-    appPhoto.putExtra("foodieLatitude",foodieLatitude);
-    appPhoto.putExtra("foodieLongitude",foodieLongitude);
-
-    appPhoto.putExtra("foodieName", foodieName);
-*/
-
-
     /*
     Affiche l'image du foodie en couleur au centre de l'écran
     */
@@ -285,15 +245,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
     fitToScanView.setVisibility(View.VISIBLE); //affiche le foodie
 
-    //TODO : enregistrer la photo avec le foodie et récup le path
-    String path = null;
-
-    //manager.newFoodieCaptured(foodieName, path);
+    isOnTheGoodDirection = true;
   }
 
-  ;
-
-  @Override
+    @Override
   protected void onDestroy() {
     if (session != null) {
       // Explicitly close ARCore Session to release native resources.
@@ -310,7 +265,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   @Override
   protected void onResume() {
     super.onResume();
-/*** SERVICE BOUSSOLE **/
+/* SERVICE BOUSSOLE **/
     Intent intent = new Intent(this, CompassService.class);
     // conection au service boussole
     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
@@ -596,7 +551,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
   private boolean serviceBound = false;
 
-  private ServiceConnection serviceConnection = new ServiceConnection() {
+  private final ServiceConnection serviceConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
       Log.d(TAG, "onServiceConnected");
@@ -668,13 +623,13 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   protected void onStart() {
     System.out.println("AugmentedImageActivity onStart: ");
 
-    /*** SERVICE BOUSSOLE **/
+    /* SERVICE BOUSSOLE **/
     Intent intent = new Intent(this, CompassService.class);
     // conection au service boussole
     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     compassService = new CompassService();
 
-    /** SERVICE LOCALISATION **/
+    /* SERVICE LOCALISATION **/
     super.onStart();
     // Vérifier si le service est lié
        /* if (mBound) {
@@ -695,14 +650,14 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     System.out.println("MainActivity onStop: ");
     super.onStop();
 
-    /** SERVICE BOUSSOLE **/
+    /* SERVICE BOUSSOLE **/
     if (serviceBound) {
       //deconnection du service boussole
       unbindService(serviceConnection);
       serviceBound = false;
     }
 
-    /** SERVICE LOCALISATION **/
+    /* SERVICE LOCALISATION **/
     // Délier le service de l'activité
        /* if (mBound) {
             unbindService(mConnection);
@@ -718,8 +673,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     Intent i = null;
     switch (v.getId()) {
       case R.id.close:
-        i = new Intent(this, GalleryFoodiesActivity.class);
-
+        //i = new Intent(this, GalleryFoodiesActivity.class);
+        finish();
         break;
       case R.id.takePicture:
         //TODO : gérer l'enregistrement de la photo
@@ -729,8 +684,13 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
         //takePicture();
         //callTackPictureInBackground();
         //screenshoot();
-        i = new Intent(this, tempActivity.class);
-        i.putExtra("foodieName",foodieNameOnCapture);
+        if (isOnTheGoodDirection){
+          i = new Intent(this, TempActivity.class);
+          i.putExtra("foodieName",foodieNameOnCapture);
+        }else{
+          Toast.makeText(this, "Dirige ton téléphone vers le foodie. Tourne tu toi même." , Toast.LENGTH_LONG).show();
+        }
+
         //i = new Intent(this, GalleryFoodiesActivity.class);
       default:
         break;
@@ -738,83 +698,12 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     if (i != null) {
       this.finish();
       startActivity(i);
+      finish();
+
     }
 
 
   }
-
-  /*
-    private void takePicture() {
-      // Créez un objet Intent pour lancer l'application de capture d'écran du système
-      Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      // Créez un fichier dans lequel enregistrer l'image capturée
-      File imageFile = File.createTempFile("screenshot", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-      // Définissez le fichier créé comme destination de l'image capturée
-      intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
-      // Appelez l'application de capture d'écran du système
-      startActivityForResult(intent, REQUEST_CODE_SCREENSHOT);
-
-      if (requestCode == REQUEST_CODE_SCREENSHOT && resultCode == RESULT_OK) {
-        // Récupérez le chemin de l'image capturée
-        Uri imageUri = data.getData();
-        String imagePath = imageUri.getPath();
-        // Vous pouvez maintenant accéder à l'image en utilisant le chemin stocké dans la variable imagePath
-        // ...
-      }
-    }
-  */
-  private void takeScreenshot() {
-
-    Date now = new Date();
-    android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-
-    try {
-      // image naming and path  to include sd card  appending name you choose for file
-      String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
-
-      // create bitmap screen capture
-      View v1 = getWindow().getDecorView().getRootView();
-      v1.setDrawingCacheEnabled(true);
-      Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-
-      v1.setDrawingCacheEnabled(false);
-
-      File imageFile = new File(mPath);
-
-      // Enregistrer l'image dans la galerie
-      saveImageInPhoneGallery(bitmap);
-
-      FileOutputStream outputStream = new FileOutputStream(imageFile);
-      int quality = 100;
-      bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-      outputStream.flush();
-      outputStream.close();
-
-      //openScreenshot(imageFile);
-    } catch (Throwable e) {
-      // Several error may come out with file handling or DOM
-      e.printStackTrace();
-    }
-  }
-
-  private void openScreenshot(File imageFile) {
-    Intent intent = new Intent();
-    intent.setAction(Intent.ACTION_VIEW);
-    Uri uri = Uri.fromFile(imageFile);
-    intent.setDataAndType(uri, "image/*");
-    startActivity(intent);
-  }
-
-  public void saveImageInPhoneGallery(Bitmap bitmap) {
-    String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-    MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "overlay" + imageFileName, "description");
-    String path = getContentResolver() + "/" + imageFileName;
-    manager.newFoodieCaptured(foodieNameOnCapture, path);
-    Toast.makeText(this, "SAave as : " + path, Toast.LENGTH_LONG).show();
-
-  }
-
 
 
 
@@ -822,7 +711,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
    ***************************************************** Prendre une photo **************************************************
    *************************************************************************************************************************/
 
-/*
+  /*
 
 
 
@@ -859,7 +748,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
 
 */
-/*    private TakePictureInBackground(Activity activity, String foodieName){
+  /*    private TakePictureInBackground(Activity activity, String foodieName){
       this.activity = activity;
       this.foodieName = foodieName;
       Log.e(TAG2,"privateeConstructor");
@@ -1212,7 +1101,26 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
 
 */
+  /*
+    private void takePicture() {
+      // Créez un objet Intent pour lancer l'application de capture d'écran du système
+      Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+      // Créez un fichier dans lequel enregistrer l'image capturée
+      File imageFile = File.createTempFile("screenshot", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+      // Définissez le fichier créé comme destination de l'image capturée
+      intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
+      // Appelez l'application de capture d'écran du système
+      startActivityForResult(intent, REQUEST_CODE_SCREENSHOT);
 
+      if (requestCode == REQUEST_CODE_SCREENSHOT && resultCode == RESULT_OK) {
+        // Récupérez le chemin de l'image capturée
+        Uri imageUri = data.getData();
+        String imagePath = imageUri.getPath();
+        // Vous pouvez maintenant accéder à l'image en utilisant le chemin stocké dans la variable imagePath
+        // ...
+      }
+    }
+  */
   private void screenshoot() {
     Date date = new Date();
     CharSequence now = android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", date);
@@ -1289,7 +1197,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     Canvas canvas = new Canvas(bitmap);
     view1.draw(canvas);
     File fileScreenshot = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            Calendar.getInstance().getTime().toString() + ".jpg");
+            Calendar.getInstance().getTime() + ".jpg");
     String path = fileScreenshot.getAbsolutePath();
     manager.newFoodieCaptured(foodieNameOnCapture, path);
     try {
@@ -1324,6 +1232,59 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   public void callTackPictureInBackground(){
     //takePicture();
   }
+
+  private void takeScreenshot() {
+
+    Date now = new Date();
+    android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+    try {
+      // image naming and path  to include sd card  appending name you choose for file
+      String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+
+      // create bitmap screen capture
+      View v1 = getWindow().getDecorView().getRootView();
+      v1.setDrawingCacheEnabled(true);
+      Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+
+      v1.setDrawingCacheEnabled(false);
+
+      File imageFile = new File(mPath);
+
+      // Enregistrer l'image dans la galerie
+      saveImageInPhoneGallery(bitmap);
+
+      FileOutputStream outputStream = new FileOutputStream(imageFile);
+      int quality = 100;
+      bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+      outputStream.flush();
+      outputStream.close();
+
+      //openScreenshot(imageFile);
+    } catch (Throwable e) {
+      // Several error may come out with file handling or DOM
+      e.printStackTrace();
+    }
+  }
+
+  private void openScreenshot(File imageFile) {
+    Intent intent = new Intent();
+    intent.setAction(Intent.ACTION_VIEW);
+    Uri uri = Uri.fromFile(imageFile);
+    intent.setDataAndType(uri, "image/*");
+    startActivity(intent);
+  }
+
+  public void saveImageInPhoneGallery(Bitmap bitmap) {
+    String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+    MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "overlay" + imageFileName, "description");
+    String path = getContentResolver() + "/" + imageFileName;
+    manager.newFoodieCaptured(foodieNameOnCapture, path);
+    Toast.makeText(this, "SAave as : " + path, Toast.LENGTH_LONG).show();
+
+  }
+
 }
 
 

@@ -9,7 +9,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/fond"
-    tools:context=".MenuActivity"
+    tools:context=".DidicaticielActivity"
 
 
     >
@@ -71,108 +71,75 @@
 
 
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp">
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/MaxDistance"
+            android:layout_weight="1"
+            android:textColor="@color/style3"
+            android:textSize="@dimen/style3"
+            android:fontFamily="@font/style3"
+            android:layout_margin="10dp"
+            android:text="@string/welcomeMessage" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textColor="@color/style6"
-            android:fontFamily="@font/style6"
             android:textSize="@dimen/style5"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="3dp">
-
-        </TextView>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/maxDistance"
-            android:background="@drawable/rounded_corner"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:backgroundTint="@color/whiteGrey"
-            android:hint="@string/max_distance"
-            android:textColor="@color/style6"
             android:fontFamily="@font/style6"
-            android:textColorHint="@color/greyLight"
-            android:text=""
-            android:textSize="@dimen/style5">
+            android:layout_marginHorizontal="20dp"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:text="@string/stepToPlayMessage" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        </EditText>
-
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/MinDistance"
-                android:textColor="@color/style6"
-                android:fontFamily="@font/style6"
-                android:textSize="@dimen/style5"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="3dp"
-
-                >
-
-            </TextView>
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/minDistance"
-                android:background="@drawable/rounded_corner"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="10dp"
-                android:backgroundTint="@color/whiteGrey"
-                android:hint="@string/min_distance"
-                android:textColorHint="@color/greyLight"
-                android:textColor="@color/style6"
-                android:fontFamily="@font/style6"
-                android:textSize="@dimen/style5">
-
-            </EditText>
-
-
-        </LinearLayout>
-        <Button
+        <ImageView
+            android:id="@+id/imageViewDidac"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:id="@+id/modifier"
-            android:onClick="onClick"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="30dp"
-            android:layout_gravity="center"
-            android:text="@string/modifier"
-            android:textColor="@color/style1"
-            android:fontFamily="@font/style1"
-            android:textSize="@dimen/style1"
-            app:cornerRadius="@dimen/cornerRadius"
-            app:strokeColor="@color/primary"
-
-            app:strokeWidth="@dimen/stroke">
-
-        </Button>
-
-
+            android:layout_height="400dp"
+            android:src="@drawable/level_up" />
     </LinearLayout>
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:textColor="@color/style6"
+            android:textSize="@dimen/style5"
+            android:fontFamily="@font/style6"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:text="" />
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner"
+            android:textColor="@color/style1"
+            android:textSize="@dimen/style1"
+            android:fontFamily="@font/style1"
+            android:paddingHorizontal="30dp"
+            android:onClick="onClick"
+            android:text="@string/letsGoMessage" />
+    </LinearLayout>
 </LinearLayout>
-
-

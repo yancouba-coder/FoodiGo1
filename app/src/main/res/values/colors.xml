@@ -29,4 +29,5 @@
     <color name="transparentWhite">#80FFFFFF</color>
 
     <color name="secondary20">#2001B5EA</color>
+    <color name="whiteGrey">#F0F0F2</color>
 </resources>

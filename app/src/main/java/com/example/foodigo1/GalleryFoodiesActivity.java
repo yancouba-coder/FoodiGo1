@@ -4,49 +4,55 @@ package com.example.foodigo1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.security.identity.CipherSuiteNotSupportedException;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Switch;
+
+import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
 
 public class GalleryFoodiesActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private ManageFoodiesCaptured manager;
     protected void onCreate(Bundle savedInstanceState) {
-        ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
+        manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery_foodies);
         manager.displayCapturedFoodie(this);
         manager.updatePoints(this); //mise à jour des points
+
+        if (manager.gameIsComplete()) {
+            Button button = findViewById(R.id.play);
+            button.setText("Suivant");
+        }
+    }
+
+    /*
+    Si le jeu et fini le bouton jouer devient suivant
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (manager.gameIsComplete()) {
+            Button button = findViewById(R.id.play);
+            button.setText("Suivant");
+        }
     }
 
 
-
-
+    /*
+    Lié à l'evenement du clic sur l'UI
+     */
     @Override
     public void onClick(View view) {
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
         Intent photo = null;
         String foodieName = null;
         switch (view.getId()) {
-            case (R.id.play):
+            case (R.id.play): // bouton jouer ou suivant
                 Intent i = null;
                 if(manager.gameIsComplete()){
                     i = new Intent(this, GameCompleteActivity.class);
@@ -55,18 +61,16 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
                 }
                 if(i!=null){startActivity(i);}
                 break;
-            case(R.id.home):
-
+            case(R.id.home): //logo
                 Intent main = new Intent(this, MainActivity.class);
                 startActivity(main);
                 break;
 
-                //Affichage du menu
-            case (R.id.menu):
+
+            case (R.id.menu): //Affichage du menu
                 Intent menu = new Intent(this, MenuActivity.class);
                 startActivity(menu);
                 break;
-
                 //Affichage de l'image du fruit si elle existe
             case (R.id.ananasPicture):
                 foodieName = "ananas";
