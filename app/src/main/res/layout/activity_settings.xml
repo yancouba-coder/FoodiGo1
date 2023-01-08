@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/fond_menu"
+    tools:context=".MenuActivity"
+
+
+    >
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="200dp"
+                android:id="@+id/logo"
+                android:onClick="onClick"
+                android:layout_height="70dp"
+                app:srcCompat="@drawable/logov2" />
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/style5"
+                android:textColor="@color/style5"
+                android:textSize="@dimen/style5"
+                android:text="@string/score_initial"
+                />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+
+            android:gravity="end" >
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/menu" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/MaxDistance"
+            android:textColor="@color/style6"
+            android:fontFamily="@font/style6"
+            android:textSize="@dimen/style6"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="3dp">
+
+        </TextView>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/maxDistance"
+            android:background="@drawable/rounded_corner"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:backgroundTint="#C4F4DE"
+            android:hint="6"
+            android:textColor="@color/style6"
+            android:fontFamily="@font/style6"
+            android:textColorHint="@color/greyLight"
+            android:textSize="@dimen/style6">
+
+        </EditText>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/MinDistance"
+                android:textColor="@color/style6"
+                android:fontFamily="@font/style6"
+                android:textSize="@dimen/style6"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="3dp"
+
+                >
+
+            </TextView>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/minDistance"
+                android:background="@drawable/rounded_corner"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:backgroundTint="#C4F4DE"
+                android:hint="2"
+                android:textColorHint="@color/greyLight"
+                android:textColor="@color/style6"
+                android:fontFamily="@font/style6"
+                android:textSize="@dimen/style6">
+
+            </EditText>
+
+
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:id="@+id/modifier"
+            android:onClick="onClick"
+            android:layout_marginHorizontal="80dp"
+            android:padding="10dp"
+            android:text="Modifier"
+            android:textColor="@color/style1"
+            android:fontFamily="@font/style1"
+            android:textSize="@dimen/style1"
+            app:cornerRadius="@dimen/cornerRadius"
+            app:strokeColor="@color/primary"
+
+            app:strokeWidth="@dimen/stroke">
+
+        </Button>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

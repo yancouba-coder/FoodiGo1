@@ -57,4 +57,12 @@
     <string name="stop_camera">la caméra est arretée</string>
     <string name="start_camera">la caméra est activée</string>
 
+    <string name="settings">Distances</string>
+
+    <string name="MaxDistance">Distance maximale de recherche</string>
+
+    <string name="MinDistance">Distance minimale de recherche</string>
+    <string name="nameOfPrefencesDistances">nameOfPrefencesDistances</string>
+
+
 </resources>

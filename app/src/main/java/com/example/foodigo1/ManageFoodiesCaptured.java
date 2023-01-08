@@ -202,9 +202,26 @@ public class ManageFoodiesCaptured {
                     editor.apply();
                     showThePrefrerencesInConsole("writeToPreferences : ", R.string.nameOfPreferencesFile);
                 }
+                /***Stocker la distance Maximale et minimale de recherche**/
+    public void writeToPreferencesDistance (int maxDistance, int minDistance ){
+        SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPrefencesDistances), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("MinimumDistance", minDistance);
+        editor.putInt("MaximumDistance", maxDistance);
+        editor.apply();
+        showThePrefrerencesInConsole("writeToPreferences : ", R.string.nameOfPreferencesFile);
+    }
+    public int getDistance (String name){
+        SharedPreferences sharedPref = contextApp.getSharedPreferences(String.valueOf(R.string.nameOfPrefencesDistances), Context.MODE_PRIVATE);
+        int result = sharedPref.getInt(name, 2);
+        return result;
+    }
 
 
-        /*
+
+
+
+    /*
         Supprime toutes les préférences
          */
                 private void clearAllPreference ( int idPref){

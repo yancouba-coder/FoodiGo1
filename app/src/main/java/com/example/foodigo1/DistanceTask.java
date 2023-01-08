@@ -25,7 +25,7 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
     private Maps3Activity activity;
     private LatLng bitmap;
     private Looper looper;
-    private android.os.Handler handler;
+   private android.os.Handler handler;
     private HashMap<String, LatLng> latLngMap;
     private LatLng userPosition;
     private String foodiname;
@@ -33,11 +33,12 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
     public DistanceTask(Maps3Activity activity, LatLng point, HashMap<String, LatLng> _latLngMap) {
         this.activity = activity;
         //this.bitmap = bitmap;
-        this.looper = Looper.myLooper();
+       //Looper.prepare();
+        //this.looper = Looper.myLooper();
         this.userPosition=point;
         this.latLngMap=_latLngMap;
 
-        this.handler = new android.os.Handler(looper) {
+       this.handler = new android.os.Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MESSAGE_SHOW_POPUP) {
@@ -45,6 +46,11 @@ public class DistanceTask extends AsyncTask<LatLng, Void, Double> {
                 }
             }
         };
+       // Looper.loop();
+
+
+
+
     }
 /*
     @Override
