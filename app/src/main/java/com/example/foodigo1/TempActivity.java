@@ -331,7 +331,7 @@ public class TempActivity extends AppCompatActivity {
 
                         managerFoodieaptured.newFoodieCaptured(foodieName,file.getPath());
                         finish();
-                        startActivity(new Intent(TempActivity.this, GalleryFoodiesActivity.class));
+                        startActivity(new Intent(TempActivity.this, ShowTotemActivity.class));
 
 
                     }

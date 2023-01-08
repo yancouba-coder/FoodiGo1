@@ -91,6 +91,27 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".TotemClickedShownActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ShowTotemActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".UserTotemActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".GalleryFoodiesActivity"
             android:exported="false"
             android:noHistory="false">
