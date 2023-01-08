@@ -239,22 +239,22 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             case R.id.ananasImage:
                 if(manager.isCaptured("ananas")){
 
-                    montrerLepopUpForFoodie("Ananas","Bravo ! Vous avez déjà capturé l'ananas \uD83D\uDE0A");
+                    montrerLepopUpForFoodie("ananas","Bravo ! Vous avez déjà capturé l'ananas \uD83D\uDE0A");
 
                 }
                 else{
-                    montrerLepopUpForFoodie("Ananas"," Ananas n'est pas encore capturé \uD83D\uDE43");
+                    montrerLepopUpForFoodie("ananas"," Ananas n'est pas encore capturé \uD83D\uDE43");
 
                 }
                 break;
             case R.id.avocatImage:
                 if(manager.isCaptured("avocat")){
 
-                    montrerLepopUpForFoodie("Avocat","Bravo ! Vous avez déjà capturé l'avocat \uD83D\uDE0A");
+                    montrerLepopUpForFoodie("avocat","Bravo ! Vous avez déjà capturé l'avocat \uD83D\uDE0A");
 
                 }
                 else{
-                    montrerLepopUpForFoodie("Avocat"," Avocat n'est pas encore capturé \uD83D\uDE43");
+                    montrerLepopUpForFoodie("avocat"," Avocat n'est pas encore capturé \uD83D\uDE43");
 
                 }
                 break;
@@ -262,22 +262,22 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             case R.id.bananeImage:
                 if(manager.isCaptured("banane")){
 
-                    montrerLepopUpForFoodie("Banane","Bravo ! Vous avez déjà capturé la banane \uD83D\uDE0A");
+                    montrerLepopUpForFoodie("banane","Bravo ! Vous avez déjà capturé la banane \uD83D\uDE0A");
 
                 }
                 else{
-                    montrerLepopUpForFoodie("Banane"," Banane n'est pas encore capturé \uD83D\uDE43");
+                    montrerLepopUpForFoodie("banane"," Banane n'est pas encore capturé \uD83D\uDE43");
 
                 }
                 break;
             case R.id.pastequeImage:
                 if(manager.isCaptured("pasteque")){
 
-                    montrerLepopUpForFoodie("Pasteque","Bravo ! Vous avez déjà capturé Pasteque \uD83D\uDE0A");
+                    montrerLepopUpForFoodie("pasteque","Bravo ! Vous avez déjà capturé Pasteque \uD83D\uDE0A");
 
                 }
                 else{
-                    montrerLepopUpForFoodie("Pasteque"," Pasteque n'est pas encore capturé \uD83D\uDE43");
+                    montrerLepopUpForFoodie("pasteque"," Pasteque n'est pas encore capturé \uD83D\uDE43");
 
                 }
                 break;
@@ -285,11 +285,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             case R.id.mangueImage:
                 if(manager.isCaptured("mangue")){
 
-                    montrerLepopUpForFoodie("Mangue","Bravo ! Vous avez déjà capturé la mangue \uD83D\uDE0A");
+                    montrerLepopUpForFoodie("mangue","Bravo ! Vous avez déjà capturé la mangue \uD83D\uDE0A");
 
                 }
                 else{
-                    montrerLepopUpForFoodie("Mangue"," Manque n'est pas encore capturé \uD83D\uDE43");
+                    montrerLepopUpForFoodie("mangue"," Manque n'est pas encore capturé \uD83D\uDE43");
 
                 }
                 break;
@@ -297,11 +297,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
             case R.id.pommesImage:
                 if(manager.isCaptured("pommes")){
 
-                    montrerLepopUpForFoodie("Pommes","Bravo ! Vous avez déjà capturé les Pommes \uD83D\uDE0A");
+                    montrerLepopUpForFoodie("pommes","Bravo ! Vous avez déjà capturé les Pommes \uD83D\uDE0A");
 
                 }
                 else{
-                    montrerLepopUpForFoodie("Pommes"," Les pommes n'ont pas été capturé \uD83D\uDE43");
+                    montrerLepopUpForFoodie("pommes"," Les pommes n'ont pas été capturé \uD83D\uDE43");
 
                 }
                 break;
@@ -614,7 +614,7 @@ Log.d("foodies_positions", foodies_positions.toString());
 
         appPhoto.putExtra("foodieName", foodieName);
         startActivity(appPhoto);
-        Log.e(TAG,"Démarrage de l'activité Photo");
+        Log.e(TAG,"Démarrage de l'activité Photo ");
 
         this.finish();
 
@@ -624,6 +624,8 @@ Log.d("foodies_positions", foodies_positions.toString());
 
     public void montrerLepopUp() {
         if(!isPopUpAppear) {
+
+            isPopUpAppear = true;
 
             String foodieName = foodieClicked;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -644,7 +646,9 @@ Log.d("foodies_positions", foodies_positions.toString());
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
+
         }
+        isPopUpAppear = false;
 /*
 // Récupérez l'objet Button correspondant au bouton "Annuler"
         Button cancelButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
@@ -662,71 +666,77 @@ Log.d("foodies_positions", foodies_positions.toString());
 
     }
 
-    Boolean takeAPhoto = false;
+    //Boolean takeAPhoto = false;
     public void montrerLepopUp(String foodieName) {
+        if (!isPopUpAppear) {
+            isPopUpAppear = true;
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-       AlertDialog dialog= builder.setTitle("Distance inférieure à " + TAKE_PICTURE_DISTANCE +" mètre")
-                .setMessage("Vous êtes à moins de " + TAKE_PICTURE_DISTANCE+ " mètre de " + foodieName)
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton("Prendre une photo", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        callAugmentedImageActivity(foodieName);
-                        Log.e(TAG, " ********************************** L'activité va finish");
-                        takeAPhoto = true;
-                        //act.finish();
+            AlertDialog dialog = builder.setTitle("Distance inférieure à " + TAKE_PICTURE_DISTANCE + " mètre")
+                    .setMessage("Vous êtes à moins de " + TAKE_PICTURE_DISTANCE + " mètre de " + foodieName)
+                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("Prendre une photo", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            callAugmentedImageActivity(foodieName);
+                            Log.e(TAG, " ********************************** L'activité va finish");
+                            //takeAPhoto = true;
+                            act.finish();
 
-                    }
+                        }
 
-                }).create();
-        dialog.setOnShowListener( new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface arg0) {
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.GREEN);
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN);
-            }
-        });
+                    }).create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface arg0) {
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.GREEN);
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN);
+                }
+            });
 
-        Log.e(TAG, " ********************************** Tentative de dialogue");
+            Log.e(TAG, " ********************************** Tentative de dialogue");
 
-        //AlertDialog dialog = builder.create();
-        //Button buttonAnnuler = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        //buttonAnnuler.
-      //  buttonAnnuler.setBackgroundColor(Color.BLACK);
-        //buttonAnnuler.setTextColor(Color.WHITE);
+            //AlertDialog dialog = builder.create();
+            //Button buttonAnnuler = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            //buttonAnnuler.
+            //  buttonAnnuler.setBackgroundColor(Color.BLACK);
+            //buttonAnnuler.setTextColor(Color.WHITE);
 
-        //Button buttonOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-       // buttonOK.setBackgroundColor(Color.BLACK);
-       // buttonOK.setTextColor(Color.WHITE);
-        if(!takeAPhoto) dialog.show();
+            //Button buttonOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            // buttonOK.setBackgroundColor(Color.BLACK);
+            // buttonOK.setTextColor(Color.WHITE);
+            dialog.show();
 
+        }
+        isPopUpAppear = false;
     }
-
-    public void montrerLepopUpForFoodie(String foodiname, String description) {
+    public void montrerLepopUpForFoodie(String foodieName, String description) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(foodieName).setMessage(description);
         AlertDialog dialog=builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Voir la photo", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        callPhotoActivity(foodieName);
+                        act.finish();
                     }
                 }).create();
 
-        builder.setTitle(foodiname).setMessage(description);
+
 
         dialog.setOnShowListener( new DialogInterface.OnShowListener() {
             @Override
@@ -738,6 +748,14 @@ Log.d("foodies_positions", foodies_positions.toString());
 
        // AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void callPhotoActivity(String foodieName) {
+
+            act.finish();
+            startActivity(new Intent(Maps3Activity.this,GalleryPhotoActivity.class).putExtra("foodieName",foodieName));
+
+
     }
 
     public void drawCercle(LatLng userPosition){

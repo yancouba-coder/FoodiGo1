@@ -100,6 +100,7 @@
             android:layout_weight="2"
             android:fontFamily="@font/style4"
             android:textColor="@color/style4"
+            android:layout_marginLeft="12dp"
             android:textSize="@dimen/style4"
 
             android:text="Foodies" />
@@ -168,6 +169,7 @@
             android:fontFamily="@font/style4"
             android:textColor="@color/style4"
             android:textSize="@dimen/style4"
+            android:layout_marginLeft="10dp"
 
             android:text="Photos" />
 
@@ -195,7 +197,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@drawable/img_ico_green" />
+            android:layout_marginLeft="10dp"
+
+            app:srcCompat="@drawable/setting_green" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -203,6 +207,8 @@
             android:layout_weight="2"
             android:fontFamily="@font/style4"
             android:textColor="@color/style4"
+            android:layout_marginLeft="10dp"
+
             android:textSize="@dimen/style4"
             android:text="@string/settings" />
 

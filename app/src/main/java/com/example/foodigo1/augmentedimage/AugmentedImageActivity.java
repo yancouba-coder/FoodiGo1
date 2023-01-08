@@ -735,8 +735,12 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       default:
         break;
     }
-    if (i != null) startActivity(i);
-    this.finish();
+    if (i != null) {
+      this.finish();
+      startActivity(i);
+    }
+
+
   }
 
   /*
