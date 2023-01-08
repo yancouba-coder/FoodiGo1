@@ -96,7 +96,7 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
             }else{ //le foodie doit avoir une photo
                 photo = new Intent(this, GalleryPhotoActivity.class);
                 try {
-                    photo.putExtra("path",manager.getAbsolutePathFromPreference(foodieName));
+                    photo.putExtra("foodieName",foodieName);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -58,6 +58,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     private String currentPhotoPath;
     private Bitmap bitmap;
     String imageFileName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

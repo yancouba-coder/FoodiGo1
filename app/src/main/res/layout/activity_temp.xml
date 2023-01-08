@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".tempActivity">
+
+    <TextureView
+        android:id="@+id/texture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="Le foodie a bien été pris en photo" />
+
+    <Button
+        android:id="@+id/btnTake"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/style1"
+        android:fontFamily="@font/style1"
+        android:textColor="@color/style1"
+        android:gravity="center"
+
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="50dp"
+        android:background="@drawable/rounded_corner"
+        android:text="Continuer" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:id="@+id/ll"
+
+        android:layout_weight="1"/>
+
+
+        <!--<Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnGallery"
+            android:layout_weight="1">
+
+        </Button>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnTake"
+            android:layout_weight="1"></Button>
+
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnVideo"
+            android:layout_weight="1"></Button>-->
+
+
+
+
+
+</LinearLayout>
