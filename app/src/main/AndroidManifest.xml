@@ -47,6 +47,14 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".tempActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />    
+                
+        </activity>
+        <activity
             android:name=".Photo3Activity"
             android:exported="false">
             <meta-data
