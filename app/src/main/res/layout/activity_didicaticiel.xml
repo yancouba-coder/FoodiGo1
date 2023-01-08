@@ -10,8 +10,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/fond"
     tools:context=".DidicaticielActivity"
-
-
     >
 
 
@@ -130,6 +128,24 @@
             android:textAlignment="center"
             android:padding="10dp"
             android:text="" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+            <Button
+                android:id="@+id/previous"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
+                android:textColor="@color/style1"
+                android:textSize="@dimen/style1"
+                android:fontFamily="@font/style1"
+                android:padding="0dp"
+
+                android:layout_marginEnd="20dp"
+                android:onClick="onClick"
+                android:text="&lt;" />
         <Button
             android:id="@+id/next"
             android:layout_width="wrap_content"
@@ -139,7 +155,9 @@
             android:textSize="@dimen/style1"
             android:fontFamily="@font/style1"
             android:paddingHorizontal="30dp"
+            android:layout_marginEnd="50dp"
             android:onClick="onClick"
             android:text="@string/letsGoMessage" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -688,7 +688,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
           i = new Intent(this, TempActivity.class);
           i.putExtra("foodieName",foodieNameOnCapture);
         }else{
-          Toast.makeText(this, "Dirige ton téléphone vers le foodie. Tourne tu toi même." , Toast.LENGTH_LONG).show();
+          Toast.makeText(this, "Dirige ton téléphone vers le foodie. Tourne sur toi même." , Toast.LENGTH_LONG).show();
         }
 
         //i = new Intent(this, GalleryFoodiesActivity.class);
