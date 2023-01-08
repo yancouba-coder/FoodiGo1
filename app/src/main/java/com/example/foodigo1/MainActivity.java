@@ -40,19 +40,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         manager = ManageFoodiesCaptured.getInstance(this);
-        manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
-        //manager.reInitPreferences();
+        //manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
+        manager.reInitPreferences();
         //TODO : a effacer dans la version de deploiement, c'est pour le test
         //manager.writeToPreferences("avocat", true);
         //manager.writeToPreferences("mangue", true);
         // FIN DU TODO
 
         manager.updatePoints(this);
-        SharedPreferences sharedPref = this.getSharedPreferences(String.valueOf(R.string.nameOfDidacticiel), Context.MODE_PRIVATE);
-        Boolean didacAlreadyShow = sharedPref.getBoolean("didac",false);
-        if (!didacAlreadyShow) {
-            startActivity(new Intent(this,UserTotemActivity.class));
-        }
+
     }
 
 
@@ -69,14 +65,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case (R.id.play):
                // mLocationService.getCurrentLocation();
-
+                SharedPreferences sharedPref = this.getSharedPreferences(String.valueOf(R.string.nameOfDidacticiel), Context.MODE_PRIVATE);
                 Intent i = null;
-              //  System.out.println("*******************La localisation est" + mLocationService.getCurrentLocation());
+
+
+
+                //  System.out.println("*******************La localisation est" + mLocationService.getCurrentLocation());
                 if (manager.gameIsComplete()) {
                     i = new Intent(this, GameCompleteActivity.class);
                 } else {
                     i = new Intent(this, GalleryFoodiesActivity.class);
 
+                }
+                Boolean didacAlreadyShow = sharedPref.getBoolean("didac",false);
+                if (!didacAlreadyShow) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("didac", true);
+                    //startActivity(new Intent(this,UserTotemActivity.class));
+                    i = new Intent(this, UserTotemActivity.class);
                 }
                 if (i != null) {
                     startActivity(i);

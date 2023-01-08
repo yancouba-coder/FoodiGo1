@@ -249,6 +249,7 @@ public class ManageFoodiesCaptured {
             clearAllPreference(R.string.nameOfPreferencesDistances);
             clearAllPreference(R.string.nameOfDidacticiel);
 
+
             initPreferences();
             showThePrefrerencesInConsole("reInitPreferences", R.string.nameOfPreferencesFile);
 
