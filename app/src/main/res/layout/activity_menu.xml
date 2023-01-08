@@ -103,7 +103,7 @@
             android:layout_marginLeft="12dp"
             android:textSize="@dimen/style4"
 
-            android:text="@string/nameOfGalleryActivity" />
+            android:text="Foodies" />
 
 
     </LinearLayout>
@@ -137,11 +137,11 @@
             android:textColor="@color/style4"
             android:textSize="@dimen/style4"
 
-            android:text="@string/carte" />
+            android:text="Carte" />
 
 
     </LinearLayout>
-<!--    <LinearLayout
+    <LinearLayout
         android:id="@+id/photos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -174,7 +174,7 @@
             android:text="Photos" />
 
 
-    </LinearLayout>-->
+    </LinearLayout>
 
 
 
@@ -215,9 +215,8 @@
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:id="@+id/didacticiel"
+        android:id="@+id/UserTotem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -235,8 +234,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="10dp"
-            app:srcCompat="@drawable/learn_green" />
+            android:layout_marginLeft="10dp"
+
+            app:srcCompat="@drawable/setting_green" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -244,15 +244,16 @@
             android:layout_weight="2"
             android:fontFamily="@font/style4"
             android:textColor="@color/style4"
-            android:textSize="@dimen/style4"
-            android:paddingLeft="5dp"
-
             android:layout_marginLeft="10dp"
 
-            android:text="@string/didacticiel" />
+            android:textSize="@dimen/style4"
+            android:text="@string/totem" />
 
 
     </LinearLayout>
+
+
+
 
 
 </LinearLayout>
