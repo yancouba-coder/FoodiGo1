@@ -11,17 +11,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int LOCATION_PERMISSION_REQUEST_CODE =298090 ;
@@ -43,14 +40,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         manager = ManageFoodiesCaptured.getInstance(this);
-        manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
-        //manager.reInitPreferences();
+        //manager.initPreferences(); //Initialise les variables à false si elles n'existent pas déjà
+        manager.reInitPreferences();
         //TODO : a effacer dans la version de deploiement, c'est pour le test
         //manager.writeToPreferences("avocat", true);
         //manager.writeToPreferences("mangue", true);
         // FIN DU TODO
 
         manager.updatePoints(this);
+        SharedPreferences sharedPref = this.getSharedPreferences(String.valueOf(R.string.nameOfDidacticiel), Context.MODE_PRIVATE);
+        Boolean didacAlreadyShow = sharedPref.getBoolean("didac",false);
+        if (!didacAlreadyShow) startActivity(new Intent(this,DidicaticielActivity.class));
     }
 
 
@@ -201,12 +201,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Log.d(TAG, "Permission CAMERA : granted " );
         }
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Request permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    11);
+        } else {
+            Log.d(TAG, "Permission CAMERA : granted " );
+        }
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+            }
+            else{
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+            }
+        }
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED&& ActivityCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) !=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},200);
+        }
 
     }
 
 
-    /********************************************************************************************
+    /* *******************************************************************************************
      ***************** Commun au SEERVICE BOUSSOLE et au SERVICE LOCALISATION *******************
      ********************************************************************************************/
 
@@ -214,12 +233,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         System.out.println("MainActivity onStart: ");
 
-        /*** SERVICE BOUSSOLE **/
+        /* ** SERVICE BOUSSOLE **/
         Intent intent = new Intent(this, CompassService.class);
         // conection au service boussole
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        /** SERVICE LOCALISATION **/
+        /* * SERVICE LOCALISATION **/
         super.onStart();
         // Vérifier si le service est lié
        /* if (mBound) {
@@ -239,14 +258,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         System.out.println("MainActivity onStop: ");
         super.onStop();
 
-        /** SERVICE BOUSSOLE **/
+        /* * SERVICE BOUSSOLE **/
         if (serviceBound) {
             //deconnection du service boussole
             unbindService(serviceConnection);
             serviceBound = false;
         }
 
-        /** SERVICE LOCALISATION **/
+        /* * SERVICE LOCALISATION **/
         // Délier le service de l'activité
        /* if (mBound) {
             unbindService(mConnection);

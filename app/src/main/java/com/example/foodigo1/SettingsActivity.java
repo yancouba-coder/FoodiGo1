@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,7 +19,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_settings);
        maxdistance=findViewById(R.id.maxDistance);
         mindistance=findViewById(R.id.minDistance);
-
+        ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
+        manager.updatePoints(this); //mise à jour des points
 
 
     }
@@ -28,8 +30,24 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()){
             case R.id.modifier:
 
-                int maxdist=Integer.parseInt(String.valueOf(maxdistance.getText()));
-                int mindist=Integer.parseInt(String.valueOf(mindistance.getText()));
+                int max = manager.getDistance("MinimumDistance");
+                int min = manager.getDistance("MaximumDistance");
+                int maxdist;
+                int mindist;
+
+                if (maxdistance.getText().toString().isEmpty()){
+                    maxdist = max;
+                }else{
+                    maxdist=Integer.parseInt(String.valueOf(maxdistance.getText()));
+                }
+
+                if (mindistance.getText().toString().isEmpty()){
+                    mindist = min;
+                }else{
+                    mindist=Integer.parseInt(String.valueOf(mindistance.getText()));
+                }
+
+                Log.e("les distanes sont : ", "maxdist = " + maxdist + " , mindist = " + mindist);
 
                 manager.writeToPreferencesDistance(maxdist,mindist);
                 Toast.makeText(this,"Modification effectuée",Toast.LENGTH_SHORT).show();

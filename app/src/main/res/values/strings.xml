@@ -47,6 +47,9 @@
     <string name="nameOfPreferencesFile">capturedFoodie</string>
     <string name="nameOfPointsSysteme">pointsSysteme</string>
     <string name="nameOfAbsolutePathPreference">absolutePathReferences</string>
+    <string name="nameOfPreferencesDistances">nameOfPrefencesDistances</string>
+    <string name="nameOfDidacticiel">didac</string>
+
     <string name="messageErrorFoodieNotcaptured">\"Ce foodie n\'a pas encore été capturé. Capture le d\'abord! \"</string>
     <string name="replay_message">REJOUER</string>
     <string name="replayQuestion">On rejoue ?</string>
@@ -62,7 +65,21 @@
     <string name="MaxDistance">Distance maximale de recherche</string>
 
     <string name="MinDistance">Distance minimale de recherche</string>
-    <string name="nameOfPrefencesDistances">nameOfPrefencesDistances</string>
+    <string name="stepToPlayMessage">Suis les étapes pour apprendre à jouer</string>
+    <string name="welcomeMessage">Bienvenue dans le didacticiel</string>
+    <string name="letsGoMessage">C\'est parti</string>
+    <string name="nameOfGalleryActivity">Foodies</string>
+    <string name="photoActivityName">Photo</string>
+    <string name="reurn">Retour</string>
+    <string name="carte">Carte</string>
+    <string name="didacticiel">Didacticiel</string>
+    <string name="fermer">Fermer</string>
+    <string name="prendre_la_photo">Prendre la photo</string>
+    <string name="min_distance">2</string>
+    <string name="max_distance">6</string>
+    <string name="modifier">Modifier</string>
+    <string name="continuer">Continuer</string>
+    <string name="confirmationPhoto">Le foodie a bien été pris en photo</string>
 
 
 </resources>

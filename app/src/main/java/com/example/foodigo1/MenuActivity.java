@@ -44,12 +44,15 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.map:
                 i = new Intent(this, Maps3Activity.class);
                 break;
-            case R.id.photos:
+            /*case R.id.photos:
                 //i = new Intent(this, GalleryPhotoActivity.class);
                 i = new Intent(this, PhotoActivity.class);
-                break;
+                break;*/
             case R.id.settings:
                 i= new Intent(this, SettingsActivity.class);
+                break;
+            case R.id.didacticiel:
+                i= new Intent(this, DidicaticielActivity.class);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + view.getId());

@@ -19,7 +19,7 @@
                 android:paddingHorizontal="1dp"
                 android:layout_margin="10dp"
                 android:paddingVertical="1dp"
-                android:text="Fermer" />
+                android:text="@string/fermer" />
 
 
         <android.opengl.GLSurfaceView
@@ -47,7 +47,7 @@
         android:onClick="onClick"
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
-        android:text="Prendre la photo"
+        android:text="@string/prendre_la_photo"
         android:textColor="@color/style1"
         android:textSize="@dimen/style2" />
 </FrameLayout>

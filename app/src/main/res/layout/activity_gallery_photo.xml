@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/style4"
-            android:text="Photo"
+            android:text="@string/photoActivityName"
             android:textColor="@color/style4"
 
             android:textSize="@dimen/style4" />
@@ -104,10 +104,11 @@
         android:orientation="horizontal"
         >
         <TextView
+            android:id="@+id/foodieName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="FoodieName"
+            android:text=""
             android:fontFamily="@font/style3"
             android:textSize="@dimen/style3"
             android:textColor="@color/style3"/>
@@ -145,7 +146,7 @@
 
             android:padding="10dp"
 
-            android:text="Retour"
+            android:text="@string/reurn"
 
             android:textColor="@color/style1"
             android:fontFamily="@font/style1"

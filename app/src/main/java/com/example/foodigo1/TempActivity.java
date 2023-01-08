@@ -1,9 +1,5 @@
 package com.example.foodigo1;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -27,7 +23,6 @@ import android.media.ImageReader;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CancellationSignal;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -40,6 +35,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -51,9 +51,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 
-public class tempActivity extends AppCompatActivity {
+public class TempActivity extends AppCompatActivity {
 
     private static final String TAG="AndroidCameraApi";
     private Button btnTake;
@@ -104,15 +103,9 @@ public class tempActivity extends AppCompatActivity {
                         takePicture();
                     }
                 });
-                if (btnGallery != null) {
-                    btnGallery.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            /*Intent intent = new Intent(tempActivity.this, CustomGalleryActivity.class);
-                            startActivity(intent);*/
-                        }
-                    });
-                }
+
+
+
             //}
 
         //}
@@ -127,7 +120,7 @@ public class tempActivity extends AppCompatActivity {
                     //btnTake.performClick();
                     //takePicture();
                     Log.e(TAG,"cameraDevice ok : takePicture a été appelé");
-                    //tempActivity.this.finish();
+                    //TempActivity.this.finish();
                 }
                 Log.e(TAG,"stateCallback : onOpened");
 
@@ -163,7 +156,7 @@ public class tempActivity extends AppCompatActivity {
             if (cameraDevice != null) {
                 //btnTake.performClick();
 //takePicture();
-                //tempActivity.this.finish();
+                //TempActivity.this.finish();
             }
         }
 
@@ -172,7 +165,7 @@ public class tempActivity extends AppCompatActivity {
             if (cameraDevice != null) {
                 //btnTake.performClick();
 //takePicture();
-                //tempActivity.this.finish();
+                //TempActivity.this.finish();
             }
             Log.e(TAG,"onSurfaceTextureSizeChanged");
 
@@ -188,7 +181,7 @@ public class tempActivity extends AppCompatActivity {
             if (cameraDevice != null) {
                 //btnTake.performClick();
 //takePicture();
-                //tempActivity.this.finish();
+                //TempActivity.this.finish();
             }
             Log.e(TAG,"onSurfaceTextureUpdated");
 
@@ -203,22 +196,26 @@ public class tempActivity extends AppCompatActivity {
         if (cameraDevice != null) {
             //btnTake.performClick();
             //takePicture();
-            //tempActivity.this.finish();
+            //TempActivity.this.finish();
         }
         Log.e(TAG,"startBackgroundThred" + cameraDevice);
 
 
     }
     protected void stopBackgroundThread(){
-        if (mBackgroundThred != null) mBackgroundThred.quitSafely();
-        try{
-            mBackgroundThred.join();
-            mBackgroundThred=null;
-            mBackgroundHandler=null;
+        if (mBackgroundThred != null) {
+            mBackgroundThred.quitSafely();
+            try{
+                mBackgroundThred.join();
+                mBackgroundThred=null;
+                mBackgroundHandler=null;
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+
     }
 
     @Override
@@ -229,7 +226,7 @@ public class tempActivity extends AppCompatActivity {
         if (cameraDevice != null) {
             //btnTake.performClick();
             //takePicture();
-            //tempActivity.this.finish();
+            //TempActivity.this.finish();
         }
         Log.e(TAG,"onStart");
 
@@ -326,14 +323,16 @@ public class tempActivity extends AppCompatActivity {
                         mediaScanIntent.setData(contentUri);
                         sendBroadcast(mediaScanIntent);
 
-                        SharedPreferences sharedPref = tempActivity.this.getSharedPreferences(String.valueOf("path"), Context.MODE_PRIVATE);
+                        SharedPreferences sharedPref = TempActivity.this.getSharedPreferences(String.valueOf("path"), Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("path", file.getPath());
                         editor.apply();
-                        ManageFoodiesCaptured managerFoodieaptured = ManageFoodiesCaptured.getInstance(tempActivity.this);
+                        ManageFoodiesCaptured managerFoodieaptured = ManageFoodiesCaptured.getInstance(TempActivity.this);
+
                         managerFoodieaptured.newFoodieCaptured(foodieName,file.getPath());
-                        Intent i = new Intent(tempActivity.this,GalleryFoodiesActivity.class);
-                        startActivity(i);
+                        finish();
+                        startActivity(new Intent(TempActivity.this, GalleryFoodiesActivity.class));
+
 
                     }
                 };
@@ -345,7 +344,7 @@ public class tempActivity extends AppCompatActivity {
                         if (cameraDevice != null) {
                             //btnTake.performClick();
                             //takePicture();
-                            //tempActivity.this.finish();
+                            //TempActivity.this.finish();
                         }
                         Log.e(TAG,"onCaptureStarted");
                     }
@@ -353,14 +352,14 @@ public class tempActivity extends AppCompatActivity {
                     @Override
                     public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                         super.onCaptureCompleted(session, request, result);
-                        Toast.makeText(tempActivity.this,"Saved"+file,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(TempActivity.this,"Saved"+file,Toast.LENGTH_LONG).show();
                         Log.d(TAG,""+file);
 
                         createCameraPreview();
                         if (cameraDevice != null) {
                             //btnTake.performClick();
                             //takePicture();
-                            //tempActivity.this.finish();
+                            //TempActivity.this.finish();
                         }
                         Log.e(TAG,"onCaptureCompleted");
                     }
@@ -446,7 +445,7 @@ public class tempActivity extends AppCompatActivity {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-                    Toast.makeText(tempActivity.this,"Configuration change", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TempActivity.this,"Configuration change", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -459,7 +458,7 @@ public class tempActivity extends AppCompatActivity {
         if (cameraDevice != null) {
             //btnTake.performClick();
 //takePicture();
-            //tempActivity.this.finish();
+            //TempActivity.this.finish();
         }
         Log.e(TAG,"createCameraPreview");
 
@@ -475,7 +474,7 @@ public class tempActivity extends AppCompatActivity {
             imageDimension=map.getOutputSizes(SurfaceTexture.class)[0];
             //add permission
             if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED&& ActivityCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) !=PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(tempActivity.this, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CAMERA_PERMISSION);
+                ActivityCompat.requestPermissions(TempActivity.this, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CAMERA_PERMISSION);
             }
             manager.openCamera(cameraID,stateCallback,null);
         } catch (CameraAccessException e) {
@@ -484,7 +483,7 @@ public class tempActivity extends AppCompatActivity {
         Log.e(TAG,"openCamera X" );
         if (cameraDevice != null) {
             //takePicture();
-            //tempActivity.this.finish();
+            //TempActivity.this.finish();
         }
         Log.e(TAG,"openCamer bis " + cameraDevice);
 
@@ -512,10 +511,11 @@ public class tempActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions,grantResults);
         if(requestCode==REQUEST_CAMERA_PERMISSION){
             if(grantResults[0]==PackageManager.PERMISSION_DENIED){
-                Toast.makeText(tempActivity.this,"Sorry !!!, you cant use this app without granting Camera",Toast.LENGTH_SHORT).show();
+                Toast.makeText(TempActivity.this,"Sorry !!!, you cant use this app without granting Camera",Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
+
 
     }
 
@@ -531,12 +531,6 @@ public class tempActivity extends AppCompatActivity {
         else{
             textureView.setSurfaceTextureListener(textureListener);
         }
-        if (cameraDevice != null) {
-
-            //btnTake.performClick();
-            //takePicture();
-            //this.finish();
-        }
 
 
     }
@@ -545,11 +539,6 @@ public class tempActivity extends AppCompatActivity {
         Log.e(TAG,"Onpause");
         stopBackgroundThread();
         super.onPause();
-        if (cameraDevice != null) {
-            //btnTake.performClick();
-            //takePicture();
-            //tempActivity.this.finish();
-        }
     }
     @Override
     protected void onStop() {
@@ -569,22 +558,13 @@ public class tempActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (cameraDevice != null) {
-            //btnTake.performClick();
-            //takePicture();
-            //tempActivity.this.finish();
-        }
+
         Log.e(TAG,"onRestart");
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (cameraDevice != null) {
-            //btnTake.performClick();
-            //takePicture();
-            //tempActivity.this.finish();
-        }
         Log.e(TAG,"onPostCreate");
     }
 
