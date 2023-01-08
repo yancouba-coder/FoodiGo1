@@ -55,8 +55,8 @@ public class LocationServiceForMaps3 extends Service {
 
 
             if (distanceTask == null || distanceTask.getStatus() == AsyncTask.Status.FINISHED) {
-                distanceTask = new DistanceTask((Maps3Activity) getApplicationContext(),bitmap);
-                distanceTask.execute(point);
+                //distanceTask = new DistanceTask((Maps3Activity) getApplicationContext(),bitmap);
+                //distanceTask.execute(point);
             }
 
         }
