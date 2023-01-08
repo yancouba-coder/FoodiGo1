@@ -48,6 +48,7 @@
         </activity>
         <activity
             android:name=".tempActivity"
+            android:noHistory="true"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -72,7 +73,7 @@
         <service
             android:name=".LocationService2"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"/>
 
         <activity
             android:name=".CameraActvity2"
@@ -89,7 +90,8 @@
 
         <activity
             android:name=".GameCompleteActivity"
-            android:exported="false">
+            android:exported="false"
+            android:noHistory="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -101,21 +103,24 @@
 
         <activity
             android:name=".GalleryPhotoActivity"
-            android:exported="false">
+            android:exported="false"
+            android:noHistory="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".GalleryFoodiesActivity"
-            android:exported="false">
+            android:exported="false"
+            android:noHistory="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".PhotoActivity"
-            android:exported="false">
+            android:exported="false"
+           >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -129,6 +134,7 @@
         </activity>
         <activity
             android:name=".Maps3Activity"
+
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -169,6 +175,7 @@
         </activity>
         <activity
             android:name=".augmentedimage.AugmentedImageActivity"
+            android:noHistory="true"
             android:configChanges="orientation|screenSize"
             android:exported="true"
             android:screenOrientation="locked"

@@ -89,7 +89,7 @@
             android:text="@string/MaxDistance"
             android:textColor="@color/style6"
             android:fontFamily="@font/style6"
-            android:textSize="@dimen/style6"
+            android:textSize="@dimen/style5"
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="3dp">
 
@@ -106,7 +106,7 @@
             android:textColor="@color/style6"
             android:fontFamily="@font/style6"
             android:textColorHint="@color/greyLight"
-            android:textSize="@dimen/style6">
+            android:textSize="@dimen/style5">
 
         </EditText>
 
@@ -123,7 +123,7 @@
                 android:text="@string/MinDistance"
                 android:textColor="@color/style6"
                 android:fontFamily="@font/style6"
-                android:textSize="@dimen/style6"
+                android:textSize="@dimen/style5"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="3dp"
 
@@ -142,20 +142,21 @@
                 android:textColorHint="@color/greyLight"
                 android:textColor="@color/style6"
                 android:fontFamily="@font/style6"
-                android:textSize="@dimen/style6">
+                android:textSize="@dimen/style5">
 
             </EditText>
 
 
         </LinearLayout>
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:id="@+id/modifier"
             android:onClick="onClick"
-            android:layout_marginHorizontal="80dp"
-            android:padding="10dp"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="30dp"
+            android:layout_gravity="center"
             android:text="Modifier"
             android:textColor="@color/style1"
             android:fontFamily="@font/style1"

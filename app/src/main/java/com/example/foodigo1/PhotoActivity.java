@@ -426,7 +426,8 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
                     finish();
                 } else {
                     //si on a perdu le prent on redirige vers l'acceuil
-                    startActivity(new Intent(this, MainActivity.class));
+                    startActivity(new Intent(this, GalleryFoodiesActivity.class));
+                    //startActivity(new Intent(this, MainActivity.class));
                 }
                 //revenir sur l'activité appelante'
                 break;
