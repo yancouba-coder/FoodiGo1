@@ -20,13 +20,14 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
     private TextView subtitle;
     private String totemName;
     private Button previous;
+    ManageFoodiesCaptured manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_didicaticiel);
         clickNumber = 0;
-        ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
+        manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
         manager.updatePoints(this); //mise à jour des points
         next = findViewById(R.id.next);
         description = findViewById(R.id.description);
@@ -141,6 +142,7 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
                 subtitleString = "Tu es maintenant prêt à jouer, à capturer des foodies et à voir ton " + totemName + " grandir.";
                 descriptionString = "";
                 nextString = "Jouer";
+                idImage = manager.getIDDrawableTotem();
                 //TODO : mettre le totem : idImage =
                 break;
             case 12:

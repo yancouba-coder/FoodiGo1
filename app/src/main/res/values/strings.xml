@@ -82,4 +82,21 @@
     <string name="confirmationPhoto">Le foodie a bien été pris en photo</string>
 
 
+
+
+    <string name="totemTo">Choisis l\'animal à nourrir</string>
+    <string name="giraffe">Giraffe</string>
+    <string name="buldog">Buldog</string>
+    <string name="elephant">Elephant</string>
+    <string name="cheval">Cheval</string>
+    <string name="Cochon">Cochon</string>
+    <string name="Licorne">Licorne</string>
+    <string name="totem">Votre totem</string>
+    <string name="totemExplained">Sélectionnes un animal totem, puis nourris le en capturant des foodies sur la carte</string>
+    <string name="nameOfPrefencesTotem">nameOfPrefencesTotem</string>
+    <string name="totemKiddescription">Captures encore plus de foodies pour le voir évoluer</string>
+    <string name="totemYounDescription">Ah ! Ton animal totem a encore faim 😀</string>
+    <string name="totemBigDescription">Ton totem a bien mangé  😍</string>
+    <string name="ShownTotemDescription"> Captures des Foodies pour lui, il a faim et a besoin de grandir 🙂</string>
+
 </resources>

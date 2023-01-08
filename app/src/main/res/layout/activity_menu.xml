@@ -215,7 +215,42 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/UserTotem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_corner"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:backgroundTint="#C4F4DE"
+        android:onClick="onClick"
+        >
 
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+
+            app:srcCompat="@drawable/setting_green" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:fontFamily="@font/style4"
+            android:textColor="@color/style4"
+            android:layout_marginLeft="20dp"
+
+            android:textSize="@dimen/style4"
+            android:text="@string/totem" />
+
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/didacticiel"
         android:layout_width="match_parent"
