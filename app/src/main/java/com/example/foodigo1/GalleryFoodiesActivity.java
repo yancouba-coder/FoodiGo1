@@ -59,10 +59,11 @@ public class GalleryFoodiesActivity extends AppCompatActivity implements View.On
                 } else{
                     i = new Intent(this, Maps3Activity.class);
                 }
-                if(i!=null){startActivity(i);}
+                if(i!=null){finish();startActivity(i);}
                 break;
             case(R.id.home): //logo
                 Intent main = new Intent(this, MainActivity.class);
+                finish();
                 startActivity(main);
                 break;
 

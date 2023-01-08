@@ -3,6 +3,7 @@ package com.example.foodigo1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
     private TextView title;
     private TextView subtitle;
     private String totemName;
+    private Button previous;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
 
         //TODO : instancer le totem depuis les préférence
         totemName = "totem";
+        previous = findViewById(R.id.previous);
+        previous.setVisibility(View.INVISIBLE);
     }
 
 
@@ -50,6 +54,18 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
             case R.id.next:
                 clickNumber++;
                 changeUI();
+                break;
+            case R.id.previous:
+                clickNumber--;
+                changeUI();
+                break;
+            case R.id.menu:
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+            case R.id.home:
+                finish();
+                startActivity(new Intent(this, MainActivity.class));
+                break;
             default:
                 break;
         }
@@ -62,9 +78,15 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
         String descriptionString = "";
         int idImage = 0;
         switch (clickNumber){
+
             case 0:
+                subtitleString =  this.getString(R.string.stepToPlayMessage);
+                descriptionString = "";
+                idImage = R.drawable.level_up;
+                previous.setVisibility(View.INVISIBLE);
                 break;
             case 1:
+                previous.setVisibility(View.VISIBLE);
                 subtitleString = "Tu vas devoir rechercher des foodies sur la carte et les capturer pour nourrir ton " + totemName;
                 descriptionString = "Commence le jeu en cliquant sur jouer";
                 idImage = R.drawable.home;
@@ -105,7 +127,7 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
                 idImage = R.drawable.home;
                 break;
             case 9:
-                subtitleString = "Depuis n'importe quel écran du jeu, tu peux accéder au menu :";
+                subtitleString = "Depuis n'importe quel écran du jeu, tu peux accéder au menu en cliquant sur les 3 petits points en haut à droite.";
                 descriptionString = "Tu retrouves ici toutes les fonctionnalités.";
                 idImage = R.drawable.menu_final;
                 break;
@@ -119,8 +141,10 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
                 subtitleString = "Tu es maintenant prêt à jouer, à capturer des foodies et à voir ton " + totemName + " grandir.";
                 descriptionString = "";
                 nextString = "Jouer";
+                //TODO : mettre le totem : idImage =
                 break;
             case 12:
+
                 idImage = -1;
                 clickNumber = 0;
                 break;
@@ -138,7 +162,7 @@ public class DidicaticielActivity extends AppCompatActivity implements View.OnCl
             imageViewDidac.setImageBitmap(null);
         }
 
-        if (clickNumber == 0 ){// cas de la fin du didacticiel
+        if (clickNumber == 0 && idImage==-1 ){// cas de la fin du didacticiel
             this.finish();
         }
 
