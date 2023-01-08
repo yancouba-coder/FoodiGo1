@@ -1,18 +1,21 @@
 # FoodiGo1
 Bienvenu dans Foodigo. 
 
-Foodigo est un jeu mobile developpé pour Android. 
+Vidéo de présentation de l'application : https://drive.google.com/drive/folders/1AaPh-xUOw7MIFjK0okWvSNFqtJzCyqaB?usp=share_link
+
+Foodigo est un **jeu mobile** developpé pour Android. 
 Nous avons développé ce Jeu dans le cadre de notre formation de Master 2 MIAGE à l'université de Bordeaux.
 Cejeu qui utilise les API : Google maps, Boussole et l'appareil photo et la réalité augmentée (ARCore).
 
-Dès le démarrage de l'application il y'a un didactiel qui explique le fonctionnement du jeu.
+Dès le démarrage de l'application il y'a un **didactiel** qui explique le fonctionnement du jeu.
+
 
 Nous sommes partis sur le concept suivant:
 
 
-Le joueur choisis son Tottem parmi 6 animaux. Le but du jeu est de le nourrir et de le voir grandir.
+Le joueur choisis son Tottem parmi 6 animaux. **Le but du jeu est de le nourrir et de le voir grandir.**
 
-Le joueur doit donc chercher de la nourriture pour lui, ce sont les Foodies. Il s'agit d'une collection de fruits associés à un système de point. Le jeu fonctionne par palier, l'animal Tottem grandira et sera mis en jour dès que le palier de points est franchi. Chaque animal Tottem dispose de 3 versions pour les trois paliers du jeu. 
+Le joueur doit donc **chercher de la nourriture pour lui**, ce sont les Foodies. Il s'agit d'une collection de fruits associés à un système de point. Le jeu fonctionne par palier, l'animal Tottem grandira et sera mis en jour dès que le palier de points est franchi. Chaque animal Tottem dispose de 3 versions pour les trois paliers du jeu. 
 
 
 
