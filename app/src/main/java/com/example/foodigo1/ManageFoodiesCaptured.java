@@ -335,6 +335,8 @@ public class ManageFoodiesCaptured {
                     addVictoryToPoints(getPointOfFoodie(foodieName));
                     addAbsolutePathToPreference(foodieName, absolutePath);
                     //TODO : enlever dans foodies_positions la position du foodie
+                    Log.e("manager","newFoodieCaptured : " + absolutePath);
+
                 }
 
 

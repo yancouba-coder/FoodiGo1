@@ -3,13 +3,21 @@ package com.example.foodigo1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.IOException;
+
 public class GalleryPhotoActivity extends AppCompatActivity implements View.OnClickListener {
-    String path;
+    String foodieName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("onCreate() de GalleryPhotoActivity");
@@ -18,11 +26,66 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
         ManageFoodiesCaptured manager = ManageFoodiesCaptured.getInstance(getApplicationContext());
         manager.updatePoints(this); //mise à jour des points
         //displayPhotoInImageView(manager); //mise à jour de la photo en fonction du foodie appelant
-        path = getIntent().getExtras().getString("path");
-        ImageView photoFoodieCaptured = findViewById(R.id.photoFoodieCaptured);
-        Uri imageUri = Uri.parse("file://" + path);
+        /*foodieName = getIntent().getExtras().getString("foodieName");
 
-        photoFoodieCaptured.setImageURI(imageUri);
+        ImageView photoFoodieCaptured = findViewById(R.id.photoFoodieCaptured);
+        Uri imageUri = null;
+        try {
+            imageUri = Uri.parse("file://" + manager.getAbsolutePathFromPreference(foodieName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        // Récupérez le nom de la foodie à partir de l'Intent
+        //exemple de la mangue
+        foodieName = getIntent().getExtras().getString("foodieName");
+        String path = null;
+        manager.showThePrefrerencesInConsole("foodieName = " + foodieName + "Les préférence : ",R.string.nameOfAbsolutePathPreference);
+        try {
+            path = manager.getAbsolutePathFromPreference(foodieName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.e("chemin : ",  "path : " + path);
+
+        // Récupérez l'ImageView dans laquelle vous souhaitez afficher les images
+        ImageView photoFoodieCaptured = findViewById(R.id.photoFoodieCaptured);
+
+        // Créez un nouveau bitmap à partir de l'image de la mangue stockée dans les drawables
+        Bitmap mangueBitmap = BitmapFactory.decodeResource(getResources(), manager.getIdOfDrawableFoodie(foodieName));
+
+        // Charger l'image du foodie à partir du disque local
+        Uri imageUri = null;
+        try {
+            Log.e("chemin : ", manager.getAbsolutePathFromPreference(foodieName));
+            imageUri = Uri.parse("file://" + manager.getAbsolutePathFromPreference(foodieName));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Bitmap foodieBitmap = null;
+        try {
+            foodieBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Effectuez une rotation de 90 degrés de l'image du foodie
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap rotatedFoodieBitmap = Bitmap.createBitmap(foodieBitmap, 0, 0, foodieBitmap.getWidth(), foodieBitmap.getHeight(), matrix, true);
+
+        // Redimensionnez l'image de la mangue pour qu'elle ait la même largeur que l'image du foodie rotatée
+        int newMangueWidth = rotatedFoodieBitmap.getWidth();
+        int newMangueHeight = (int) (mangueBitmap.getHeight() * ((float) newMangueWidth / mangueBitmap.getWidth()));
+        Bitmap resizedMangueBitmap = Bitmap.createScaledBitmap(mangueBitmap, newMangueWidth, newMangueHeight, true);
+        // Créez un nouveau bitmap en fusionnant les deux images (mangue et foodie)
+        //Bitmap mergedBitmap = mergeBitmaps(mangueBitmap, foodieBitmap);
+        Bitmap mergedBitmap = mergeBitmaps(resizedMangueBitmap, rotatedFoodieBitmap);
+
+
+        // Affichez le bitmap fusionné dans l'ImageView
+        photoFoodieCaptured.setImageBitmap(mergedBitmap);
+
+
     }
 
     //TODO : cette classe ne fonctionne pas encore comme elle le devrait car version de test.
@@ -30,6 +93,32 @@ public class GalleryPhotoActivity extends AppCompatActivity implements View.OnCl
     // au foodie si elle a été appelé depuis l'icone photo de la galerie ou permet de prendre
     // une photo si elle a été appelée depuis l'icone appareil photo de la map
 
+    // Méthode pour fusionner deux bitmaps
+    private Bitmap mergeBitmaps(Bitmap topBitmap, Bitmap bottomBitmap) {
+        // Créez un nouveau bitmap de la taille de l'image de base (bottomBitmap)
+        Bitmap mergedBitmap = Bitmap.createBitmap(bottomBitmap.getWidth(), bottomBitmap.getHeight(), bottomBitmap.getConfig());
+
+        // Créez un nouvel objet Canvas en utilisant le bitmap fusionné
+        Canvas canvas = new Canvas(mergedBitmap);
+
+        // Dessinez l'image de base (bottomBitmap) sur le canvas
+        canvas.drawBitmap(bottomBitmap, 0, 0, null);
+
+        int topBitmapWidth = topBitmap.getWidth();
+        int topBitmapHeight = topBitmap.getHeight();
+        int bottomBitmapWidth = bottomBitmap.getWidth();
+        int bottomBitmapHeight = bottomBitmap.getHeight();
+
+// Calculer les coordonnées de départ (x, y) pour dessiner topBitmap sur le canvas
+        int x = (bottomBitmapWidth - topBitmapWidth) / 2;
+        int y = (bottomBitmapHeight - topBitmapHeight) / 2;
+
+        canvas.drawBitmap(topBitmap, x, y, null);
+
+
+        // Retournez le bitmap fusionné
+        return mergedBitmap;
+    }
 
 
     /*
