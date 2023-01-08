@@ -390,8 +390,6 @@ public class ManageFoodiesCaptured {
         }
     }
 
-
-
         /* *************************************************************************************************/
         /* ******************************************* Points **********************************************/
 
@@ -475,6 +473,7 @@ public class ManageFoodiesCaptured {
 
             return pointsByCalcul;
         }
+
         /* *************************************************************************************************/
         /* *************************************** Les tottems *********************************************/
 
@@ -642,7 +641,32 @@ public class ManageFoodiesCaptured {
 
                 }
 
+
+
+
+
+        /* *************************************************************************************************/
+        /* ************************ Ancienne méthodes liées aux fichiers JSON ******************************/
+
+        /*
+        Renvoi un boolean indiquant si le foodie a déjà été capturé selon l'information stocké dans le fichier JSON
+        N'est plus utilisé, on a opté pour les préférences.
+         */
+        /*
+        private Boolean OLDisCaptured (String foodie) throws Exception {
+                //OLD method, actually not used
+                JSONObject capturedJSON = readJson("captured.json");
+                HashMap<String, Boolean> captured = new Gson().fromJson(String.valueOf(capturedJSON), HashMap.class);
+
+                if (captured.containsKey(foodie)) {
+                    return captured.get(foodie);
+                } else {
+                    throw new Exception("The foodie " + foodie + " doesn't exist");
+                }
+
             }
+
+         */
 
 
 
@@ -695,6 +719,7 @@ public class ManageFoodiesCaptured {
                 return contextApp.getDrawable(R.drawable.bulldog_1);
 
             case R.id.elephantImage:
+
 
                 return contextApp.getDrawable(R.drawable.elefant_1);
 
@@ -815,6 +840,7 @@ public class ManageFoodiesCaptured {
                 System.out.println(foodname + "n'a pas pu être remplacé");
             }
             }*/
+
 
 }
 
