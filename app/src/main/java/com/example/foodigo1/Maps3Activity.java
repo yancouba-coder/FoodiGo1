@@ -68,7 +68,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     ManageFoodiesCaptured manager;
     DistanceTask distanceAsyncTask;
     public static int TAKE_PICTURE_DISTANCE=1;
-    private  MarkerOptions userMarker;
+    //private  MarkerOptions userMarker;
     private int maxDistance, minDistance;
     private boolean isPopUpAppear=false;
 
@@ -77,11 +77,9 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
     private Double distanceToFoodie;
     private Circle circle;
 
-    public Marker getRedUserMarker() {
-        return redUserMarker;
-    }
 
-    private Marker redUserMarker;
+
+    private Marker userMarker;
     private HashMap<String,LatLng> foodies_positions;
 
 
@@ -376,14 +374,11 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapUser, 19.0f));
        //Le systeme de Zoom
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        userMarker=new MarkerOptions().position(mapUser).title("Vous êtes ici");
+        addAndRemoveUserMarker(mapUser);
         drawCercle(mapUser);
         //On regarde si il y'a d'embler un Foodie dans le cerle de capture
-        for (Map.Entry foodie_position : foodies_positions.entrySet()){
-            distanceToFoodie = SphericalUtil.computeDistanceBetween(mapUser, (LatLng) foodie_position.getValue());
-            Log.d("distanceToFoodie : ", "On se trouve à " + distanceToFoodie + " mètres de " + foodie_position.getKey());
-            if (distanceToFoodie < TAKE_PICTURE_DISTANCE) montrerLepopUp((String) foodie_position.getKey());
-        }
+        computeDistanceForEachFoodie(mapUser);
+
 
 
 
@@ -402,24 +397,8 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                 //onLocationChanged(location);
                 //Set the marker of user
                 LatLng userPos = new LatLng(mLocationService.getLocation().getLatitude(), mLocationService.getLocation().getLongitude());
-                userMarker.position(userPos);
-                mMap.addMarker(userMarker);
-                // Créez une nouvelle instance de l'objet MarkerOptions
-                    /*
-                    MarkerOptions markerOptions = new MarkerOptions();
+                addAndRemoveUserMarker(userPos);
 
-                    // Définissez les options du marker, telles que sa position et son titre
-                    markerOptions.position(userPos).title("Vous êtes ici");
-
-                    // Ajoutez le marker à la carte en utilisant la méthode addMarker de l'objet GoogleMap
-                    Marker userMarker = mMap.addMarker(markerOptions);
-
-                        // Donnez un identifiant au marker en utilisant la méthode setTag de l'objet Marker
-                    marker.setTag("userFirstPositionMarker");
-                    /
-                     */
-                // mMap.addMa
-                //mMap.addMarker(new MarkerOptions().position(userPos).title("Vous êtes ici"));
                 if (line != null)
                     eraseLine();
                 drawLine(foodiePositionOnMap, userPos);
@@ -465,6 +444,21 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         });
 
     }
+    public void computeDistanceForEachFoodie(LatLng userPosition){
+        if(foodies_positions!=null){
+            for (Map.Entry foodie_position : foodies_positions.entrySet()){
+                distanceToFoodie = SphericalUtil.computeDistanceBetween(userPosition, (LatLng) foodie_position.getValue());
+                Log.d("distanceToFoodie : ", "On se trouve à " + distanceToFoodie + " mètres de " + foodie_position.getKey());
+                if (distanceToFoodie < TAKE_PICTURE_DISTANCE)
+                    montrerLepopUp((String) foodie_position.getKey());
+            }
+
+        }
+        else{
+            Log.e(TAG,"Le Hashmap foodie_positions est null");
+        }
+
+    }
 
 
    public void putFoodiesOnMap2(GoogleMap map, double[] tableaudesLatitudes, double[] tableauDesLongitudes, double[] tableauDesDistances) {
@@ -494,12 +488,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
         //
         int [] angleDepositionnement = {90, 270, 360, 180, 315, 45};
         foodies_positions=new HashMap<>();
-
-
         int i=0;//indice angle de positionnement
-
-
-
         for (String foodie:manager.getListOfFoodies()) {
             // Si il est pas capturé on le positionne
             if(!manager.isCaptured(foodie)){
@@ -512,7 +501,7 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
                     fooddistance=maxDistance;
 
                 LatLng foodiePosition = SphericalUtil.computeOffsetOrigin(userPostion,fooddistance, angleDepositionnement[i]);
-
+             /**Si on ne veut pas placer les foodies sur des batiments**/
                /* while (isBatiment(foodiePosition)){
                     fooddistance=fooddistance+1;
                     foodiePosition = SphericalUtil.computeOffsetOrigin(userPostion,fooddistance, angleDepositionnement[i]);
@@ -547,6 +536,12 @@ public class Maps3Activity extends AppCompatActivity implements View.OnClickList
 
         }
 
+    }
+    public void addAndRemoveUserMarker( LatLng userPoistion){
+        if(this.userMarker!=null){
+            this.userMarker.remove();
+        }
+        this.userMarker=mMap.addMarker( new MarkerOptions().position(userPoistion).title("Vous êtes ici"));
     }
     //public void pupFoodOnMaps(LatLng userPosition, )
     public void drawLine(LatLng pointA, LatLng pointB){
@@ -777,8 +772,7 @@ Log.d("foodies_positions", foodies_positions.toString());
         location=mLocationService.getLocation();
         LatLng point= new LatLng(location.getLatitude(),location.getLongitude());
         //on dessine un nouveau cercle
-        userMarker.position(point);
-        mMap.addMarker(userMarker);
+        addAndRemoveUserMarker(point);
 
         circle.remove();
         drawCercle(point);
@@ -786,19 +780,8 @@ Log.d("foodies_positions", foodies_positions.toString());
        // distanceAsyncTask= new DistanceTask(this, point, foodies_positions);
        // distanceAsyncTask.execute(point);
 
-        //TODO : on parcours la liste des foodies_positions et si un des foodie a une distance inférieure à TAKE_PICTURE_DISTANCE metres alors on fairt la suite
-        for (Map.Entry foodie_position : foodies_positions.entrySet()){
-            distanceToFoodie = SphericalUtil.computeDistanceBetween(point, (LatLng) foodie_position.getValue());
-            Log.d("distanceToFoodie : ", "On se trouve à " + distanceToFoodie + " mètres de " + foodie_position.getKey());
-            if (distanceToFoodie < TAKE_PICTURE_DISTANCE) montrerLepopUp((String) foodie_position.getKey());
-        }
-
-
-
-        //new DistanceTask(this, bitmap).execute(point);
-
-        //if(distance<TAKE_PICTURE_DISTANCE)
-        //              startCameraActivity(userPos,bitmap,marker.getTitle(),(int)distance);
+        //TODO : on parcours la liste des foodies_positions et si un des foodie a une distance inférieure à TAKE_PICTURE_DISTANCE metres alors on fait la suite
+        computeDistanceForEachFoodie(point);
 
 
     }
