@@ -41,6 +41,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.foodies:
                 i = new Intent(this, GalleryFoodiesActivity.class);
                 break;
+            case R.id.UserTotem:
+                i=new Intent(this, UserTotemActivity.class);
+                break;
             case R.id.map:
                 i = new Intent(this, Maps3Activity.class);
                 break;
