@@ -1,7 +1,6 @@
 # FoodiGo1
 Bienvenu dans Foodigo. 
-
-Vidéo de présentation de l'application : https://drive.google.com/drive/folders/1AaPh-xUOw7MIFjK0okWvSNFqtJzCyqaB?usp=share_link
+Vidéo de présentation de l'application et son APK: https://drive.google.com/drive/folders/1AaPh-xUOw7MIFjK0okWvSNFqtJzCyqaB?usp=share_link
 
 Foodigo est un **jeu mobile** developpé pour Android. 
 Nous avons développé ce Jeu dans le cadre de notre formation de Master 2 MIAGE à l'université de Bordeaux.
